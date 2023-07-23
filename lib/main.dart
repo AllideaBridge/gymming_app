@@ -1,5 +1,6 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gymming_app/explore/explore_screen.dart';
 import 'package:gymming_app/login/login.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
             // or simply save your changes to "hot reload" in a Flutter IDE).
             // Notice that the counter didn't reset back to zero; the application
             // is not restarted.
+            fontFamily: 'Pretendard',
             scaffoldBackgroundColor: Colors.black,
           ),
           home: const MyHomePage(),
@@ -72,11 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: const Text("Timetable"),
         actions: [
-          const TextButton(
-            onPressed: null,
-            style: ButtonStyle(
+          TextButton(
+            style: const ButtonStyle(
                 foregroundColor: MaterialStatePropertyAll(Colors.white)),
-            child: Text('둘러보기'),
+            child: const Text('둘러보기'),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ExploreScreen()));
+            },
           ),
           Image.asset('assets/arrow.png')
         ],
