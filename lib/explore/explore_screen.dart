@@ -42,7 +42,7 @@ class TrainerTile extends StatelessWidget {
   final TrainerList trainer;
   late String displayTime = trainer.weekendTime == ''
       ? '평일 ${trainer.weekdayTime}'
-      : '평일${trainer.weekdayTime}\n주말 ${trainer.weekendTime}';
+      : '평일 ${trainer.weekdayTime}\n주말 ${trainer.weekendTime}';
 
   TrainerTile({required this.trainer});
 
