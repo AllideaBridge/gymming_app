@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/models/trainer_list.dart';
 import 'package:gymming_app/repositories/trainer_repository.dart';
+import 'package:gymming_app/user_timetable/timetable.dart';
 
 class ExploreScreen extends StatelessWidget {
   final List<TrainerList> trainers = TrainerRepository().getTrainerList();
@@ -19,8 +20,11 @@ class ExploreScreen extends StatelessWidget {
             onPressed: null,
           ),
           actions: [
-            const TextButton(
-              onPressed: null,
+            TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TimeTable()));
+              },
               style: ButtonStyle(
                   foregroundColor: MaterialStatePropertyAll(Colors.white)),
               child: Text('Timetable'),

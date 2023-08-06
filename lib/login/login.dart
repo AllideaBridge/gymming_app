@@ -12,7 +12,7 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Social Login"),
       ),
-      body: const Center(
+      body: Center(
           child: Column(children: [
         GoogleLoginButton(),
         KakaoLoginButton(),
