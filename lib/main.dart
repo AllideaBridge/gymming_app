@@ -1,7 +1,8 @@
-import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gymming_app/state/state_week.dart';
+import 'package:gymming_app/user_timetable/timetable.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,90 +18,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return CalendarControllerProvider(
-        controller: EventController(),
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or simply save your changes to "hot reload" in a Flutter IDE).
-            // Notice that the counter didn't reset back to zero; the application
-            // is not restarted.
-            scaffoldBackgroundColor: Colors.black,
-          ),
-          home: const MyHomePage(),
-        ));
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  // final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() async {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      //_counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text("Timetable"),
-        actions: [
-          const TextButton(
-            onPressed: null,
-            style: ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.white)),
-            child: Text('둘러보기'),
-          ),
-          Image.asset('assets/arrow.png')
-        ],
-        backgroundColor: Colors.black,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => StateWeek(
+                year: DateTime.now().year,
+                month: DateTime.now().month,
+                dayOfSunday: DateTime.now().weekday == 7
+                    ? DateTime.now().day
+                    : DateTime.now().day - DateTime.now().weekday))
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        home: const TimeTable(),
       ),
-      body: const MonthView(),
-      drawer: const Drawer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
