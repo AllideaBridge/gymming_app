@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/explore/explore_screen.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
 
 import 'component/schedule_week.dart';
@@ -14,11 +15,14 @@ class TimeTable extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: const Text("Timetable"),
         actions: [
-          const TextButton(
-            onPressed: null,
+          TextButton(
             style: ButtonStyle(
                 foregroundColor: MaterialStatePropertyAll(Colors.white)),
             child: Text('둘러보기'),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ExploreScreen()));
+            },
           ),
           Image.asset('assets/arrow.png')
         ],
