@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/user_timetable/component/schedule_change.dart';
 import 'package:gymming_app/user_timetable/component/schedule_display.dart';
 
 class ScheduleDay extends StatelessWidget {
@@ -63,22 +64,20 @@ class ScheduleDay extends StatelessWidget {
             onTap: () {
               showModalBottomSheet(
                   context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: 500,
-                      decoration: BoxDecoration(
-                          color: Color(0xff2d2d2d),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          )),
-                    );
-                  },
-                  shape: RoundedRectangleBorder(
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
-                  )));
+                  )),
+                  builder: (BuildContext context) {
+                    return Wrap(children: [
+                      ScheduleChange(
+                        // TODO: 나중에 지울 부분
+                        originDay: DateTime(2023, 10, 15),
+                      )
+                    ]);
+                  });
             },
             child: ScheduleDisplay(
               time: DateTime.now(),
