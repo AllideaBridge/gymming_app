@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
+import 'package:gymming_app/user_timetable/component/schedule_change.dart';
 import 'package:gymming_app/user_timetable/component/schedule_view.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,26 @@ class ScheduleDisplay extends StatelessWidget {
                                       style: TextStyle(color: Colors.white),
                                     )),
                                 OutlinedButton(
-                                    onPressed: null,
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30),
+                                            topRight: Radius.circular(30),
+                                          )),
+                                          builder: (BuildContext context) {
+                                            return Wrap(children: [
+                                              ScheduleChange(
+                                                originDay:
+                                                    Provider.of<StateDateTime>(
+                                                            context)
+                                                        .selectedDateTime,
+                                              )
+                                            ]);
+                                          });
+                                    },
                                     child: Text(
                                       "변경하기",
                                       style: TextStyle(color: Colors.white),

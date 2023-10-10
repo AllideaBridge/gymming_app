@@ -13,7 +13,7 @@ class CalendarModal extends StatefulWidget {
 }
 
 class _CalendarState extends State<CalendarModal> {
-  DateTime selectedDay = DateTime(2023, 10, 16);
+  DateTime selectedDay = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
