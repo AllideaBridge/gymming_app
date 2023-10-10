@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/state/state_week.dart';
+import 'package:gymming_app/state/state_date_time.dart';
 import 'package:gymming_app/user_timetable/timetable.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +21,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => StateWeek(
-                year: DateTime.now().year,
-                month: DateTime.now().month,
-                dayOfSunday: DateTime.now().weekday == 7
-                    ? DateTime.now().day
-                    : DateTime.now().day - DateTime.now().weekday))
+            create: (context) =>
+                StateDateTime(selectedDateTime: DateTime.now()))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

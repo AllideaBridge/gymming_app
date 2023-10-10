@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/explore/explore_screen.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
-
-import 'component/schedule_week.dart';
+import 'package:gymming_app/user_timetable/component/schedule_display.dart';
 
 class TimeTable extends StatelessWidget {
   const TimeTable({Key? key}) : super(key: key);
@@ -30,34 +29,7 @@ class TimeTable extends StatelessWidget {
       ),
       drawer: const Drawer(),
       body: ListView(
-        children: [
-          Calendar(),
-          Container(
-            color: Colors.white24,
-            height: 8,
-            margin: EdgeInsets.only(left: 0, right: 0, top: 20, bottom: 30),
-          ),
-          Stack(
-            children: [
-              ScheduleWeek(),
-              // Positioned(
-              //     top: 55,
-              //     left: 5,
-              //     child: Text(
-              //       "오전",
-              //       style: TextStyle(color: Colors.white.withOpacity(0.6)),
-              //     )),
-              // Positioned(
-              //     top: 80,
-              //     left: 0,
-              //     right: 0,
-              //     child: Container(
-              //       height: 1,
-              //       color: Colors.white.withOpacity(0.2),
-              //     )),
-            ],
-          )
-        ],
+        children: [Calendar(), ScheduleDisplay()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
