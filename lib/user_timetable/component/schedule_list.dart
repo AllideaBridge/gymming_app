@@ -17,7 +17,7 @@ class ScheduleDisplay extends StatelessWidget {
     List<ScheduleInfo> schedules = List.generate(
         1,
         (index) => ScheduleInfo(
-            DateTime.now(), DateTime.now(), "PT", "김헬스", "GYMMING", "방이동"));
+            DateTime.now(), DateTime.now(), "PT", "김헬스", "GYMMING", "방이동", 3));
 
     return Expanded(
       child: Container(

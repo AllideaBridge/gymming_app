@@ -5,7 +5,10 @@ import 'package:gymming_app/modal/model/reason_content.dart';
 import 'package:gymming_app/modal/reason.dart';
 import 'package:gymming_app/user_timetable/component/schedule_changed.dart';
 import 'package:gymming_app/user_timetable/model/schedule_info.dart';
+import 'package:provider/provider.dart';
 
+import '../state/state_date_time.dart';
+import '../user_timetable/component/schedule_change.dart';
 import '../user_timetable/model/modal_content.dart';
 
 class ScheduleClicked extends StatelessWidget {
@@ -106,17 +109,18 @@ class ScheduleClicked extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () {
-                  showBottomSheet(
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(25.0))),
-                      builder: (BuildContext context) {
-                        return Reason(
-                            reasonContent: ReasonContent(
-                                changeTitle, changeSubTitle, changeReasons));
-                      });
+                onPressed:() {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ScheduleChange(
+                                originDay: Provider.of<
+                                    StateDateTime>(
+                                    context)
+                                    .selectedDateTime,
+                                scheduleInfo: scheduleInfo,
+                              )));
                 },
                 child: Text(
                   "변경하기",
