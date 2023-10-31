@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/explore/explore_screen.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
-import 'package:gymming_app/user_timetable/component/schedule_display.dart';
+import 'package:gymming_app/user_timetable/component/schedule_list.dart';
 
 class TimeTable extends StatelessWidget {
   const TimeTable({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class TimeTable extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       drawer: const Drawer(),
-      body: ListView(
+      body: Column(
         children: [Calendar(), ScheduleDisplay()],
       ),
       floatingActionButton: FloatingActionButton(

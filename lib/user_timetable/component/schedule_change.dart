@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/user_timetable/component/calendar_modal.dart';
+import 'package:gymming_app/user_timetable/component/schedule_changed.dart';
 import 'package:gymming_app/user_timetable/component/time_modal.dart';
 
+import '../../common/constants.dart';
+import '../../modal/model/reason_content.dart';
+import '../../modal/reason.dart';
+import '../model/schedule_info.dart';
+
 class ScheduleChange extends StatefulWidget {
-  const ScheduleChange({super.key, required this.originDay});
+  const ScheduleChange(
+      {super.key, required this.originDay, required this.scheduleInfo});
 
   final DateTime originDay;
+  final ScheduleInfo scheduleInfo;
 
   @override
   State<ScheduleChange> createState() => _ScheduleChangeState();
@@ -86,7 +94,26 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                   width: 350, // 원하는 가로 크기
                   height: 56, // 원하는 세로 크기
                   child: ElevatedButton(
-                    onPressed: null,
+                    onPressed:_selectedTime.isEmpty?null: () {
+                      DateTime now = DateTime.now();
+                      int days =
+                          widget.originDay.difference( DateTime(now.year,now.month,now.day)).inDays;
+                      if (days >= widget.scheduleInfo.remainDays) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ScheduleChanged(
+                                  beforeTime: DateTime.now(),
+                                  afterTime: DateTime.now())),
+                        );
+                      }else{
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                            Reason(
+                                reasonContent: ReasonContent(
+                                    changeTitle, changeSubTitle, changeReasons))
+                        ));
+                      }
+                    },
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(buttonColor),

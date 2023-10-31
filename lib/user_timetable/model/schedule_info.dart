@@ -5,9 +5,10 @@ class ScheduleInfo {
   String _trainerName;
   String _centerName;
   String _centerLocation;
+  int _remainDays;
 
   ScheduleInfo(this._startTime, this._endTime, this._lessonName,
-      this._trainerName, this._centerName, this._centerLocation);
+      this._trainerName, this._centerName, this._centerLocation, this._remainDays);
 
   String get centerLocation => _centerLocation;
 
@@ -20,4 +21,6 @@ class ScheduleInfo {
   DateTime get endTime => _endTime;
 
   DateTime get startTime => _startTime;
+
+  int get remainDays => _remainDays;
 }
