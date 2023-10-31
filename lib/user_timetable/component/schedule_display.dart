@@ -58,24 +58,16 @@ class ScheduleDisplay extends StatelessWidget {
                                     )),
                                 OutlinedButton(
                                     onPressed: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(30),
-                                            topRight: Radius.circular(30),
-                                          )),
-                                          builder: (BuildContext context) {
-                                            return Wrap(children: [
-                                              ScheduleChange(
-                                                originDay:
-                                                    Provider.of<StateDateTime>(
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ScheduleChange(
+                                                    originDay: Provider.of<
+                                                                StateDateTime>(
                                                             context)
                                                         .selectedDateTime,
-                                              )
-                                            ]);
-                                          });
+                                                  )));
                                     },
                                     child: Text(
                                       "변경하기",
