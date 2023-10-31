@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarModal extends StatefulWidget {
-  const CalendarModal({super.key, required this.originDay});
+  const CalendarModal(
+      {super.key, required this.originDay, required this.changeSelectedDay});
 
   final DateTime originDay;
+  final Function(DateTime) changeSelectedDay;
 
   @override
   State<CalendarModal> createState() => _CalendarState();
@@ -14,6 +16,12 @@ class CalendarModal extends StatefulWidget {
 
 class _CalendarState extends State<CalendarModal> {
   DateTime selectedDay = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDay = widget.originDay.add(const Duration(days: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +66,7 @@ class _CalendarState extends State<CalendarModal> {
         setState(() {
           this.selectedDay = selectedDay;
         });
+        widget.changeSelectedDay(selectedDay);
       },
       eventLoader: _getEventList,
       selectedDayPredicate: (DateTime day) =>
