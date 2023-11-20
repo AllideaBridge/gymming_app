@@ -1,7 +1,7 @@
 class ReasonContent{
-  String _title;
-  String _subtitle;
-  List<String> _reasons;
+  final String _title;
+  final String _subtitle;
+  final List<String> _reasons;
 
   ReasonContent(this._title, this._subtitle, this._reasons);
 
