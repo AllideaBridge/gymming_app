@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
 import 'package:gymming_app/modal/schedule_clicked.dart';
-import 'package:gymming_app/user_timetable/component/schedule_change.dart';
 import 'package:gymming_app/user_timetable/component/schedule_item.dart';
-import 'package:gymming_app/user_timetable/model/modal_content.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
 import '../model/schedule_info.dart';
 
-class ScheduleDisplay extends StatelessWidget {
-  const ScheduleDisplay({super.key});
+class ScheduleList extends StatelessWidget {
+  const ScheduleList({super.key});
 
   @override
   Widget build(BuildContext context) {
     List<ScheduleInfo> schedules = List.generate(
-        1,
+        3,
         (index) => ScheduleInfo(
-            DateTime.now(), DateTime.now(), "PT", "김헬스", "GYMMING", "방이동", 3));
+            DateTime.now(), DateTime.now(), "PT", "김헬스", "GYMMING", "방이동", index));
 
     return Expanded(
       child: Container(

@@ -3,7 +3,7 @@ import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/explore/explore_detail.dart';
 import 'package:gymming_app/models/trainer_list.dart';
 import 'package:gymming_app/repositories/trainer_repository.dart';
-import 'package:gymming_app/user_timetable/timetable.dart';
+import 'package:gymming_app/user_timetable/user_timetable.dart';
 
 class ExploreScreen extends StatelessWidget {
   final List<TrainerList> trainers = TrainerRepository().getTrainerList();
@@ -24,7 +24,7 @@ class ExploreScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TimeTable()));
+                    MaterialPageRoute(builder: (context) => UserTimeTable()));
               },
               style: ButtonStyle(
                   foregroundColor: MaterialStatePropertyAll(Colors.white)),

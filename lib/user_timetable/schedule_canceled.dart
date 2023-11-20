@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../timetable.dart';
+import 'user_timetable.dart';
 
-class ScheduleChanged extends StatelessWidget {
-  const ScheduleChanged({super.key, required this.beforeTime, required this.afterTime});
+class ScheduleCanceled extends StatelessWidget {
+  const ScheduleCanceled({super.key, required this.lessontime});
 
-  final DateTime beforeTime;
-  final DateTime afterTime;
+  final DateTime lessontime;
 
 
   @override
@@ -30,7 +29,7 @@ class ScheduleChanged extends StatelessWidget {
           ),
           SizedBox(height: 100),
           Text(
-            """운동 일정을\n변경 하였습니다.""",
+            """운동 일정을\n취소 하였습니다.""",
             style: TextStyle(
               color: Colors.white,
               fontSize: 28,
@@ -42,12 +41,8 @@ class ScheduleChanged extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text('변경 전', style: TextStyle(color: Colors.white)),
-            trailing: Text('$beforeTime', style: TextStyle(color: Colors.white)),
-          ),
-          ListTile(
-            title: Text('변경 후', style: TextStyle(color: Colors.white)),
-            trailing: Text('$afterTime', style: TextStyle(color: Colors.white)),
+            title: Text('취소한 일정', style: TextStyle(color: Colors.white)),
+            trailing: Text('${lessontime.month}월 ${lessontime.day}일 ${lessontime.hour}:00', style: TextStyle(color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -59,7 +54,7 @@ class ScheduleChanged extends StatelessWidget {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => TimeTable()),
+                  MaterialPageRoute(builder: (context) => UserTimeTable()),
                       (Route<dynamic> route) => false, // 모든 라우트를 제거하므로 false를 반환합니다.
                 );
               },
