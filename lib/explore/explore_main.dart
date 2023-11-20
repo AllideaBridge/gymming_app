@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/explore/explore_detail.dart';
 import 'package:gymming_app/models/trainer_list.dart';
 import 'package:gymming_app/repositories/trainer_repository.dart';
 import 'package:gymming_app/user_timetable/timetable.dart';
@@ -36,7 +37,12 @@ class ExploreScreen extends StatelessWidget {
         body: ListView.builder(
           itemCount: trainers.length,
           itemBuilder: (context, index) {
-            return TrainerTile(trainer: trainers[index]);
+            return GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ExploreDetail()));
+                },
+                child: TrainerTile(trainer: trainers[index]));
           },
         ));
   }

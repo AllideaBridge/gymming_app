@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/explore/explore_screen.dart';
+import 'package:gymming_app/explore/explore_main.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
 import 'package:gymming_app/user_timetable/component/schedule_list.dart';
 
