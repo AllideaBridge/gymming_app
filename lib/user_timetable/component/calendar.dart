@@ -39,29 +39,9 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "${Provider
-            .of<StateDateTime>(context)
-            .selectedDateTime
-            .year}년 ${Provider
-            .of<StateDateTime>(context)
-            .selectedDateTime
-            .month}월 ${Provider
-            .of<StateDateTime>(context)
-            .selectedDateTime
-            .day}일 ${Provider
-            .of<StateDateTime>(context)
-            .selectedDateTime
-            .hour}시 ${Provider
-            .of<StateDateTime>(context)
-            .selectedDateTime
-            .minute}분");
-
     const defaultTextStyle = TextStyle(color: Colors.white);
     return TableCalendar(
-      focusedDay: Provider
-          .of<StateDateTime>(context)
-          .selectedDateTime,
+      focusedDay: Provider.of<StateDateTime>(context).selectedDateTime,
       firstDay: DateTime(1800),
       lastDay: DateTime(3000),
       calendarFormat: CalendarFormat.month,
@@ -71,11 +51,9 @@ class _CalendarState extends State<Calendar> {
         leftChevronVisible: false,
         headerPadding: const EdgeInsets.all(8),
         titleTextStyle:
-        const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         titleTextFormatter: (date, locale) =>
-        "${date.year % 100} ${DateFormat.MMMM(locale)
-            .format(date)
-            .toUpperCase()}",
+            "${date.year % 100} ${DateFormat.MMMM(locale).format(date).toUpperCase()}",
       ),
       calendarStyle: const CalendarStyle(
         defaultTextStyle: defaultTextStyle,
@@ -99,20 +77,11 @@ class _CalendarState extends State<Calendar> {
         return null;
       }),
       selectedDayPredicate: (DateTime day) =>
-      Provider
-          .of<StateDateTime>(context)
-          .selectedDateTime
-          .year ==
-          day.year &&
-          Provider
-              .of<StateDateTime>(context)
-              .selectedDateTime
-              .month ==
+          Provider.of<StateDateTime>(context).selectedDateTime.year ==
+              day.year &&
+          Provider.of<StateDateTime>(context).selectedDateTime.month ==
               day.month &&
-          Provider
-              .of<StateDateTime>(context)
-              .selectedDateTime
-              .day == day.day,
+          Provider.of<StateDateTime>(context).selectedDateTime.day == day.day,
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
@@ -125,9 +94,7 @@ class _CalendarState extends State<Calendar> {
 
   List<bool> _getEventList(DateTime day) {
     if (_isScheduled.contains(
-        "${day.year}${day.month < 10 ? "0" : ""}${day.month}${day.day < 10
-            ? "0"
-            : ""}${day.day}")) {
+        "${day.year}${day.month < 10 ? "0" : ""}${day.month}${day.day < 10 ? "0" : ""}${day.day}")) {
       return [true];
     }
     return [];

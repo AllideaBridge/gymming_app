@@ -6,3 +6,4 @@ const Color SECONDARY_COLOR = Color(0xff9a9a9a);
 const Color BRIGHT_SECONDARY_COLOR = Color(0xffe0e0e0);
 const Color BORDER_COLOR = Color(0xff3c3c3c);
 const Color BTN_COLOR = Color(0xff494949);
+const Color INDICATOR_COLOR = Color(0xff151515);
