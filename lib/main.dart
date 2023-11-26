@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
 import 'package:gymming_app/trainer_timetable/tainer_timetable.dart';
-import 'package:gymming_app/user_timetable/user_timetable.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
@@ -29,8 +28,8 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
             scaffoldBackgroundColor: Colors.black, fontFamily: 'Pretendard'),
-         home: const UserTimeTable(),
-        // home: const TrainerTimeTable(),
+         // home: const UserTimeTable(),
+        home: const TrainerTimeTable(),
       ),
     );
   }
