@@ -22,113 +22,110 @@ class Proposal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
         body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-            child: Column(children: [
-              Expanded(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '운동 일정 $type을(를)\n신청하셨습니다.',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        '일정 $type이(가) 확정된 것이 아니며, 트레이너 및\n지점 확인 후 승인 여부를 알려드리겠습니다.\n(최대 3시간 소요)',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      SizedBox(height: 40),
-                      buildTitleAndTime('변경 전', originDay, '', SECONDARY_COLOR),
-                      SizedBox(height: 40),
-                      buildTitleAndTime(
-                          '변경 후', selectedDay, selectedTime, Colors.white),
-                      SizedBox(height: 40),
-                      buildTitleAndReason('변경 사유', reason),
-                    ]),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        child: Column(children: [
+          Expanded(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 169,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserTimeTable()),
-                          (Route<dynamic> route) =>
-                              false, // 모든 라우트를 제거하므로 false를 반환합니다.
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(BTN_COLOR),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        '변경 취소',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  Text(
+                    '운동 일정 $type을(를)\n신청하셨습니다.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
-                    width: 169,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserTimeTable()),
-                          (Route<dynamic> route) =>
-                              false, // 모든 라우트를 제거하므로 false를 반환합니다.
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(BTN_COLOR),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        '확인',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: PRIMARY_COLOR,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  SizedBox(height: 12),
+                  Text(
+                    '일정 $type이(가) 확정된 것이 아니며, 트레이너 및\n지점 확인 후 승인 여부를 알려드리겠습니다.\n(최대 3시간 소요)',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
                     ),
                   ),
-                ],
-              ),
-            ]),
+                  SizedBox(height: 40),
+                  buildTitleAndTime('변경 전', originDay, '', SECONDARY_COLOR),
+                  SizedBox(height: 40),
+                  buildTitleAndTime(
+                      '변경 후', selectedDay, selectedTime, Colors.white),
+                  SizedBox(height: 40),
+                  buildTitleAndReason('변경 사유', reason),
+                ]),
           ),
-        ));
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                width: 169,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserTimeTable()),
+                      (Route<dynamic> route) =>
+                          false, // 모든 라우트를 제거하므로 false를 반환합니다.
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(BTN_COLOR),
+                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    '변경 취소',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 169,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserTimeTable()),
+                      (Route<dynamic> route) =>
+                          false, // 모든 라우트를 제거하므로 false를 반환합니다.
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(BTN_COLOR),
+                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    '확인',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: PRIMARY_COLOR,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    ));
   }
 
   Widget buildTitleAndTime(

@@ -81,8 +81,10 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ScheduleChanged(
-                                        beforeTime: DateTime.now(),
-                                        afterTime: DateTime.now())),
+                                          originDay: widget.originDay,
+                                          selectedDay: _selectedDay,
+                                          selectedTime: _selectedTime,
+                                        )),
                               );
                             } else {
                               Navigator.push(
