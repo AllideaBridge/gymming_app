@@ -65,8 +65,8 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                       changeSelectedTime: _changeSelectedTime),
                 ),
                 SizedBox(
-                  width: 350, // 원하는 가로 크기
-                  height: 56, // 원하는 세로 크기
+                  width: 350,
+                  height: 56,
                   child: ElevatedButton(
                     onPressed: _selectedTime.isEmpty
                         ? null
@@ -81,7 +81,8 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ScheduleChanged(
-                                          originDay: widget.originDay,
+                                          originDay:
+                                              widget.scheduleInfo.startTime,
                                           selectedDay: _selectedDay,
                                           selectedTime: _selectedTime,
                                         )),
@@ -95,7 +96,8 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                                                 changeTitle,
                                                 changeSubTitle,
                                                 changeReasons),
-                                            originDay: widget.originDay,
+                                            originDay:
+                                                widget.scheduleInfo.startTime,
                                             selectedDay: _selectedDay,
                                             selectedTime: _selectedTime,
                                             type: CHANGE,

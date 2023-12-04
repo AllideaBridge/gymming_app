@@ -21,6 +21,9 @@ class _CalendarState extends State<CalendarModal> {
   void initState() {
     super.initState();
     selectedDay = widget.originDay.add(const Duration(days: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.changeSelectedDay(selectedDay);
+    });
   }
 
   @override
