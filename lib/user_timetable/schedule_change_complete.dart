@@ -51,7 +51,7 @@ class ScheduleChangeComplete extends StatelessWidget {
                     Visibility(
                       visible: type == CHANGE,
                       child: buildTitleAndTime(
-                          '변경 후', selectedDay!, selectedTime!, Colors.white),
+                          '변경 후', DateTime.now(), '', Colors.white),
                     ),
                   ],
                 ),
