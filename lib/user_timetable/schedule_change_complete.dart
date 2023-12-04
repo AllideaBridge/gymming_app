@@ -51,7 +51,7 @@ class ScheduleChangeComplete extends StatelessWidget {
                     Visibility(
                       visible: type == CHANGE,
                       child: buildTitleAndTime(
-                          '변경 후', DateTime.now(), '', Colors.white),
+                          '변경 후', selectedDay, selectedTime, Colors.white),
                     ),
                   ],
                 ),
@@ -97,7 +97,7 @@ class ScheduleChangeComplete extends StatelessWidget {
   }
 
   Widget buildTitleAndTime(
-      String title, DateTime time, String hour, Color color) {
+      String title, DateTime? time, String? hour, Color color) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,7 +117,7 @@ class ScheduleChangeComplete extends StatelessWidget {
                 )),
             SizedBox(height: 8),
             Text(
-              hour.isEmpty
+              hour == null || hour.isEmpty
                   ? DateUtil.getKoreanDayAndHour(time)
                   : DateUtil.getKoreanDayAndExactHour(time, hour),
               style: TextStyle(

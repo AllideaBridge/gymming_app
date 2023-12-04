@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/user_timetable/user_timetable.dart';
 
+import '../common/constants.dart';
 import '../common/utils/date_util.dart';
 
 class ScheduleChangeCompleteWithReason extends StatelessWidget {
@@ -48,12 +49,19 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 40),
-                  buildTitleAndTime('변경 전', originDay, '', SECONDARY_COLOR),
+                  buildTitleAndTime(type == CHANGE ? '변경 전' : '취소 일정',
+                      originDay, '', SECONDARY_COLOR),
+                  Visibility(
+                    visible: type == CHANGE,
+                    child: SizedBox(height: 40),
+                  ),
+                  Visibility(
+                    visible: type == CHANGE,
+                    child: buildTitleAndTime(
+                        '변경 후', selectedDay, selectedTime, Colors.white),
+                  ),
                   SizedBox(height: 40),
-                  buildTitleAndTime(
-                      '변경 후', selectedDay, selectedTime, Colors.white),
-                  SizedBox(height: 40),
-                  buildTitleAndReason('변경 사유', reason),
+                  buildTitleAndReason('$type 사유', reason),
                 ]),
           ),
           Row(
@@ -129,7 +137,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
   }
 
   Widget buildTitleAndTime(
-      String title, DateTime time, String hour, Color color) {
+      String title, DateTime? time, String? hour, Color color) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -149,7 +157,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
                 )),
             SizedBox(height: 8),
             Text(
-              hour.isEmpty
+              hour!.isEmpty
                   ? DateUtil.getKoreanDayAndHour(time)
                   : DateUtil.getKoreanDayAndExactHour(time, hour),
               style: TextStyle(
