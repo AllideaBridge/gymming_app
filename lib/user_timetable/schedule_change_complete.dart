@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../common/colors.dart';
+import '../common/constants.dart';
 import '../common/utils/date_util.dart';
 import 'user_timetable.dart';
 
-class ScheduleChanged extends StatelessWidget {
-  const ScheduleChanged(
+class ScheduleChangeComplete extends StatelessWidget {
+  const ScheduleChangeComplete(
       {super.key,
+      required this.type,
       required this.originDay,
-      required this.selectedDay,
-      required this.selectedTime});
+      this.selectedDay,
+      this.selectedTime});
 
+  final String type;
   final DateTime originDay;
-  final DateTime selectedDay;
-  final String selectedTime;
+  final DateTime? selectedDay;
+  final String? selectedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class ScheduleChanged extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "운동 일정을\n변경 하였습니다.",
+                "운동 일정을\n$type하였습니다.",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -39,10 +42,17 @@ class ScheduleChanged extends StatelessWidget {
                   children: [
                     Image.asset('assets/change_compeleted.png'),
                     SizedBox(height: 80),
-                    buildTitleAndTime('변경 전', originDay, '', SECONDARY_COLOR),
-                    SizedBox(height: 40),
-                    buildTitleAndTime(
-                        '변경 후', selectedDay, selectedTime, Colors.white),
+                    buildTitleAndTime(type == CHANGE ? '변경 전' : '취소한 일정',
+                        originDay, '', SECONDARY_COLOR),
+                    Visibility(
+                      visible: type == CHANGE,
+                      child: SizedBox(height: 40),
+                    ),
+                    Visibility(
+                      visible: type == CHANGE,
+                      child: buildTitleAndTime(
+                          '변경 후', selectedDay!, selectedTime!, Colors.white),
+                    ),
                   ],
                 ),
               ),

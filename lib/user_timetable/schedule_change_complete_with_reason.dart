@@ -4,14 +4,14 @@ import 'package:gymming_app/user_timetable/user_timetable.dart';
 
 import '../common/utils/date_util.dart';
 
-class Proposal extends StatelessWidget {
+class ScheduleChangeCompleteWithReason extends StatelessWidget {
   final String type;
   final DateTime originDay;
   final DateTime selectedDay;
   final String selectedTime;
   final String reason;
 
-  const Proposal(
+  const ScheduleChangeCompleteWithReason(
       {super.key,
       required this.type,
       required this.originDay,

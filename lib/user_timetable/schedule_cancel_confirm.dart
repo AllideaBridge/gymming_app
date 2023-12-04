@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/user_timetable/model/schedule_info.dart';
 import 'package:gymming_app/user_timetable/reason.dart';
-import 'package:gymming_app/user_timetable/schedule_canceled.dart';
-import 'package:gymming_app/user_timetable/schedule_changed.dart';
+import 'package:gymming_app/user_timetable/schedule_change_complete.dart';
 
 import '../modal/model/reason_content.dart';
 import 'component/schedule_header.dart';
@@ -24,7 +23,7 @@ class ScheduleCancelConfirm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ScheduleHeader(type:CANCEL),
+              ScheduleHeader(type: CANCEL),
               Text(
                 '운동 일정을\n취소하시겠습니까?',
                 style: TextStyle(
@@ -123,31 +122,31 @@ class ScheduleCancelConfirm extends StatelessWidget {
                     onPressed: () {
                       DateTime now = DateTime.now();
                       int days = scheduleInfo.startTime
-                          .difference(
-                          DateTime(now.year, now.month, now.day))
+                          .difference(DateTime(now.year, now.month, now.day))
                           .inDays;
                       if (days >= scheduleInfo.remainDays) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ScheduleCanceled(lessontime: scheduleInfo.startTime)),
+                              builder: (context) => ScheduleChangeComplete(
+                                    type: CANCEL,
+                                    originDay: scheduleInfo.startTime,
+                                  )),
                         );
                       } else {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Reason(
-                                  reasonContent: ReasonContent(
-                                      cancelTitle,
-                                      cancelSubTitle,
-                                      changeReasons),
-                                  originDay: scheduleInfo.startTime,
-                                  selectedDay: scheduleInfo.startTime,
-                                  selectedTime: '${scheduleInfo.startTime.hour}:00',
-                                  type: CANCEL,
-                                )));
+                                      reasonContent: ReasonContent(cancelTitle,
+                                          cancelSubTitle, changeReasons),
+                                      originDay: scheduleInfo.startTime,
+                                      selectedDay: scheduleInfo.startTime,
+                                      selectedTime:
+                                          '${scheduleInfo.startTime.hour}:00',
+                                      type: CANCEL,
+                                    )));
                       }
-
                     },
                     child: Text('취소하기'),
                     style: ElevatedButton.styleFrom(primary: Colors.grey),

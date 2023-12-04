@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
-import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/modal/model/reason_content.dart';
 import 'package:gymming_app/user_timetable/component/schedule_header.dart';
-import 'package:gymming_app/user_timetable/proposal.dart';
+import 'package:gymming_app/user_timetable/schedule_change_complete_with_reason.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
@@ -131,8 +130,9 @@ class ReasonState extends State<Reason> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Proposal(
-                                type: widget.type,
+                              builder: (context) =>
+                                  ScheduleChangeCompleteWithReason(
+                                    type: widget.type,
                                     originDay: widget.originDay,
                                     selectedDay: widget.selectedDay,
                                     selectedTime: widget.selectedTime,

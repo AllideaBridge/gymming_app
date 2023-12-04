@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
-import 'package:gymming_app/common/constants.dart';
-import 'package:gymming_app/modal/model/reason_content.dart';
-import 'package:gymming_app/user_timetable/reason.dart';
-import 'package:gymming_app/user_timetable/schedule_changed.dart';
 import 'package:gymming_app/user_timetable/model/schedule_info.dart';
 import 'package:provider/provider.dart';
 
@@ -92,7 +88,9 @@ class ScheduleClicked extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ScheduleCancelConfirm(scheduleInfo:scheduleInfo)),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ScheduleCancelConfirm(scheduleInfo: scheduleInfo)),
                   );
                 },
                 child: Text(
@@ -109,15 +107,12 @@ class ScheduleClicked extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed:() {
+                onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ScheduleChange(
-                                originDay: Provider.of<
-                                    StateDateTime>(
-                                    context)
+                          builder: (context) => ScheduleChange(
+                                originDay: Provider.of<StateDateTime>(context)
                                     .selectedDateTime,
                                 scheduleInfo: scheduleInfo,
                               )));

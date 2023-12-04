@@ -3,7 +3,7 @@ import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/user_timetable/component/calendar_modal.dart';
 import 'package:gymming_app/user_timetable/component/schedule_header.dart';
 import 'package:gymming_app/user_timetable/component/time_modal.dart';
-import 'package:gymming_app/user_timetable/schedule_changed.dart';
+import 'package:gymming_app/user_timetable/schedule_change_complete.dart';
 
 import '../common/constants.dart';
 import '../modal/model/reason_content.dart';
@@ -80,7 +80,9 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ScheduleChanged(
+                                    builder: (context) =>
+                                        ScheduleChangeComplete(
+                                          type: CHANGE,
                                           originDay:
                                               widget.scheduleInfo.startTime,
                                           selectedDay: _selectedDay,
