@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/user_timetable/component/calendar_modal.dart';
 import 'package:gymming_app/user_timetable/component/schedule_header.dart';
-import 'package:gymming_app/user_timetable/schedule_changed.dart';
 import 'package:gymming_app/user_timetable/component/time_modal.dart';
+import 'package:gymming_app/user_timetable/schedule_change_complete.dart';
 
 import '../common/constants.dart';
 import '../modal/model/reason_content.dart';
-import 'reason.dart';
 import 'model/schedule_info.dart';
+import 'reason.dart';
 
 class ScheduleChange extends StatefulWidget {
   const ScheduleChange(
@@ -48,29 +48,24 @@ class _ScheduleChangeState extends State<ScheduleChange> {
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.all(20),
-            color: BACKGROUND_COLOR,
             child: Column(
               children: [
                 ScheduleHeader(type: CHANGE),
-                const SizedBox(
-                  height: 40,
-                ),
                 CalendarModal(
                   originDay: widget.originDay,
                   changeSelectedDay: _changeSelectedDay,
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 10,
                 ),
-                TimeModal(
-                    selectedDay: _selectedDay,
-                    changeSelectedTime: _changeSelectedTime),
-                const SizedBox(
-                  height: 40,
+                Expanded(
+                  child: TimeModal(
+                      selectedDay: _selectedDay,
+                      changeSelectedTime: _changeSelectedTime),
                 ),
                 SizedBox(
-                  width: 350, // 원하는 가로 크기
-                  height: 56, // 원하는 세로 크기
+                  width: 350,
+                  height: 56,
                   child: ElevatedButton(
                     onPressed: _selectedTime.isEmpty
                         ? null
@@ -84,9 +79,14 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ScheduleChanged(
-                                        beforeTime: DateTime.now(),
-                                        afterTime: DateTime.now())),
+                                    builder: (context) =>
+                                        ScheduleChangeComplete(
+                                          type: CHANGE,
+                                          originDay:
+                                              widget.scheduleInfo.startTime,
+                                          selectedDay: _selectedDay,
+                                          selectedTime: _selectedTime,
+                                        )),
                               );
                             } else {
                               Navigator.push(
@@ -97,10 +97,11 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                                                 changeTitle,
                                                 changeSubTitle,
                                                 changeReasons),
-                                            originDay: widget.originDay,
+                                            originDay:
+                                                widget.scheduleInfo.startTime,
                                             selectedDay: _selectedDay,
                                             selectedTime: _selectedTime,
-                                        type: CHANGE,
+                                            type: CHANGE,
                                           )));
                             }
                           },
@@ -122,7 +123,10 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                       ),
                     ),
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
               ],
             ),
           ),

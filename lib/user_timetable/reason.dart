@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/common/colors.dart';
-import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/modal/model/reason_content.dart';
 import 'package:gymming_app/user_timetable/component/schedule_header.dart';
-import 'package:gymming_app/user_timetable/proposal.dart';
+
+import '../common/colors.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
@@ -39,116 +38,140 @@ class ReasonState extends State<Reason> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // extendBody: true,
+      extendBody: true,
       body: SafeArea(
         child: Container(
-          color: BACKGROUND_COLOR,
-          constraints: BoxConstraints.expand(),
-          padding: EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ScheduleHeader(type: widget.type),
-                Text(widget.reasonContent.title,
-                    style: TextStyle(fontSize: 20, color: Colors.white)),
-                Text(widget.reasonContent.subtitle,
-                    style: TextStyle(fontSize: 15, color: Colors.white)),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isOpen = !isOpen;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(5),
-                        color: BORDER_COLOR),
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(widget.reasonContent.reasons[clicked],
-                                style: TextStyle(color: Colors.white)),
-                            Icon(
-                              isOpen
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                        if (isOpen) ...[
-                          Divider(),
-                          ...widget.reasonContent.reasons
-                              .asMap()
-                              .entries
-                              .map((e) {
-                            var idx = e.key;
-                            var reason = e.value;
-
-                            return TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  clicked = idx;
-                                  isOpen = !isOpen;
-                                });
-                                print(clicked);
-                              },
-                              child: Text(reason),
-                            );
-                          }).toList(),
-                        ],
-                      ],
-                    ),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              ScheduleHeader(type: widget.type),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(vertical: 40, horizontal: 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.reasonContent.title,
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 12),
+                    Text(widget.reasonContent.subtitle,
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isOpen = !isOpen;
+                  });
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: BRIGHT_SECONDARY_COLOR),
+                      borderRadius: BorderRadius.circular(4),
+                      color: BTN_COLOR),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(widget.reasonContent.reasons[clicked],
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      isOpen
+                          ? Image.asset('assets/icon_nav_arrow_up.png',
+                              width: 20, height: 20)
+                          : Image.asset('assets/icon_nav_arrow_down.png',
+                              width: 20, height: 20),
+                    ],
                   ),
                 ),
-                if (clicked == 0)
-                  TextField(
-                    controller: textController,
-                    decoration: InputDecoration(
-                      hintText: '텍스트를 입력하세요',
-                      hintStyle: TextStyle(color: Colors.white),
-                      filled: true,
-                      fillColor: BORDER_COLOR,
-                      // 필요에 따라 배경색을 조절할 수 있습니다.
-                      border: OutlineInputBorder(),
-                    ),
-                    style: TextStyle(color: Colors.white),
+              ),
+              if (isOpen)
+                Container(
+                  height: 207,
+                  padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: BRIGHT_SECONDARY_COLOR),
+                      borderRadius: BorderRadius.circular(4),
+                      color: BTN_COLOR),
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    thickness: 4.0,
+                    radius: Radius.circular(10.0),
+                    child: ListView.builder(
+                        itemCount: widget.reasonContent.reasons.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                clicked = index;
+                                isOpen = !isOpen;
+                              });
+                            },
+                            child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 0),
+                                child: Text(widget.reasonContent.reasons[index],
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white))),
+                          );
+                        }),
                   ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: SECONDARY_COLOR, // Right Button Color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                ),
+              if (clicked == 0)
+                Container(
+                  margin: EdgeInsets.only(top: 12),
+                  height: 180,
+                  child: TextField(
+                    controller: textController,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      hintText: '${widget.type}하시려는 사유를 입력해주세요.',
+                      hintStyle: TextStyle(fontSize: 16, color: Colors.white),
+                      filled: true,
+                      fillColor: BTN_COLOR,
+                      counterText: '${textController.text.length} / 100',
+                      counterStyle:
+                          TextStyle(fontSize: 12, color: Colors.white),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Proposal(
-                                type: widget.type,
-                                    originDay: widget.originDay,
-                                    selectedDay: widget.selectedDay,
-                                    selectedTime: widget.selectedTime,
-                                    reason: clicked == 0
-                                        ? textController.text
-                                        : widget.reasonContent.reasons[clicked],
-                                  )));
-                    },
-                    child: Text(
-                      "확인",
-                      style: TextStyle(
-                        color: Colors.greenAccent,
-                      ),
-                    ))
-              ],
-            ),
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+              //       ElevatedButton(
+              //           style: ElevatedButton.styleFrom(
+              //             backgroundColor: SECONDARY_COLOR,
+              //             // Right Button Color
+              //             shape: RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(5),
+              //             ),
+              //           ),
+              //           onPressed: () {
+              //             Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) =>
+              //                         ScheduleChangeCompleteWithReason(
+              //                           type: widget.type,
+              //                           originDay: widget.originDay,
+              //                           selectedDay: widget.selectedDay,
+              //                           selectedTime: widget.selectedTime,
+              //                           reason: clicked == 0
+              //                               ? textController.text
+              //                               : widget
+              //                                   .reasonContent.reasons[clicked],
+              //                         )));
+              //           },
+              //           child: Text(
+              //             "확인",
+              //             style: TextStyle(
+              //               color: Colors.greenAccent,
+              //             ),
+              //           )
+            ],
           ),
         ),
       ),
