@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/user_request/request.dart';
+import 'package:gymming_app/common/component/request.dart';
 import 'package:gymming_app/explore/explore_main.dart';
+import 'package:gymming_app/trainer_timetable/tainer_timetable.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
 import 'package:gymming_app/user_timetable/component/schedule_list.dart';
+
+import '../user_request/component/completed_list.dart';
+import '../user_request/component/response_waiting_list.dart';
 
 class UserTimeTable extends StatelessWidget {
   const UserTimeTable({Key? key}) : super(key: key);
@@ -41,7 +45,7 @@ class UserTimeTable extends StatelessWidget {
             ListTile(
               title: Text('요청'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Request()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Request(title: "요청 목록", leftTabName: "응답 대기", rightTabName: "완료", leftComponent: ResponseWaitingList(), rightComponent: CompletedList(),)));
               },
             ),
             ListTile(
@@ -59,7 +63,9 @@ class UserTimeTable extends StatelessWidget {
         children: [Calendar(), ScheduleList()],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TrainerTimeTable()));
+        },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
       ),
