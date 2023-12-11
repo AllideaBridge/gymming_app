@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/user_timetable/user_timetable.dart';
+
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../common/constants.dart';
-import '../state/state_date_time.dart';
+import '../common/component/request.dart';
+import '../user_management/user_management_list.dart';
 
 class TrainerTimeTable extends StatefulWidget {
   const TrainerTimeTable({Key? key}) : super(key: key);
@@ -14,45 +16,24 @@ class TrainerTimeTable extends StatefulWidget {
 }
 
 class _TrainerTimeTableState extends State<TrainerTimeTable> {
+  late int diffFromNow;
+  late DateTime nowFocusedDate;
+
+  bool needFocus = false;
+  late int focusIdx;
+
+  @override
+  void initState() {
+    super.initState();
+    diffFromNow = 0;
+    nowFocusedDate = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
-    int year = Provider.of<StateDateTime>(context).selectedDateTime.year;
-    int month = Provider.of<StateDateTime>(context).selectedDateTime.month;
-    // int dayOfSunday = Provider.of<StateDateTime>(context).selectedDateTime.dayOfSunday;
+    double hourComponentHeight = 48;
 
-    var lastDayOfMonth = year % 4 == 0 ? leapYear : notLeapYear;
-    var monthArr = [];
-    var dayArr = [];
-
-    // for (int i = 0; i < 7; i++) {
-    //   if (dayOfSunday + i > lastDayOfMonth[month - 1]) {
-    //     monthArr.add(month + 1);
-    //     dayArr.add(dayOfSunday + i - lastDayOfMonth[month - 1]);
-    //   } else {
-    //     monthArr.add(month);
-    //     dayArr.add(dayOfSunday + i);
-    //   }
-    // }
-
-    // return Container(
-    //   margin: EdgeInsets.only(bottom: 80),
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //     children: [
-    //       ScheduleDay(month: monthArr[0], day: dayArr[0], dayOfWeek: "SUN"),
-    //       ScheduleDay(month: monthArr[1], day: dayArr[1], dayOfWeek: "MON"),
-    //       ScheduleDay(month: monthArr[2], day: dayArr[2], dayOfWeek: "TUE"),
-    //       ScheduleDay(month: monthArr[3], day: dayArr[3], dayOfWeek: "WED"),
-    //       ScheduleDay(month: monthArr[4], day: dayArr[4], dayOfWeek: "THR"),
-    //       ScheduleDay(month: monthArr[5], day: dayArr[5], dayOfWeek: "FRI"),
-    //       ScheduleDay(month: monthArr[6], day: dayArr[6], dayOfWeek: "SAT")
-    //     ],
-    //   ),
-    // );
-    double gap = (MediaQuery.of(context).size.width - 64) / 7;
-    print(Provider.of<StateDateTime>(context).selectedDateTime.weekday);
-    print(gap);
+    // 이름, 시작, 종료 시간, 요일
 
     return Scaffold(
       appBar: AppBar(
@@ -71,50 +52,86 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
         ],
         backgroundColor: Colors.black,
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+          child: ListView(
+        // 주요 내비게이션 항목들
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Drawer Header'),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+          ),
+          ListTile(
+            title: Text('회원 관리'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Request(
+                            title: "회원 관리",
+                            leftTabName: "현재 등록 회원",
+                            rightTabName: "이전 등록 회원",
+                            leftComponent: UserManagementList(),
+                            rightComponent: UserManagementList(),
+                          )));
+            },
+          ),
+          ListTile(
+            title: Text('Item 2'),
+            onTap: () {
+              // 다른 작업
+              Navigator.pop(context); // 드로어를 닫습니다.
+            },
+          ),
+          // ... 다른 리스트 타일 항목들 ...
+        ],
+      )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Stack(
           children: [
-            Positioned(
-                // left: 10,
-                child: Opacity(
-                  opacity: 0.5,
-                  child: Container(
-                    margin: EdgeInsets.only(left: (50* (Provider.of<StateDateTime>(context).selectedDateTime.weekday%7) + 22), top: 22),
-                    width: 46,
-                    decoration: BoxDecoration(
-                      color: Colors.grey, // 컨테이너의 배경 색상
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25.0), // 왼쪽 상단 모서리 둥글게
-                        topRight: Radius.circular(25.0), // 오른쪽 상단 모서리 둥글게
-                      ),
+            if (diffFromNow == 0)
+              Positioned(
+                  child: Opacity(
+                opacity: 0.5,
+                child: Container(
+                  margin: EdgeInsets.only(
+                      left: (50 * (DateTime.now().weekday % 7) + 22), top: 20),
+                  width: 46,
+                  decoration: BoxDecoration(
+                    color: Colors.grey, // 컨테이너의 배경 색상
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0), // 왼쪽 상단 모서리 둥글게
+                      topRight: Radius.circular(25.0), // 오른쪽 상단 모서리 둥글게
                     ),
-                    // color: Colors.grey,
                   ),
-                )),
+                  // color: Colors.grey,
+                ),
+              )),
             Column(
               children: [
                 _calendar(context),
                 SizedBox(
-                  height: 20,
+                  height: SIZE20,
                 ),
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: 25,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Stack(
+                  child: Stack(
+                    children: [
+                      ListView.builder(
+                          itemCount: 25,
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              clipBehavior: Clip.none,
                               children: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
                                       width: 20,
-                                      height: 48,
+                                      height: hourComponentHeight,
                                       child: Align(
-                                        alignment: Alignment.center,
+                                        alignment: Alignment.topCenter,
                                         child: Text(
                                           '$index',
                                           style: TextStyle(
@@ -123,12 +140,12 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
                                         ),
                                       ),
                                     ),
-                                    // SizedBox(
-                                    //   width: 8,
-                                    // ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Expanded(
                                       child: Container(
-                                        // margin: EdgeInsets.only(right: 28),
+                                        margin: EdgeInsets.only(top: 8),
                                         height: 1.0, // 줄의 두께
                                         color: Colors.grey, // 줄의 색상
                                         // 다른 Container 설정
@@ -136,31 +153,99 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
                                     )
                                   ],
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    left: 20,
-                                    // right: 24,
-                                    child: Row(
-                                      children: List.generate(
-                                          7,
-                                          (index) => Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 5.0, right: 5.0, top: 2, bottom: 2),
-                                                height: 44,
-                                                width: 40,
-                                                color: Color(0xFFCDFB60),
-                                              )),
-                                    ))
+                                if (index == 2)
+                                  Column(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 30.0, right: 5.0),
+                                        height: 60,
+                                        width: 40,
+                                        // color: Color(0xFFCDFB60),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFCDFB60),
+                                        ),
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              print("haha");
+                                            },
+                                            child: Text("PT")),
+                                      )
+                                    ],
+                                  ),
+                                // if (index == 2)
+                                //   Positioned(
+                                //       top: -42,
+                                //       left: 20,
+                                //       // right: 24,
+                                //       child: Container(
+                                //         margin: EdgeInsets.only(
+                                //             left: 5.0, right: 5.0),
+                                //         height: 72,
+                                //         width: 40,
+                                //         // color: Color(0xFFCDFB60),
+                                //         decoration: BoxDecoration(
+                                //           color: Color(0xFFCDFB60),
+                                //         ),
+                                //         child: GestureDetector(
+                                //             onTap: () {
+                                //               print("haha");
+                                //             },
+                                //             child: Text("PT")),
+                                //       )),
+                                if (diffFromNow == 0 &&
+                                    DateTime.now()
+                                            .add(Duration(hours: 9))
+                                            .hour ==
+                                        index)
+                                  Positioned(
+                                      top: 8 +
+                                          (DateTime.now().minute / 60.0) *
+                                              hourComponentHeight,
+                                      left: 50 * (DateTime.now().weekday % 7) +
+                                          22,
+                                      child: Container(
+                                        width: 45,
+                                        height: 4,
+                                        color: Colors.white,
+                                      )),
                               ],
-                            ),
-                          ],
-                        );
-                      }),
+                            );
+                          }),
+                      // ListView.builder(
+                      //     itemCount: 2,
+                      //     itemBuilder:(context, index) {
+                      //   return Container(
+                      //     width: 0,
+                      //     height: 10,
+                      //     color: Color(0xFFCDFB60),
+                      //   );
+                      // })
+                      // Positioned(
+                      //     child: Container(
+                      //   margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                      //   height: 48,
+                      //   width: 40,
+                      //   // color: Color(0xFFCDFB60),
+                      //   decoration: BoxDecoration(
+                      //     color: Color(0xFFCDFB60),
+                      //   ),
+                      // ))
+                    ],
+                  ),
                 )
               ],
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => UserTimeTable()));
+        },
+        backgroundColor: Colors.white54,
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -169,51 +254,47 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
       child: TableCalendar(
-          focusedDay: Provider.of<StateDateTime>(context).selectedDateTime,
-          firstDay: DateTime(1800),
-          lastDay: DateTime(3000),
-          daysOfWeekStyle: DaysOfWeekStyle(
-            weekdayStyle: TextStyle(color: Colors.transparent),
-            weekendStyle: TextStyle(color: Colors.transparent),
-          ),
-          calendarFormat: CalendarFormat.week,
-          // calendarStyle: const CalendarStyle(
-          //     tablePadding: EdgeInsets.symmetric(horizontal: 32.0)),
-          headerVisible: false,
-          calendarBuilders: CalendarBuilders(
-            todayBuilder: _isSameDate(
-                    Provider.of<StateDateTime>(context).selectedDateTime,
-                    DateTime.now())
-                ? _selectedDayBuilder
-                : _defaultDayBuilder,
+        onPageChanged: (DateTime focusedDay) {
+          print("${focusedDay.month}/${focusedDay.day}");
+          setState(() {
+            // 과거, 미래
+            nowFocusedDate.difference(focusedDay).inDays > 0
+                ? diffFromNow--
+                : diffFromNow++;
+            nowFocusedDate = focusedDay;
+          });
+        },
+        focusedDay: DateTime.now().add(Duration(days: 7 * diffFromNow)),
+        firstDay: DateTime(1800),
+        lastDay: DateTime(3000),
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: TextStyle(color: Colors.transparent),
+          weekendStyle: TextStyle(color: Colors.transparent),
+        ),
+        calendarFormat: CalendarFormat.week,
+        headerVisible: false,
+        calendarBuilders: CalendarBuilders(
+            todayBuilder: _todayBuilder,
             defaultBuilder: _defaultDayBuilder,
-            selectedBuilder: _selectedDayBuilder,
-          ),
-          onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-            Provider.of<StateDateTime>(context, listen: false)
-                .changeStateDate(selectedDay);
-          },
-          selectedDayPredicate: (DateTime day) =>
-              Provider.of<StateDateTime>(context).selectedDateTime.year ==
-                  day.year &&
-              Provider.of<StateDateTime>(context).selectedDateTime.month ==
-                  day.month &&
-              Provider.of<StateDateTime>(context).selectedDateTime.day ==
-                  day.day),
+            outsideBuilder: _defaultDayBuilder),
+      ),
     );
   }
 
-  bool _isSameDate(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
-  }
+  Widget _todayBuilder(BuildContext context, DateTime day, focusedDay) {
+    print("todayBuilder");
+    // Future.delayed(Duration.zero, () {
+    //   setState(() {
+    //     needFocus = true;
+    //   });
+    // });
 
-  Widget _selectedDayBuilder(context, day, focusedDay) {
+    needFocus = true;
+    focusIdx = day.weekday;
     return Container(
       // margin: EdgeInsets.only(left: 2, right: 2),
-      width: 45,
-      height: 45,
+      width: SIZE45,
+      height: SIZE45,
       decoration: BoxDecoration(
         // color: Colors.white.withOpacity(0.6), shape: BoxShape.circle
         color: Colors.transparent, // 배경색은 투명하게
@@ -243,10 +324,10 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
     );
   }
 
-  Widget _defaultDayBuilder(context, day, focusedDay) {
+  Widget _defaultDayBuilder(BuildContext context, DateTime day, focusedDay) {
     return Container(
-      width: 45,
-      height: 45,
+      width: SIZE45,
+      height: SIZE45,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

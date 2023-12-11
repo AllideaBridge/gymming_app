@@ -5,6 +5,12 @@ class DateUtil {
     return year % 4 == 0 ? leapYear : notLeapYear;
   }
 
+  static bool isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
   static String getKoreanWeekDay(DateTime day) {
     List<String> weekDays = ['일', '월', '화', '수', '목', '금', '토'];
     return weekDays[day.weekday];
