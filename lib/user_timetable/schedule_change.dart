@@ -48,7 +48,6 @@ class _ScheduleChangeState extends State<ScheduleChange> {
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.all(20),
-            color: BACKGROUND_COLOR,
             child: Column(
               children: [
                 ScheduleHeader(type: CHANGE),
