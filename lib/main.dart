@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
             scaffoldBackgroundColor: Colors.black, fontFamily: 'Pretendard'),
-         home: const UserTimeTable(),
+        home: const UserTimeTable(),
         // home: const TrainerTimeTable(),
       ),
     );
