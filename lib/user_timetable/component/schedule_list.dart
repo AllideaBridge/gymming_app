@@ -14,15 +14,18 @@ class ScheduleList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<ScheduleInfo> schedules = List.generate(
         3,
-        (index) => ScheduleInfo(
-            DateTime.now(), DateTime.now(), "PT", "김헬스", "GYMMING", "방이동", index));
+        (index) => ScheduleInfo(DateTime.now(), DateTime.now(), "PT", "김헬스",
+            "GYMMING", "방이동", index));
 
     return Expanded(
       child: Container(
-        margin: EdgeInsets.only(top: 20),
-        color: BACKGROUND_COLOR,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          color: BACKGROUND_COLOR,
+        ),
+        margin: EdgeInsets.only(top: 54),
         child: Container(
-          margin: EdgeInsets.only(top: 20, left: 15, right: 15),
+          padding: EdgeInsets.fromLTRB(20, 32, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,42 +33,25 @@ class ScheduleList extends StatelessWidget {
                 "오늘은\n${Provider.of<StateDateTime>(context).selectedDateTime.month}월 ${Provider.of<StateDateTime>(context).selectedDateTime.day}일",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                    fontSize: 24,
+                    fontWeight: FontWeight.normal),
               ),
+              SizedBox(width: 28, height: 28),
               Expanded(
                 child: ListView(
                   shrinkWrap: true,
                   children: schedules
                       .map((schedule) => GestureDetector(
                             onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(500))),
-                                  builder: (BuildContext context) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),    // 왼쪽 상단 모서리
-                                        topRight: Radius.circular(20),   // 오른쪽 상단 모서리
-                                      ),
-                                      child: Scaffold(
-                                        body: Container(
-                                          decoration: BoxDecoration(
-                                              color: Color(0xff2d2d2d),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(50),
-                                                topRight: Radius.circular(25),
-                                              )),
-                                          child: ScheduleClicked(
-                                              scheduleInfo: schedule),
-                                        ),
-                                      ),
-                                    );
-                                  });
+                              showScheduleBottomSheet(context, schedule);
                             },
-                            child: ScheduleItem(scheduleInfo: schedule),
+                            child: Column(
+                              children: [
+                                ScheduleItem(scheduleInfo: schedule),
+                                SizedBox(width: 28, height: 28),
+                              ],
+                            )
+
                           ))
                       .toList(),
                 ),
@@ -75,5 +61,35 @@ class ScheduleList extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showScheduleBottomSheet(BuildContext context, ScheduleInfo schedule) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(500))),
+        builder: (BuildContext context) {
+          return ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft:
+                  Radius.circular(20), // 왼쪽 상단 모서리
+              topRight:
+                  Radius.circular(20), // 오른쪽 상단 모서리
+            ),
+            child: Scaffold(
+              body: Container(
+                decoration: BoxDecoration(
+                    color: Color(0xff2d2d2d),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(25),
+                    )),
+                child: ScheduleClicked(
+                    scheduleInfo: schedule),
+              ),
+            ),
+          );
+        });
   }
 }
