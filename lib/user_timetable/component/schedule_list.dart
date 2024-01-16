@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
 import 'package:gymming_app/modal/schedule_clicked.dart';
 import 'package:gymming_app/user_timetable/component/schedule_item.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
@@ -29,12 +30,11 @@ class ScheduleList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "오늘은\n${Provider.of<StateDateTime>(context).selectedDateTime.month}월 ${Provider.of<StateDateTime>(context).selectedDateTime.day}일",
+              Text(getScheduleListTitleString(context),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
-                    fontWeight: FontWeight.normal),
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(width: 28, height: 28),
               Expanded(
@@ -91,5 +91,11 @@ class ScheduleList extends StatelessWidget {
             ),
           );
         });
+  }
+
+  String getScheduleListTitleString(BuildContext context) {
+    var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
+    String yoil = DateFormat('E', 'ko_KR').format(selectedDateTime);
+    return  "오늘은\n${selectedDateTime.month}월 ${selectedDateTime.day}일 ${yoil}요일";
   }
 }
