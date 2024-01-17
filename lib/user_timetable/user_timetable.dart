@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/component/request.dart';
 import 'package:gymming_app/explore/explore_main.dart';
-import 'package:gymming_app/trainer_timetable/tainer_timetable.dart';
+import 'package:gymming_app/trainer_timetable/trainer_timetable.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
 import 'package:gymming_app/user_timetable/component/schedule_list.dart';
 
@@ -45,14 +45,23 @@ class UserTimeTable extends StatelessWidget {
             ListTile(
               title: Text('요청'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Request(title: "요청 목록", leftTabName: "응답 대기", rightTabName: "완료", leftComponent: ResponseWaitingList(), rightComponent: CompletedList(),)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Request(
+                              title: "요청 목록",
+                              leftTabName: "응답 대기",
+                              rightTabName: "완료",
+                              leftComponent: ResponseWaitingList(),
+                              rightComponent: CompletedList(),
+                            )));
               },
             ),
             ListTile(
               title: Text('Item 2'),
               onTap: () {
                 // 다른 작업
-                Navigator.pop(context);  // 드로어를 닫습니다.
+                Navigator.pop(context); // 드로어를 닫습니다.
               },
             ),
             // ... 다른 리스트 타일 항목들 ...
@@ -64,7 +73,8 @@ class UserTimeTable extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TrainerTimeTable()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => TrainerTimeTable()));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
