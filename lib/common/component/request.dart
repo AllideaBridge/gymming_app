@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../user_request/component/completed_list.dart';
-import '../../user_request/component/response_waiting_list.dart';
+import 'common_header.dart';
 
 class Request extends StatelessWidget {
   const Request(
@@ -20,29 +19,36 @@ class Request extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              tabs: [
-                Tab(text: leftTabName),
-                Tab(text: rightTabName),
-              ],
+    return Scaffold(
+      extendBody: true,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CommonHeader(title: title),
+            DefaultTabController(
+              length: 2,
+              child: Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 37,
+                      child: TabBar(
+                        tabs: [
+                          Tab(text: leftTabName),
+                          Tab(text: rightTabName),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [leftComponent, rightComponent],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-            title: Text(title),
-            centerTitle: true,
-            backgroundColor: Colors.black,
-          ),
-          body: TabBarView(
-            children: [
-              // 응답 대기 탭 컨텐츠
-              leftComponent,
-              // 완료 탭 컨텐츠
-              rightComponent,
-            ],
-          ),
+          ],
         ),
       ),
     );

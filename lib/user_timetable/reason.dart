@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/modal/model/reason_content.dart';
-import 'package:gymming_app/user_timetable/component/schedule_header.dart';
 import 'package:gymming_app/user_timetable/schedule_change_complete_with_reason.dart';
 
 import '../common/colors.dart';
@@ -58,7 +58,7 @@ class ReasonState extends State<Reason> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              ScheduleHeader(type: widget.type),
+              CommonHeader(title: '일정 ${widget.type}'),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 40, horizontal: 0),

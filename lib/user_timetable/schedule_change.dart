@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/user_timetable/component/calendar_modal.dart';
-import 'package:gymming_app/user_timetable/component/schedule_header.dart';
 import 'package:gymming_app/user_timetable/component/time_modal.dart';
 import 'package:gymming_app/user_timetable/schedule_change_complete.dart';
 
@@ -50,7 +50,7 @@ class _ScheduleChangeState extends State<ScheduleChange> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                ScheduleHeader(type: CHANGE),
+                CommonHeader(title: '일정 $CHANGE'),
                 CalendarModal(
                   originDay: widget.originDay,
                   changeSelectedDay: _changeSelectedDay,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ScheduleHeader extends StatelessWidget {
-  final String type;
+class CommonHeader extends StatelessWidget {
+  final String title;
 
-  const ScheduleHeader({super.key, required this.type});
+  const CommonHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ScheduleHeader extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
-      Text('일정 $type',
+      Text(title,
           style: TextStyle(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
       const SizedBox(
