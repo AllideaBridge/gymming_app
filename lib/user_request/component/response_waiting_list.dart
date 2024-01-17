@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/constants.dart';
+import 'package:gymming_app/repositories/request_repository.dart';
 import 'package:gymming_app/user_request/request_detail.dart';
 
+import '../../models/request_list.dart';
+
 class ResponseWaitingList extends StatelessWidget {
+  final List<RequestList> requestList = RequestRepository().getRequestList();
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: 20, // 임시 데이터의 수
-
+      itemCount: requestList.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RequestDetail(from: WAITING_LIST,)));
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RequestDetail(
+                          from: WAITING_LIST,
+                        )));
           },
           child: Card(
             color: Colors.black,
             child: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -32,7 +41,9 @@ class ResponseWaitingList extends StatelessWidget {
                                 color: Colors.green, // 초록색으로 채우기
                                 shape: BoxShape.circle, // 동그란 모양으로 설정
                               )),
-                          SizedBox(width: 8,),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Text('김민희',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,

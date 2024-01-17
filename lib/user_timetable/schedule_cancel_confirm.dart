@@ -5,9 +5,9 @@ import 'package:gymming_app/user_timetable/model/schedule_info.dart';
 import 'package:gymming_app/user_timetable/reason.dart';
 import 'package:gymming_app/user_timetable/schedule_change_complete.dart';
 
+import '../common/component/common_header.dart';
 import '../common/utils/date_util.dart';
 import '../modal/model/reason_content.dart';
-import 'component/schedule_header.dart';
 
 class ScheduleCancelConfirm extends StatelessWidget {
   final ScheduleInfo scheduleInfo;
@@ -23,7 +23,7 @@ class ScheduleCancelConfirm extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              ScheduleHeader(type: CANCEL),
+              CommonHeader(title: '일정 $CANCEL'),
               Expanded(
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 40, horizontal: 0),
