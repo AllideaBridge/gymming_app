@@ -30,7 +30,8 @@ class ScheduleList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(getScheduleListTitleString(context),
+              Text(
+                getScheduleListTitleString(context),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -42,17 +43,15 @@ class ScheduleList extends StatelessWidget {
                   shrinkWrap: true,
                   children: schedules
                       .map((schedule) => GestureDetector(
-                            onTap: () {
-                              showScheduleBottomSheet(context, schedule);
-                            },
-                            child: Column(
-                              children: [
-                                ScheduleItem(scheduleInfo: schedule),
-                                SizedBox(width: 28, height: 28),
-                              ],
-                            )
-
-                          ))
+                          onTap: () {
+                            showScheduleBottomSheet(context, schedule);
+                          },
+                          child: Column(
+                            children: [
+                              ScheduleItem(scheduleInfo: schedule),
+                              SizedBox(width: 28, height: 28),
+                            ],
+                          )))
                       .toList(),
                 ),
               )
@@ -66,29 +65,12 @@ class ScheduleList extends StatelessWidget {
   void showScheduleBottomSheet(BuildContext context, ScheduleInfo schedule) {
     showModalBottomSheet(
         context: context,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(500))),
         builder: (BuildContext context) {
-          return ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft:
-                  Radius.circular(20), // 왼쪽 상단 모서리
-              topRight:
-                  Radius.circular(20), // 오른쪽 상단 모서리
-            ),
-            child: Scaffold(
-              body: Container(
-                decoration: BoxDecoration(
-                    color: Color(0xff2d2d2d),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(25),
-                    )),
-                child: ScheduleClicked(
-                    scheduleInfo: schedule),
-              ),
-            ),
+          return Container(
+            height: 407,
+            child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                child: ScheduleClicked(scheduleInfo: schedule)),
           );
         });
   }
@@ -96,6 +78,6 @@ class ScheduleList extends StatelessWidget {
   String getScheduleListTitleString(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
     String yoil = DateFormat('E', 'ko_KR').format(selectedDateTime);
-    return  "오늘은\n${selectedDateTime.month}월 ${selectedDateTime.day}일 ${yoil}요일";
+    return "오늘은\n${selectedDateTime.month}월 ${selectedDateTime.day}일 ${yoil}요일";
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/common/utils/date_util.dart';
 import 'package:gymming_app/user_timetable/model/schedule_info.dart';
 import 'package:provider/provider.dart';
 
@@ -10,124 +11,137 @@ import '../user_timetable/schedule_change.dart';
 class ScheduleClicked extends StatelessWidget {
   final ScheduleInfo scheduleInfo;
 
-  ScheduleClicked({
-    Key? key,
-    required this.scheduleInfo,
-  }) : super(key: key);
+  const ScheduleClicked({super.key, required this.scheduleInfo});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: BORDER_COLOR,
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.fromLTRB(20, 32, 20, 40),
       child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "알림",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
+          clickedScheduleItem(Icons.alarm, "일시",
+              DateUtil.getKoreanDayAndHour(scheduleInfo.startTime)),
+          SizedBox(
+            height: 40,
           ),
-          SizedBox(height: 20),
-          Text(
-            "${scheduleInfo.startTime}",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          clickedScheduleItem(
+            Icons.calendar_today_outlined,
+            "일정",
+            '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너',
           ),
-          SizedBox(height: 20),
-          Text(
-            "이전",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
+          SizedBox(
+            height: 40,
           ),
-          SizedBox(height: 10),
-          Text(
-            "${scheduleInfo.lessonName} | ${scheduleInfo.trainerName}",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          clickedScheduleItem(Icons.location_on, "장소",
+              '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}'),
+          SizedBox(
+            height: 40,
           ),
-          SizedBox(height: 10),
-          Text(
-            "장소",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            "${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Expanded(
+              child: Row(
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[700], // Left Button Color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ScheduleCancelConfirm(scheduleInfo: scheduleInfo)),
-                  );
-                },
-                child: Text(
+              secondaryButton(
                   "취소하기",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: SECONDARY_COLOR, // Right Button Color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ScheduleChange(
-                                originDay: Provider.of<StateDateTime>(context)
-                                    .selectedDateTime,
-                                scheduleInfo: scheduleInfo,
-                              )));
-                },
-                child: Text(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ScheduleCancelConfirm(scheduleInfo: scheduleInfo))),
+              SizedBox(width: 12),
+              primaryButton(
                   "변경하기",
-                  style: TextStyle(
-                    color: Colors.greenAccent,
-                  ),
-                ),
-              ),
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ScheduleChange(
+                            originDay: Provider.of<StateDateTime>(context)
+                                .selectedDateTime,
+                            scheduleInfo: scheduleInfo,
+                          ))),
             ],
-          )
+          ))
         ],
       ),
     );
+  }
+
+  Widget clickedScheduleItem(IconData iconData, String title, String content) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          iconData,
+          color: SECONDARY_COLOR,
+          size: 20,
+        ),
+        SizedBox(
+          width: 12,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(color: SECONDARY_COLOR, fontSize: 18),
+            ),
+            Text(
+              content,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget secondaryButton(
+      String title, BuildContext context, MaterialPageRoute route) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: BTN_COLOR,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            minimumSize: Size.fromHeight(56)),
+        onPressed: () {
+          Navigator.push(context, route);
+        },
+        child: Text(
+          title,
+          style: TextStyle(
+            color: PRIMARY_COLOR,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget primaryButton(
+      String title, BuildContext context, MaterialPageRoute route) {
+    return Expanded(
+        child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: PRIMARY_COLOR,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          minimumSize: Size.fromHeight(56)),
+      onPressed: () {
+        Navigator.push(context, route);
+      },
+      child: Text(
+        title,
+        style: TextStyle(
+          color: INDICATOR_COLOR,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ));
   }
 }
