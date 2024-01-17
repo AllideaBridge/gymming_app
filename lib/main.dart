@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
 import 'package:gymming_app/user_timetable/user_timetable.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting();
 
   KakaoSdk.init(nativeAppKey: '5103199f9fd8a213a6e369fd4e67ea2f');
 
