@@ -30,7 +30,8 @@ class IconLabel extends StatelessWidget {
         SizedBox(
           width: 12,
         ),
-        Column(
+        Flexible(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -45,7 +46,7 @@ class IconLabel extends StatelessWidget {
                   fontWeight: FontWeight.w500),
             )
           ],
-        )
+        ))
       ],
     );
   }

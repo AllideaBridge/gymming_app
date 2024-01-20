@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/common/component/common_header.dart';
+import 'package:gymming_app/common/component/icon_label.dart';
 
 import '../models/request_list.dart';
 
@@ -92,38 +93,90 @@ class RequestDetail extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 28, horizontal: 20),
                     child: Column(
                       children: [
-                        Container(
-                          color: Colors.white,
-                          height: 50,
-                        ),
+                        IconLabel(
+                            iconData: Icons.alarm,
+                            title: '변경 전',
+                            content: requestDetail.originDay,
+                            titleColor: SECONDARY_COLOR,
+                            contentColor: SECONDARY_COLOR),
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          color: Colors.white,
-                          height: 50,
-                        ),
+                        IconLabel(
+                            iconData: Icons.alarm,
+                            title: '변경 후',
+                            content: requestDetail.changeDay,
+                            titleColor: Colors.white,
+                            contentColor: Colors.white),
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          color: Colors.white,
-                          height: 50,
-                        ),
+                        IconLabel(
+                            iconData: Icons.message_outlined,
+                            title: '변경 사유',
+                            content: '잘못된 날을 선택하였습니다.',
+                            titleColor: Colors.white,
+                            contentColor: Colors.white),
                       ],
                     ))),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(onPressed: () {}, child: Text('거절')),
-                    ElevatedButton(onPressed: () {}, child: Text('승인')),
-                  ],
-                ))
+                child: SizedBox(
+                    height: 56,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        secondaryButton('거절'),
+                        SizedBox(width: 12),
+                        primaryButton('승인')
+                      ],
+                    )))
           ],
         ),
       ),
     );
+  }
+
+  Widget secondaryButton(String title) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: BTN_COLOR,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            minimumSize: Size(160, 56)),
+        onPressed: () {},
+        child: Text(
+          title,
+          style: TextStyle(
+            color: PRIMARY_COLOR,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget primaryButton(String title) {
+    return Expanded(
+        child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: PRIMARY_COLOR,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          minimumSize: Size(160, 56)),
+      onPressed: () {},
+      child: Text(
+        title,
+        style: TextStyle(
+          color: INDICATOR_COLOR,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ));
   }
 }
