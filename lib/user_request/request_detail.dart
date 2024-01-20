@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/common/component/icon_label.dart';
 
@@ -128,7 +129,10 @@ class RequestDetail extends StatelessWidget {
                       children: [
                         secondaryButton('거절'),
                         SizedBox(width: 12),
-                        primaryButton('승인')
+                        PrimaryButton(
+                          title: '승인',
+                          onPressed: () {},
+                        )
                       ],
                     )))
           ],
@@ -157,26 +161,5 @@ class RequestDetail extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget primaryButton(String title) {
-    return Expanded(
-        child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: PRIMARY_COLOR,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
-          minimumSize: Size(160, 56)),
-      onPressed: () {},
-      child: Text(
-        title,
-        style: TextStyle(
-          color: INDICATOR_COLOR,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ));
   }
 }
