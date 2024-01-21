@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/common/component/buttons/primary_button.dart';
+import 'package:gymming_app/common/component/buttons/secondary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/common/component/icon_label.dart';
 
 import '../models/request_list.dart';
 
-class RequestDetail extends StatelessWidget {
+class RequestDetail extends StatefulWidget {
   final String from;
 
   //dummy instance
@@ -20,7 +21,17 @@ class RequestDetail extends StatelessWidget {
   RequestDetail({super.key, required this.from});
 
   @override
+  _RequestDetailState createState() => _RequestDetailState();
+}
+
+class _RequestDetailState extends State<RequestDetail> {
+  bool _isCompleted = false;
+  bool _isAccepted = false;
+
+  @override
   Widget build(BuildContext context) {
+    RequestList requestDetail = widget.requestDetail;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -89,6 +100,47 @@ class RequestDetail extends StatelessWidget {
               color: BACKGROUND_COLOR,
               height: 6,
             ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 28, 20, 0),
+              child: Visibility(
+                  visible: _isCompleted,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Visibility(
+                          visible: _isAccepted,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: PRIMARY2_COLOR,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Text(
+                              '승인',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          )),
+                  Visibility(
+                    visible: !_isAccepted,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: BTN_COLOR,
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        child: Text(
+                          '거절',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                      ))
+                    ],
+                  )),
+            ),
             Expanded(
                 child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 28, horizontal: 20),
@@ -120,44 +172,36 @@ class RequestDetail extends StatelessWidget {
                             contentColor: Colors.white),
                       ],
                     ))),
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                child: SizedBox(
-                    height: 56,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        secondaryButton('거절'),
-                        SizedBox(width: 12),
-                        PrimaryButton(
-                          title: '승인',
-                          onPressed: () {},
-                        )
-                      ],
-                    )))
+            Visibility(
+                visible: !_isCompleted,
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                    child: SizedBox(
+                        height: 56,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SecondaryButton(
+                                title: '거절',
+                                onPressed: () {
+                                  setState(() {
+                                    _isCompleted = true;
+                                    _isAccepted = false;
+                                  });
+                                }),
+                            SizedBox(width: 12),
+                            PrimaryButton(
+                              title: '승인',
+                              onPressed: () {
+                                setState(() {
+                                  _isCompleted = true;
+                                  _isAccepted = true;
+                                });
+                              },
+                            )
+                          ],
+                        ))))
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget secondaryButton(String title) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: BTN_COLOR,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            minimumSize: Size(160, 56)),
-        onPressed: () {},
-        child: Text(
-          title,
-          style: TextStyle(
-            color: PRIMARY_COLOR,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
         ),
       ),
     );

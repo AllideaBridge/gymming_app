@@ -13,7 +13,7 @@ class DateUtil {
 
   static String getKoreanWeekDay(DateTime day) {
     List<String> weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-    return weekDays[day.weekday];
+    return weekDays[day.weekday % 7];
   }
 
   static String getKoreanDayAndHour(DateTime? day) {
