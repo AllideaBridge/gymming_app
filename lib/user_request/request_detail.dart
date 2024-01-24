@@ -4,19 +4,20 @@ import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/buttons/secondary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/common/component/icon_label.dart';
-
-import '../models/request_list.dart';
+import 'package:gymming_app/models/request_detail_dto.dart';
 
 class RequestDetail extends StatefulWidget {
   final String from;
 
   //dummy instance
-  final RequestList requestDetail = RequestList(
-      profileImg: 'img',
-      name: '김민희',
-      originDay: '8월 6일 목 09:00',
-      changeDay: '8월 7일 금 20:00',
-      requestDay: '23. 10. 08. 16:07 요청');
+  final RequestDetailDTO requestDetailDTO = RequestDetailDTO(
+      profileImg: "image",
+      name: "김민희",
+      originDay: "2023.10.23",
+      changeDay: "2023.10.24",
+      requestDay: "2023.10.23",
+      requestStatus: "inProgress",
+      reason: "몸이 아파서");
 
   RequestDetail({super.key, required this.from});
 
@@ -25,12 +26,20 @@ class RequestDetail extends StatefulWidget {
 }
 
 class _RequestDetailState extends State<RequestDetail> {
-  bool _isCompleted = false;
-  bool _isAccepted = false;
+  late bool _isCompleted;
+  late bool _isAccepted;
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+    _isCompleted = widget.requestDetailDTO.requestStatus != "inProgress";
+    _isAccepted = widget.requestDetailDTO.requestStatus == "accepted";
+  }
 
   @override
   Widget build(BuildContext context) {
-    RequestList requestDetail = widget.requestDetail;
+    RequestDetailDTO requestDetail = widget.requestDetailDTO;
 
     return Scaffold(
       body: SafeArea(
@@ -108,7 +117,7 @@ class _RequestDetailState extends State<RequestDetail> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Visibility(
-                          visible: _isAccepted,
+                          visible: _isCompleted &&_isAccepted,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
@@ -123,21 +132,22 @@ class _RequestDetailState extends State<RequestDetail> {
                                   fontWeight: FontWeight.w500),
                             ),
                           )),
-                  Visibility(
-                    visible: !_isAccepted,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: BTN_COLOR,
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: Text(
-                          '거절',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
-                        ),
-                      ))
+                      Visibility(
+                          visible: _isCompleted && !_isAccepted,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: BTN_COLOR,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Text(
+                              '거절',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ))
                     ],
                   )),
             ),
@@ -167,7 +177,7 @@ class _RequestDetailState extends State<RequestDetail> {
                         IconLabel(
                             iconData: Icons.message_outlined,
                             title: '변경 사유',
-                            content: '잘못된 날을 선택하였습니다.',
+                            content: requestDetail.reason,
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                       ],
@@ -195,8 +205,7 @@ class _RequestDetailState extends State<RequestDetail> {
                               onPressed: () {
                                 setState(() {
                                   _isCompleted = true;
-                                  _isAccepted = true;
-                                });
+                                  _isAccepted = true;});
                               },
                             )
                           ],
