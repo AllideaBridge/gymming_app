@@ -18,7 +18,7 @@ class SecondaryButton extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
               minimumSize: Size(160, 56)),
           onPressed: () {
-            onPressed(context);
+            onPressed();
           },
           child: Text(
             title,
