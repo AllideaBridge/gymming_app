@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 
 import 'common_header.dart';
 
@@ -33,6 +34,7 @@ class Request extends StatelessWidget {
                     SizedBox(
                       height: 37,
                       child: TabBar(
+                        indicatorColor: PRIMARY_COLOR,
                         tabs: [
                           Tab(text: leftTabName),
                           Tab(text: rightTabName),
