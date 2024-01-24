@@ -1,4 +1,5 @@
 class RequestList {
+  final String type;
   final String profileImg;
   final String name;
   final String originDay;
@@ -6,7 +7,8 @@ class RequestList {
   final String requestDay;
 
   RequestList(
-      {required this.profileImg,
+      {required this.type,
+      required this.profileImg,
       required this.name,
       required this.originDay,
       required this.changeDay,
