@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/buttons/secondary_button.dart';
+import 'package:gymming_app/common/component/chips/grey_chip.dart';
+import 'package:gymming_app/common/component/chips/primary_chip.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/common/component/icon_label.dart';
 import 'package:gymming_app/models/request_detail_dto.dart';
@@ -11,11 +14,11 @@ class RequestDetail extends StatefulWidget {
 
   //dummy instance
   final RequestDetailDTO requestDetailDTO = RequestDetailDTO(
-      profileImg: "image",
+      profileImg: "assets/trainerExample.png",
       name: "김민희",
-      originDay: "2023.10.23",
-      changeDay: "2023.10.24",
-      requestDay: "2023.10.23",
+      originDay: "8월 6일 목요일 09:00",
+      changeDay: "8월 7일 금요일 20:00",
+      requestDay: "23. 10. 08. 16:07",
       requestStatus: "inProgress",
       reason: "몸이 아파서");
 
@@ -32,7 +35,6 @@ class _RequestDetailState extends State<RequestDetail> {
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
     _isCompleted = widget.requestDetailDTO.requestStatus != "inProgress";
     _isAccepted = widget.requestDetailDTO.requestStatus == "accepted";
   }
@@ -53,12 +55,13 @@ class _RequestDetailState extends State<RequestDetail> {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50.0),
+                          child: Image.asset(
+                            widget.requestDetailDTO.profileImg,
+                            fit: BoxFit.cover,
+                            width: 48.0,
+                            height: 48.0,
                           ),
                         ),
                         SizedBox(
@@ -76,15 +79,17 @@ class _RequestDetailState extends State<RequestDetail> {
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white),
                                 ),
+                                SizedBox(width: 4.0),
                                 Icon(
                                   Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white,
+                                  color: TERITARY_COLOR,
                                   size: 16,
                                 )
                               ],
                             ),
+                            SizedBox(height: 4.0),
                             Text(
-                              requestDetail.requestDay,
+                              '${requestDetail.requestDay} 요청',
                               style: TextStyle(
                                   fontSize: 14, color: SECONDARY_COLOR),
                             )
@@ -93,7 +98,9 @@ class _RequestDetailState extends State<RequestDetail> {
                       ],
                     ),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: 클릭 시 연락 기능 추가
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: BTN_COLOR,
                           shape: RoundedRectangleBorder(
@@ -109,53 +116,19 @@ class _RequestDetailState extends State<RequestDetail> {
               color: BACKGROUND_COLOR,
               height: 6,
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 28, 20, 0),
-              child: Visibility(
-                  visible: _isCompleted,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Visibility(
-                          visible: _isCompleted &&_isAccepted,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: PRIMARY2_COLOR,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            child: Text(
-                              '승인',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          )),
-                      Visibility(
-                          visible: _isCompleted && !_isAccepted,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: BTN_COLOR,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            child: Text(
-                              '거절',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ))
-                    ],
-                  )),
-            ),
             Expanded(
                 child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 28, horizontal: 20),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        _isCompleted
+                            ? Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, 28),
+                                child: _isAccepted
+                                    ? PrimaryChip(title: '승인')
+                                    : GreyChip(title: '거절'))
+                            : SizedBox.shrink(),
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 전',
@@ -182,37 +155,57 @@ class _RequestDetailState extends State<RequestDetail> {
                             contentColor: Colors.white),
                       ],
                     ))),
-            Visibility(
-                visible: !_isCompleted,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                    child: SizedBox(
-                        height: 56,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SecondaryButton(
-                                title: '거절',
+            Padding(
+                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                child: SizedBox(
+                    height: 56,
+                    child: Row(
+                      children: _isCompleted
+                          ? [
+                              SecondaryButton(
+                                  title: '목록으로 이동',
+                                  onPressed: () {
+                                    // TODO: 목록으로 이동 버튼 클릭 이벤트
+                                  })
+                            ]
+                          : [
+                              SecondaryButton(
+                                  title: '거절',
+                                  onPressed: () {
+                                    // TODO: 거절 버튼 클릭 이벤트
+                                    _showToast('거절 되었습니다.');
+                                    setState(() {
+                                      _isCompleted = true;
+                                      _isAccepted = false;
+                                    });
+                                  }),
+                              SizedBox(width: 12),
+                              PrimaryButton(
+                                title: '승인',
                                 onPressed: () {
+                                  // TODO: 승인 버튼 클릭 이벤트
+                                  _showToast('승인 되었습니다.');
                                   setState(() {
                                     _isCompleted = true;
-                                    _isAccepted = false;
+                                    _isAccepted = true;
                                   });
-                                }),
-                            SizedBox(width: 12),
-                            PrimaryButton(
-                              title: '승인',
-                              onPressed: () {
-                                setState(() {
-                                  _isCompleted = true;
-                                  _isAccepted = true;});
-                              },
-                            )
-                          ],
-                        ))))
+                                },
+                              )
+                            ],
+                    )))
           ],
         ),
       ),
+    );
+  }
+
+  void _showToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: BACKGROUND_COLOR,
+      textColor: Colors.white,
     );
   }
 }

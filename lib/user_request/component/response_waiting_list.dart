@@ -7,7 +7,8 @@ import 'package:gymming_app/user_request/request_detail.dart';
 import '../../models/request_list.dart';
 
 class ResponseWaitingList extends StatelessWidget {
-  final List<RequestList> requestList = RequestRepository().getRequestList();
+  final List<RequestList> requestList =
+      RequestRepository().getPendingRequestList();
 
   @override
   Widget build(BuildContext context) {
@@ -44,100 +45,68 @@ class ResponseWaitingList extends StatelessWidget {
                     width: 12,
                   ),
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              requestList[index].name,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  requestList[index].name,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(
+                                  width: 8.0,
+                                ),
+                                Text(
+                                  '${requestList[index].requestDay} 요청',
+                                  style: TextStyle(
+                                      fontSize: 14, color: SECONDARY_COLOR),
+                                ),
+                              ],
                             ),
-                            Text(
-                              '${requestList[index].requestDay} 요청',
-                              style: TextStyle(
-                                  fontSize: 14, color: SECONDARY_COLOR),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: requestList[index].type == CHANGE
-                                  ? [
-                                      Text(
-                                        '${requestList[index].originDay} 기존',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: SECONDARY_COLOR),
-                                      ),
-                                      SizedBox(height: 8.0),
-                                      Text(
-                                        '${requestList[index].changeDay} 변경',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
-                                      ),
-                                    ]
-                                  : [
-                                      Text(
-                                        '${requestList[index].originDay} 취소',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: SECONDARY_COLOR),
-                                      ),
-                                    ],
+                            SizedBox(
+                              height: 8,
                             ),
                             Row(
                               children: [
-                                SizedBox(
-                                  width: 58.0,
-                                  height: 32.0,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // 거절 버튼 클릭 이벤트 처리
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: BTN_COLOR,
-                                    ),
-                                    child: Text(
-                                      '거절',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                  ),
+                                Text(
+                                  requestList[index].originDay,
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
                                 ),
                                 SizedBox(width: 8.0),
-                                SizedBox(
-                                  width: 58.0,
-                                  height: 32.0,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // 승인 버튼 클릭 이벤트 처리
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: PRIMARY_COLOR,
-                                    ),
-                                    child: Text(
-                                      '승인',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.black),
-                                    ),
-                                  ),
-                                ),
+                                Icon(Icons.arrow_forward_rounded,
+                                    size: 12, color: Colors.white),
+                                SizedBox(width: 8.0),
+                                requestList[index].type == CHANGE
+                                    ? Text(
+                                        requestList[index].changeDay,
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      )
+                                    : Text(
+                                        '취소',
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      )
                               ],
-                            )
+                            ),
                           ],
                         ),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 20,
+                          color: BORDER_COLOR,
+                        )
                       ],
                     ),
                   ),

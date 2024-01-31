@@ -26,14 +26,31 @@ class Request extends StatelessWidget {
         child: Column(
           children: [
             CommonHeader(title: title),
+            // TODO: 간격 조정 필요
+            SizedBox(height: 10),
             DefaultTabController(
               length: 2,
               child: Expanded(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 37,
+                    Container(
+                      height: 38,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: BORDER_COLOR,
+                        width: 1.0,
+                      ))),
                       child: TabBar(
+                        labelColor: PRIMARY_COLOR,
+                        unselectedLabelColor: TERITARY_COLOR,
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        unselectedLabelStyle: TextStyle(
+                          fontSize: 18,
+                        ),
                         indicatorColor: PRIMARY_COLOR,
                         tabs: [
                           Tab(text: leftTabName),
