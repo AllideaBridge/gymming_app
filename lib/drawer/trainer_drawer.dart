@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/common/colors.dart';
 
+import '../common/colors.dart';
 import '../common/component/request.dart';
-import '../user_request/component/completed_list.dart';
-import '../user_request/component/response_waiting_list.dart';
+import '../user_management/user_management_list.dart';
 
-class UserDrawer extends StatelessWidget {
-  const UserDrawer({super.key});
+class TrainerDrawer extends StatelessWidget {
+  const TrainerDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,9 @@ class UserDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
             child: Row(
@@ -40,7 +41,7 @@ class UserDrawer extends StatelessWidget {
                     SizedBox(
                       height: 12,
                     ),
-                    Text('회원',
+                    Text('트레이너',
                         style: TextStyle(
                             color: SECONDARY_COLOR,
                             fontSize: 14,
@@ -101,6 +102,25 @@ class UserDrawer extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
             title: Text(
+              '기존 회원 관리',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Request(
+                            title: "회원 관리",
+                            leftTabName: "현재 등록 회원",
+                            rightTabName: "이전 등록 회원",
+                            leftComponent: UserManagementList(),
+                            rightComponent: UserManagementList(),
+                          )));
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
               '알림 수신 관리',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
@@ -118,25 +138,6 @@ class UserDrawer extends StatelessWidget {
               '앱 공지사항',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
-            title: Text(
-              '요청 목록으로 이동',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Request(
-                            title: "요청 목록",
-                            leftTabName: "응답 대기",
-                            rightTabName: "완료",
-                            leftComponent: ResponseWaitingList(),
-                            rightComponent: CompletedList(),
-                          )));
-            },
           ),
           ListTile(
             title: Text('드로어를 닫는다', style: TextStyle(color: Colors.white)),

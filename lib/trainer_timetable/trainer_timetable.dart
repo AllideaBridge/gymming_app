@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/drawer/trainer_drawer.dart';
 import 'package:gymming_app/user_timetable/user_timetable.dart';
 
 import '../common/component/request.dart';
@@ -44,39 +45,7 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
         ],
         backgroundColor: Colors.black,
       ),
-      drawer: Drawer(
-          child: ListView(
-        children: <Widget>[
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-          ),
-          ListTile(
-            title: Text('회원 관리'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Request(
-                            title: "회원 관리",
-                            leftTabName: "현재 등록 회원",
-                            rightTabName: "이전 등록 회원",
-                            leftComponent: UserManagementList(),
-                            rightComponent: UserManagementList(),
-                          )));
-            },
-          ),
-          ListTile(
-            title: Text('Item 2'),
-            onTap: () {
-              // 다른 작업
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      )),
+      drawer: TrainerDrawer(),
       body: Container(
           // child: SfCalendar(
           //   view: CalendarView.week,
