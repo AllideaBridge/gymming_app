@@ -26,6 +26,8 @@ class Request extends StatelessWidget {
         child: Column(
           children: [
             CommonHeader(title: title),
+            // TODO: 간격 조정 필요
+            SizedBox(height: 10),
             DefaultTabController(
               length: 2,
               child: Expanded(
