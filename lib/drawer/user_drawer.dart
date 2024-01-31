@@ -19,7 +19,9 @@ class UserDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
             child: Row(
@@ -130,7 +132,7 @@ class UserDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Request(
-                            title: "요청 목록",
+                            title: "요청",
                             leftTabName: "응답 대기",
                             rightTabName: "완료",
                             leftComponent: ResponseWaitingList(),
