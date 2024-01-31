@@ -31,6 +31,8 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(color: Colors.white),
         title: const Text("Timetable"),
         actions: [
           IconButton(
