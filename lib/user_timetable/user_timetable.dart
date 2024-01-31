@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/common/component/request.dart';
+import 'package:gymming_app/drawer/user_drawer.dart';
 import 'package:gymming_app/explore/explore_main.dart';
 import 'package:gymming_app/trainer_timetable/trainer_timetable.dart';
 import 'package:gymming_app/user_timetable/component/calendar.dart';
 import 'package:gymming_app/user_timetable/component/schedule_list.dart';
-
-import '../user_request/component/completed_list.dart';
-import '../user_request/component/response_waiting_list.dart';
 
 class UserTimeTable extends StatelessWidget {
   const UserTimeTable({Key? key}) : super(key: key);
@@ -15,8 +12,8 @@ class UserTimeTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(color: Colors.white),
         title: const Text("Timetable"),
         actions: [
           TextButton(
@@ -32,42 +29,7 @@ class UserTimeTable extends StatelessWidget {
         ],
         backgroundColor: Colors.black,
       ),
-      drawer: Drawer(
-        child: ListView(
-          // 주요 내비게이션 항목들
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: Text('요청'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Request(
-                              title: "요청 목록",
-                              leftTabName: "응답 대기",
-                              rightTabName: "완료",
-                              leftComponent: ResponseWaitingList(),
-                              rightComponent: CompletedList(),
-                            )));
-              },
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                // 다른 작업
-                Navigator.pop(context); // 드로어를 닫습니다.
-              },
-            ),
-            // ... 다른 리스트 타일 항목들 ...
-          ],
-        ),
-      ),
+      drawer: UserDrawer(),
       body: Column(
         children: [Calendar(), ScheduleList()],
       ),
