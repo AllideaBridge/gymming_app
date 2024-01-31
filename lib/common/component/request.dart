@@ -31,9 +31,24 @@ class Request extends StatelessWidget {
               child: Expanded(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 37,
+                    Container(
+                      height: 38,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: BORDER_COLOR,
+                        width: 1.0,
+                      ))),
                       child: TabBar(
+                        labelColor: PRIMARY_COLOR,
+                        unselectedLabelColor: TERITARY_COLOR,
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        unselectedLabelStyle: TextStyle(
+                          fontSize: 18,
+                        ),
                         indicatorColor: PRIMARY_COLOR,
                         tabs: [
                           Tab(text: leftTabName),
