@@ -53,7 +53,11 @@ class RequestRepository {
         requestDay: '24.01.13. 09:59'),
   ];
 
-  List<RequestList> getRequestList() {
+  List<RequestList> getPendingRequestList() {
+    return _dummyRequests;
+  }
+
+  List<RequestList> getCompletedRequestList() {
     return _dummyRequests;
   }
 }
