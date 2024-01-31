@@ -38,6 +38,7 @@ class IconLabel extends StatelessWidget {
               title,
               style: TextStyle(color: titleColor, fontSize: 18),
             ),
+            SizedBox(height: 8),
             Text(
               content,
               style: TextStyle(
