@@ -29,14 +29,43 @@ class RequestDetail extends StatefulWidget {
 }
 
 class _RequestDetailState extends State<RequestDetail> {
+  late FToast fToast;
   late bool _isCompleted;
   late bool _isAccepted;
 
   @override
   void initState() {
     super.initState();
+    fToast = FToast();
+    fToast.init(context);
     _isCompleted = widget.requestDetailDTO.requestStatus != "inProgress";
     _isAccepted = widget.requestDetailDTO.requestStatus == "accepted";
+  }
+
+  _showToast(msg) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4.0),
+        color: BACKGROUND_COLOR,
+      ),
+      child: Text(
+        msg,
+        style: TextStyle(fontSize: 16, color: Colors.white),
+      ),
+    );
+
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 1),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            bottom: 176.0,
+            left: 0,
+            right: 0,
+            child: child,
+          );
+        });
   }
 
   @override
@@ -196,16 +225,6 @@ class _RequestDetailState extends State<RequestDetail> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: BACKGROUND_COLOR,
-      textColor: Colors.white,
     );
   }
 }
