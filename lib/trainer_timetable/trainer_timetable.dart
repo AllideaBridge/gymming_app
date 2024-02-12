@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/drawer/trainer_drawer.dart';
+import 'package:gymming_app/repositories/lesson_repository.dart';
+import 'package:gymming_app/trainer_timetable/LessonDataSource.dart';
 import 'package:gymming_app/user_timetable/user_timetable.dart';
-
-import '../common/component/request.dart';
-import '../user_management/user_management_list.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class TrainerTimeTable extends StatefulWidget {
   const TrainerTimeTable({Key? key}) : super(key: key);
@@ -13,21 +14,6 @@ class TrainerTimeTable extends StatefulWidget {
 }
 
 class _TrainerTimeTableState extends State<TrainerTimeTable> {
-  late int diffFromNow;
-  late DateTime nowFocusedDate;
-
-  bool needFocus = false;
-  late int focusIdx;
-
-  @override
-  void initState() {
-    super.initState();
-    diffFromNow = 0;
-    nowFocusedDate = DateTime.now()
-        .subtract(Duration(days: DateTime.now().weekday))
-        .add(Duration(days: 7 * diffFromNow));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,10 +33,37 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
       ),
       drawer: TrainerDrawer(),
       body: Container(
-          // child: SfCalendar(
-          //   view: CalendarView.week,
-          // ),
+        child: SfCalendar(
+          view: CalendarView.week,
+          dataSource: LessonDataSource(LessonRepository().getLessonList()),
+          appointmentTextStyle: TextStyle(
+            fontSize: 11,
+            color: Colors.black,
           ),
+          headerHeight: 0,
+          timeSlotViewSettings: TimeSlotViewSettings(
+            dayFormat: 'EEE',
+            dateFormat: 'M.d',
+            timeFormat: 'H',
+            timeTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
+          cellBorderColor: BORDER_COLOR,
+          viewHeaderStyle: ViewHeaderStyle(
+            dayTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+            ),
+            dateTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
       //TODO: 나중에 제거
       floatingActionButton: FloatingActionButton(
         onPressed: () {
