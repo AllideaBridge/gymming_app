@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/modal/model/reason_content.dart';
 import 'package:gymming_app/user_timetable/schedule_change_complete_with_reason.dart';
 
 import '../common/colors.dart';
+import '../common/constants.dart';
+import '../common/utils/toast_util.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
@@ -26,6 +29,7 @@ class Reason extends StatefulWidget {
 
 class ReasonState extends State<Reason> {
   final textController = TextEditingController();
+  late FToast fToast;
 
   bool isOpen = false;
   int clicked = 0;
@@ -34,12 +38,28 @@ class ReasonState extends State<Reason> {
   @override
   void initState() {
     super.initState();
+    fToast = FToast();
+    fToast.init(context);
 
     textController.addListener(() {
       setState(() {
         textLength = textController.text.length;
       });
     });
+  }
+
+  _showToast(msg) {
+    fToast.showToast(
+        child: ToastUtil.defaultToast(msg),
+        toastDuration: Duration(seconds: 1),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            bottom: 176.0,
+            left: 0,
+            right: 0,
+            child: child,
+          );
+        });
   }
 
   @override
@@ -58,7 +78,9 @@ class ReasonState extends State<Reason> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              CommonHeader(title: '일정 ${widget.type}'),
+              CommonHeader(
+                  title:
+                      widget.type != REJECT ? '일정 ${widget.type}' : '일정 변경 거절'),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 40, horizontal: 0),
@@ -91,15 +113,16 @@ class ReasonState extends State<Reason> {
                         padding: EdgeInsets.symmetric(
                             vertical: 16.0, horizontal: 12.0),
                         decoration: BoxDecoration(
-                            border: Border.all(color: BRIGHT_SECONDARY_COLOR),
-                            borderRadius: BorderRadius.circular(4),
-                            color: BTN_COLOR),
+                          border: Border(
+                              bottom:
+                                  BorderSide(color: PRIMARY_COLOR, width: 2)),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(widget.reasonContent.reasons[clicked],
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
+                                    fontSize: 20, color: Colors.white)),
                             isOpen
                                 ? Image.asset('assets/icon_nav_arrow_up.png',
                                     width: 20, height: 20)
@@ -111,12 +134,13 @@ class ReasonState extends State<Reason> {
                     ),
                     if (isOpen)
                       Container(
-                        height: 207,
-                        padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                        height: 248,
+                        margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+                        padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
                         decoration: BoxDecoration(
-                            border: Border.all(color: BRIGHT_SECONDARY_COLOR),
+                            border: Border.all(color: PRIMARY_COLOR),
                             borderRadius: BorderRadius.circular(4),
-                            color: BTN_COLOR),
+                            color: BACKGROUND_COLOR),
                         child: Scrollbar(
                           thumbVisibility: true,
                           thickness: 4.0,
@@ -133,17 +157,18 @@ class ReasonState extends State<Reason> {
                                   },
                                   child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 0),
+                                          vertical: 12, horizontal: 0),
                                       child: Text(
                                           widget.reasonContent.reasons[index],
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 20,
                                               color: Colors.white))),
                                 );
                               }),
                         ),
                       ),
-                    if (clicked == 0 && !isOpen)
+                    if (widget.reasonContent.reasons[clicked] == '직접 입력' &&
+                        !isOpen)
                       Container(
                         margin: EdgeInsets.only(top: 12),
                         height: 180,
@@ -155,16 +180,16 @@ class ReasonState extends State<Reason> {
                               decoration: InputDecoration(
                                 hintText: '${widget.type}하시려는 사유를 입력해주세요.',
                                 hintStyle: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 18, color: TERITARY_COLOR),
                                 filled: true,
-                                fillColor: BTN_COLOR,
+                                fillColor: BACKGROUND_COLOR,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.transparent),
                                 ),
                               ),
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                                  TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             Positioned(
                               right: 16,
@@ -186,34 +211,42 @@ class ReasonState extends State<Reason> {
                 height: 56,
                 child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(BTN_COLOR),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          widget.type == CANCEL ? Colors.white : PRIMARY_COLOR),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ScheduleChangeCompleteWithReason(
-                                    type: widget.type,
-                                    originDay: widget.originDay,
-                                    selectedDay: widget.selectedDay,
-                                    selectedTime: widget.selectedTime,
-                                    reason: clicked == 0
-                                        ? textController.text
-                                        : widget.reasonContent.reasons[clicked],
-                                  )));
-                    },
+                    onPressed: widget.type != REJECT
+                        ? () {
+                            // TODO: 변경&취소 API 호출
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ScheduleChangeCompleteWithReason(
+                                          type: widget.type,
+                                          originDay: widget.originDay!,
+                                          selectedDay: widget.selectedDay!,
+                                          selectedTime: widget.selectedTime!,
+                                          reason: clicked == 0
+                                              ? textController.text
+                                              : widget.reasonContent
+                                                  .reasons[clicked],
+                                        )));
+                          }
+                        : () {
+                            // TODO: 거절 API 호출
+                            _showToast('운동 일정 변경을 거절하셨습니다.');
+                            Navigator.pop(context);
+                          },
                     child: Text(
                       "확인",
                       style: TextStyle(
                         fontSize: 18,
-                        color: PRIMARY_COLOR,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     )),

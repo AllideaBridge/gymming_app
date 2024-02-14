@@ -10,6 +10,7 @@ import 'package:gymming_app/common/component/icon_label.dart';
 import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/models/request_detail_dto.dart';
 
+import '../common/utils/toast_util.dart';
 import '../modal/model/reason_content.dart';
 import '../user_timetable/reason.dart';
 
@@ -47,20 +48,8 @@ class _RequestDetailState extends State<RequestDetail> {
   }
 
   _showToast(msg) {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4.0),
-        color: BACKGROUND_COLOR,
-      ),
-      child: Text(
-        msg,
-        style: TextStyle(fontSize: 16, color: Colors.white),
-      ),
-    );
-
     fToast.showToast(
-        child: toast,
+        child: ToastUtil.defaultToast(msg),
         toastDuration: Duration(seconds: 1),
         positionedToastBuilder: (context, child) {
           return Positioned(
