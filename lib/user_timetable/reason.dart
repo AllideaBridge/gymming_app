@@ -7,17 +7,17 @@ import '../common/colors.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
-  final DateTime originDay;
-  final DateTime selectedDay;
-  final String selectedTime;
+  final DateTime? originDay;
+  final DateTime? selectedDay;
+  final String? selectedTime;
   final String type;
 
   const Reason(
       {super.key,
       required this.reasonContent,
-      required this.originDay,
-      required this.selectedDay,
-      required this.selectedTime,
+      this.originDay,
+      this.selectedDay,
+      this.selectedTime,
       required this.type});
 
   @override

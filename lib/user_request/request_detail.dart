@@ -7,7 +7,11 @@ import 'package:gymming_app/common/component/chips/grey_chip.dart';
 import 'package:gymming_app/common/component/chips/primary_chip.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 import 'package:gymming_app/common/component/icon_label.dart';
+import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/models/request_detail_dto.dart';
+
+import '../modal/model/reason_content.dart';
+import '../user_timetable/reason.dart';
 
 class RequestDetail extends StatefulWidget {
   final String from;
@@ -201,12 +205,16 @@ class _RequestDetailState extends State<RequestDetail> {
                               SecondaryButton(
                                   title: '거절',
                                   onPressed: () {
-                                    // TODO: 거절 버튼 클릭 이벤트
-                                    _showToast('거절 되었습니다.');
-                                    setState(() {
-                                      _isCompleted = true;
-                                      _isAccepted = false;
-                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Reason(
+                                                  reasonContent: ReasonContent(
+                                                      REJECT_TITLE,
+                                                      REJECT_SUBTITLE,
+                                                      REJECT_REASONS),
+                                                  type: REJECT,
+                                                )));
                                   }),
                               SizedBox(width: 12),
                               PrimaryButton(

@@ -78,9 +78,9 @@ class ScheduleCancelConfirm extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) => Reason(
                                               reasonContent: ReasonContent(
-                                                  cancelTitle,
-                                                  cancelSubTitle,
-                                                  changeReasons),
+                                                  CANCEL_TITLE,
+                                                  CANCEL_SUBTITLE,
+                                                  CHANGE_REASONS),
                                               originDay: scheduleInfo.startTime,
                                               selectedDay:
                                                   scheduleInfo.startTime,

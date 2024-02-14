@@ -94,9 +94,9 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                                   MaterialPageRoute(
                                       builder: (context) => Reason(
                                             reasonContent: ReasonContent(
-                                                changeTitle,
-                                                changeSubTitle,
-                                                changeReasons),
+                                                CHANGE_TITLE,
+                                                CHANEG_SUBTITLE,
+                                                CHANGE_REASONS),
                                             originDay:
                                                 widget.scheduleInfo.startTime,
                                             selectedDay: _selectedDay,

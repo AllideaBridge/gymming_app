@@ -2,7 +2,7 @@ import '../constants.dart';
 
 class DateUtil {
   static List<int> lastDayOfMonths(int year) {
-    return year % 4 == 0 ? leapYear : notLeapYear;
+    return year % 4 == 0 ? LEAP_YEAR : NOT_LEAP_YEAR;
   }
 
   static bool isSameDate(DateTime date1, DateTime date2) {
