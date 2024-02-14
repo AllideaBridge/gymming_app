@@ -114,8 +114,10 @@ class ReasonState extends State<Reason> {
                             vertical: 16.0, horizontal: 12.0),
                         decoration: BoxDecoration(
                           border: Border(
-                              bottom:
-                                  BorderSide(color: PRIMARY_COLOR, width: 2)),
+                              bottom: BorderSide(
+                                  color:
+                                      isOpen ? PRIMARY_COLOR : SECONDARY_COLOR,
+                                  width: 2)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
