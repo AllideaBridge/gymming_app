@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/trainee_registration/trainee_registration.dart';
 
 import '../common/colors.dart';
 import '../common/component/request.dart';
@@ -98,6 +99,19 @@ class TrainerDrawer extends StatelessWidget {
           ),
           SizedBox(
             height: 40,
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
+              '새로운 회원 등록',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TraineeRegistration()));
+            },
           ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
