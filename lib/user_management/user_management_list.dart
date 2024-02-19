@@ -1,65 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/common/constants.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/repositories/trainee_repository.dart';
 import 'package:gymming_app/user_management/user_detail.dart';
 
-import '../user_request/request_detail.dart';
+import '../models/trainee_list.dart';
 
 class UserManagementList extends StatelessWidget {
+  final String type;
+  final List<TraineeList> traineeList = TraineeRepository().getTraineeList();
+
+  UserManagementList({
+    super.key,
+    required this.type,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: 20, // 임시 데이터의 수
-
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => UserDetail()));
-          },
-          child: Card(
-            color: Colors.black,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      width: 32.0, // 이미지의 너비
-                      height: 32.0, // 이미지의 높이
-                      margin: EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.purple, // 초록색으로 채우기
-                        shape: BoxShape.circle, // 동그란 모양으로 설정
-                      )),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('김민희',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '3 / 10 진행 | 23.10.08. 등록',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+      child: Column(
+        children: [
+          GestureDetector(
+            // TODO: 정렬 버튼 클릭 이벤트
+            onTap: null,
+            child: Row(
+              children: [
+                Text(
+                  '가나다 순',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: SECONDARY_COLOR,
+                  ),
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Icon(
+                  Icons.sort,
+                  color: SECONDARY_COLOR,
+                  size: 16,
+                ),
+              ],
             ),
           ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return Divider(
-          color: Colors.grey,
-          thickness: 1,
-        );
-      },
+          Expanded(
+            child: ListView.separated(
+              itemCount: traineeList.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => UserDetail()));
+                  },
+                  child: Card(
+                    color: Colors.black,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
+                            child: Image.asset(
+                              traineeList[index].profileImg,
+                              fit: BoxFit.cover,
+                              width: 48.0,
+                              height: 48.0,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 16.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(traineeList[index].name,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Text(
+                                type == 'now'
+                                    ? '${traineeList[index].weekday} | ${traineeList[index].usedDay} / ${traineeList[index].totalDay} 진행 | ${traineeList[index].registeredDay} 등록'
+                                    : '${traineeList[index].weekday} | ${traineeList[index].usedDay} / ${traineeList[index].totalDay} 진행 | ${traineeList[index].lastDay} 종료',
+                                style: TextStyle(
+                                    fontSize: 16.0, color: SECONDARY_COLOR),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  color: BORDER_COLOR,
+                  thickness: 1,
+                  height: 1,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

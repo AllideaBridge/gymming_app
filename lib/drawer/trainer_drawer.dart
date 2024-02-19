@@ -124,11 +124,11 @@ class TrainerDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Request(
-                            title: "회원 관리",
+                            title: "기존 회원 관리",
                             leftTabName: "현재 등록 회원",
                             rightTabName: "이전 등록 회원",
-                            leftComponent: UserManagementList(),
-                            rightComponent: UserManagementList(),
+                            leftComponent: UserManagementList(type: 'now'),
+                            rightComponent: UserManagementList(type: 'end'),
                           )));
             },
           ),

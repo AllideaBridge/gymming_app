@@ -52,6 +52,7 @@ class Request extends StatelessWidget {
                           fontSize: 18,
                         ),
                         indicatorColor: PRIMARY_COLOR,
+                        indicatorSize: TabBarIndicatorSize.tab,
                         tabs: [
                           Tab(text: leftTabName),
                           Tab(text: rightTabName),
