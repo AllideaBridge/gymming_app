@@ -30,3 +30,33 @@ const WAITING_LIST = 'waiting_list';
 const COMPLETED_LIST = 'completed_list';
 const SIZE20 = 20.0;
 const SIZE45 = 45.0;
+
+//for registration
+const YEARS = [
+  1990,
+  1991,
+  1992,
+  1993,
+  1994,
+  1995,
+  1996,
+  1997,
+  1998,
+  1999,
+  2000
+];
+const MONTHS = [
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
+  '07',
+  '08',
+  '09',
+  '10',
+  '11',
+  '12'
+];
+const FIRST_PHONE_NUMBERS = ['010', '011', '070', '080'];
