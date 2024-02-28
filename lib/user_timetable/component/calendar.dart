@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gymming_app/state/state_date_time.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,29 +15,26 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late Set<String> _isScheduled;
+  Set<dynamic> _isScheduled = {};
+  DateTime now = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    // 한달 스케쥴 api 호출
-    // 서버에서 리턴되는 값 : [1, 3, 5, 6, 7, 9, 11, 12, 13, 17, 20, 25, 30]
-    // 수업이 있는 날짜.
-    _isScheduled = {
-      "20230901",
-      "20230903",
-      "20230905",
-      "20230906",
-      "20230907",
-      "20230909",
-      "20230911",
-      "20230912",
-      "20230913",
-      "20230917",
-      "20230920",
-      "20230925",
-      "20230930"
-    };
+    fetchData(now.year, now.month);
+  }
+
+  Future<void> fetchData(int year, int month) async {
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:5000/schedules/1/$year/$month'));
+    if (response.statusCode == 200) {
+      setState(() {
+        _isScheduled =
+            json.decode(response.body).map((item) => item.toString()).toSet();
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
   @override
@@ -85,8 +85,7 @@ class _CalendarState extends State<Calendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          //ToDO
-          print("api호출");
+          fetchData(day.year, day.month);
         });
       },
     );
@@ -94,7 +93,7 @@ class _CalendarState extends State<Calendar> {
 
   List<bool> _getEventList(DateTime day) {
     if (_isScheduled.contains(
-        "${day.year}${day.month < 10 ? "0" : ""}${day.month}${day.day < 10 ? "0" : ""}${day.day}")) {
+        "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10 ? "0" : ""}${day.day}")) {
       return [true];
     }
     return [];
