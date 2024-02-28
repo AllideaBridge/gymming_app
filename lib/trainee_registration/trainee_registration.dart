@@ -4,7 +4,6 @@ import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 
 import '../common/component/buttons/secondary_button.dart';
-import '../common/constants.dart';
 
 class TraineeRegistration extends StatefulWidget {
   const TraineeRegistration({super.key});
@@ -14,30 +13,10 @@ class TraineeRegistration extends StatefulWidget {
 }
 
 class _TraineeRegistration extends State<TraineeRegistration> {
-  final traineeNameController = TextEditingController();
-  String? _firstPhoneNumber;
-  String? _middlePhoneNumber;
-  String? _lastPhoneNumber;
-  int? _selectedYear;
-  int? _selectedMonth;
-  int? _selectedDay;
-  int? _registeredNumber; //총 등록 횟수
-  int? _finishedNumber; // 진행/차감 횟수
-  List<String> _trainingDays = [];
-
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _firstPhoneNumber = FIRST_PHONE_NUMBERS[0];
-    });
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    traineeNameController.dispose();
-    super.dispose();
+    setState(() {});
   }
 
   @override
@@ -52,7 +31,6 @@ class _TraineeRegistration extends State<TraineeRegistration> {
           child: Column(
             children: [
               CommonHeader(title: '새로운 회원 등록'),
-              Text(traineeNameController.text),
               Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Column(
@@ -77,7 +55,6 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
-                        controller: traineeNameController,
                       ),
                       SizedBox(
                         height: 60,
@@ -137,23 +114,13 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                           SizedBox(width: 12),
                           Expanded(
                             child: TextField(
-                              decoration: InputDecoration(
-                                  hintText: '1234',
-                                  hintStyle: TextStyle(color: TERITARY_COLOR),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color: SECONDARY_COLOR,
-                                    width: 2.0,
-                                  )),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: PRIMARY_COLOR, width: 2.0)),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 11, horizontal: 8)),
+                              decoration: phoneNumberInputDecoration('1234'),
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white),
+                              keyboardType: TextInputType.phone,
+                              maxLength: 4,
                             ),
                           ),
                           SizedBox(width: 12),
@@ -165,23 +132,13 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                           SizedBox(width: 12),
                           Expanded(
                             child: TextField(
-                              decoration: InputDecoration(
-                                  hintText: '1234',
-                                  hintStyle: TextStyle(color: TERITARY_COLOR),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color: SECONDARY_COLOR,
-                                    width: 2.0,
-                                  )),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: PRIMARY_COLOR, width: 2.0)),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 11, horizontal: 8)),
+                              decoration: phoneNumberInputDecoration('1234'),
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white),
+                              keyboardType: TextInputType.phone,
+                              maxLength: 4,
                             ),
                           )
                         ],
@@ -514,5 +471,20 @@ class _TraineeRegistration extends State<TraineeRegistration> {
         )
       ],
     );
+  }
+
+  InputDecoration phoneNumberInputDecoration(String hintText) {
+    return InputDecoration(
+        counterText: '',
+        hintText: hintText,
+        hintStyle: TextStyle(color: TERITARY_COLOR),
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+          color: SECONDARY_COLOR,
+          width: 2.0,
+        )),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: PRIMARY_COLOR, width: 2.0)),
+        contentPadding: EdgeInsets.symmetric(vertical: 11, horizontal: 8));
   }
 }
