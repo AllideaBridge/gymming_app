@@ -4,6 +4,7 @@ import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 
 import '../common/component/buttons/secondary_button.dart';
+import '../trainer_timetable/trainer_timetable.dart';
 
 class TraineeRegistration extends StatefulWidget {
   const TraineeRegistration({super.key});
@@ -13,10 +14,37 @@ class TraineeRegistration extends StatefulWidget {
 }
 
 class _TraineeRegistration extends State<TraineeRegistration> {
+  bool _isMaleSelected = true;
+  List<bool> _availableWorkdays = List.generate(7, (index) => false);
+  bool _isWorkdayIrregular = false;
+
   @override
   void initState() {
     super.initState();
-    setState(() {});
+  }
+
+  void clickSexSelectButton() {
+    setState(() {
+      _isMaleSelected = !_isMaleSelected;
+    });
+  }
+
+  void clickAvailableWorkday(int index) {
+    setState(() {
+      if (_availableWorkdays[index] == false) {
+        _isWorkdayIrregular = false;
+      }
+      _availableWorkdays[index] = !_availableWorkdays[index];
+    });
+  }
+
+  void clickIrregularWorkday() {
+    setState(() {
+      if (_isWorkdayIrregular == false) {
+        _availableWorkdays = List.generate(7, (index) => false);
+      }
+      _isWorkdayIrregular = !_isWorkdayIrregular;
+    });
   }
 
   @override
@@ -30,7 +58,14 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                 child: SingleChildScrollView(
           child: Column(
             children: [
-              CommonHeader(title: '새로운 회원 등록'),
+              CommonHeader(
+                  title: '새로운 회원 등록',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrainerTimeTable()));
+                  }),
               Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Column(
@@ -296,9 +331,9 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              PrimaryButton(title: "남", onPressed: () {}),
+                              getSwitchButton('남', _isMaleSelected),
                               SizedBox(width: 12),
-                              SecondaryButton(title: "여", onPressed: () {}),
+                              getSwitchButton('여', !_isMaleSelected),
                             ],
                           )),
                       SizedBox(
@@ -320,6 +355,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
+                        keyboardType: TextInputType.number,
                       ),
                       SizedBox(
                         height: 60,
@@ -340,6 +376,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
+                        keyboardType: TextInputType.number,
                       ),
                       SizedBox(
                         height: 60,
@@ -364,19 +401,23 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SecondaryButton(title: "일", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "일", _availableWorkdays[0], 0),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "월", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "월", _availableWorkdays[1], 1),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "화", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "화", _availableWorkdays[2], 2),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "수", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "수", _availableWorkdays[3], 3),
                           ],
                         ),
                       ),
@@ -388,19 +429,24 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SecondaryButton(title: "목", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "목", _availableWorkdays[4], 4),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "금", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "금", _availableWorkdays[5], 5),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "토", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "토", _availableWorkdays[6], 6),
                             SizedBox(
                               width: 8,
                             ),
-                            SecondaryButton(title: "불규칙", onPressed: () {}),
+                            getMultiSelectableButton(
+                                "불규칙", _isWorkdayIrregular, 7,
+                                isIrregularButton: true),
                           ],
                         ),
                       ),
@@ -471,6 +517,57 @@ class _TraineeRegistration extends State<TraineeRegistration> {
         )
       ],
     );
+  }
+
+  //성별 선택 용 switch
+  Widget getSwitchButton(String title, bool isSelected) {
+    return Expanded(
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: isSelected ? PRIMARY_COLOR : BTN_COLOR,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                minimumSize: Size(50, 56)),
+            onPressed: () {
+              clickSexSelectButton();
+            },
+            child: Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? INDICATOR_COLOR : Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            )));
+  }
+
+  // 요일 다중 선택 용 버튼
+  Widget getMultiSelectableButton(String title, bool isSelected, int index,
+      {bool isIrregularButton = false}) {
+    return Expanded(
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.zero,
+                backgroundColor: isSelected ? PRIMARY_COLOR : BTN_COLOR,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                minimumSize: Size(50, 44)),
+            onPressed: () {
+              if (isIrregularButton) {
+                clickIrregularWorkday();
+              } else {
+                clickAvailableWorkday(index);
+              }
+            },
+            child: Text(
+              title,
+              softWrap: false,
+              style: TextStyle(
+                color: isSelected ? INDICATOR_COLOR : Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            )));
   }
 
   InputDecoration phoneNumberInputDecoration(String hintText) {
