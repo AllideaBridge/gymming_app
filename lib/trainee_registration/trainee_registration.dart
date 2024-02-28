@@ -3,7 +3,6 @@ import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 
-import '../common/component/buttons/secondary_button.dart';
 import '../trainer_timetable/trainer_timetable.dart';
 
 class TraineeRegistration extends StatefulWidget {
