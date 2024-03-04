@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/trainee_registration/trainee_registration.dart';
+import 'package:gymming_app/trainee_registration/trainee_input.dart';
 
 import '../common/colors.dart';
 import '../common/component/request.dart';
@@ -110,7 +110,7 @@ class TrainerDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TraineeRegistration()));
+                      builder: (context) => TraineeInput(isRegister: true,)));
             },
           ),
           ListTile(

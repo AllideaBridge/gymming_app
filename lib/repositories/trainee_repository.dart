@@ -64,11 +64,11 @@ class TraineeRepository {
     profileImg: 'assets/trainerExample3.png',
     name: '김헬스',
     birth: '1998.08.08',
-    gender: '남',
+    gender: '여',
     weekDay: '월, 수',
     usedDay: 3,
     totalDay: 10,
-    registeredDay: '23.10.08.',
+    registeredDay: '23.10.08',
     phoneNumber: '010 - 1234 - 1234',
     lessonDay: [
       DateTime(2024, 2, 1),
@@ -81,6 +81,7 @@ class TraineeRepository {
       DateTime(2024, 2, 21),
       DateTime(2024, 2, 22),
     ],
+    specificDetail: "체중 증량이 목표"
   );
 
   List<TraineeList> getTraineeList() {

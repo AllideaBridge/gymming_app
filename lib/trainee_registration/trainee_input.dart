@@ -3,23 +3,74 @@ import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/common/component/buttons/primary_button.dart';
 import 'package:gymming_app/common/component/common_header.dart';
 
+import '../models/trainee_detail.dart';
 import '../trainer_timetable/trainer_timetable.dart';
 
-class TraineeRegistration extends StatefulWidget {
-  const TraineeRegistration({super.key});
+class TraineeInput extends StatefulWidget {
+  final bool isRegister;
+  TraineeDetail? traineeDetail;
+
+  TraineeInput({super.key, required this.isRegister, this.traineeDetail});
 
   @override
-  _TraineeRegistration createState() => _TraineeRegistration();
+  _TraineeInput createState() => _TraineeInput();
 }
 
-class _TraineeRegistration extends State<TraineeRegistration> {
+class _TraineeInput extends State<TraineeInput> {
+  late TextEditingController _nameController;
+  late TextEditingController _middlePhoneNumberController;
+  late TextEditingController _lastPhoneNumberController;
+  late TextEditingController _totalDayController;
+  late TextEditingController _usedDayController;
+  late TextEditingController _specificDetailsController;
+  late String _selectedFirstPhoneNumber;
+  int? _selectedYear;
+  int? _selectedMonth;
+  int? _selectedDay;
   bool _isMaleSelected = true;
-  List<bool> _availableWorkdays = List.generate(7, (index) => false);
   bool _isWorkdayIrregular = false;
+  List<bool> _availableWorkdays = List.generate(7, (index) => false);
+
+  final firstPhoneNumbers = ['010', '011', '080'];
+  final years = [1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002];
+  final months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  final days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   @override
   void initState() {
     super.initState();
+    if (widget.isRegister == false && widget.traineeDetail != null) {
+      _selectedFirstPhoneNumber = widget.traineeDetail!.phoneNumber;
+      _selectedYear = int.parse(widget.traineeDetail!.birth.split(".")[0]);
+      _selectedMonth = int.parse(widget.traineeDetail!.birth.split(".")[1]);
+      _selectedDay = int.parse(widget.traineeDetail!.birth.split(".")[2]);
+      _isMaleSelected = widget.traineeDetail!.gender == '남';
+    }
+
+    _nameController = TextEditingController(
+        text: !widget.isRegister ? widget.traineeDetail!.name : null);
+    _middlePhoneNumberController = TextEditingController(
+        text: !widget.isRegister
+            ? widget.traineeDetail!.phoneNumber.split("-")[1]
+            : null);
+    _lastPhoneNumberController = TextEditingController(
+        text: !widget.isRegister
+            ? widget.traineeDetail!.phoneNumber.split("-")[2]
+            : null);
+    _totalDayController = TextEditingController(
+        text: !widget.isRegister
+            ? widget.traineeDetail!.totalDay.toString()
+            : null);
+    _usedDayController = TextEditingController(
+        text: !widget.isRegister
+            ? widget.traineeDetail!.usedDay.toString()
+            : null);
+    _specificDetailsController = TextEditingController(
+        text: !widget.isRegister ? widget.traineeDetail!.specificDetail : null);
+
+    setState(() {
+      _selectedFirstPhoneNumber = firstPhoneNumbers[0];
+    });
   }
 
   void clickSexSelectButton() {
@@ -58,12 +109,16 @@ class _TraineeRegistration extends State<TraineeRegistration> {
           child: Column(
             children: [
               CommonHeader(
-                  title: '새로운 회원 등록',
+                  title: widget.isRegister ? '새로운 회원 등록' : '회원 정보 수정',
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TrainerTimeTable()));
+                    widget.isRegister
+                        ? Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TrainerTimeTable()),
+                            (route) => false,
+                          )
+                        : Navigator.pop(context);
                   }),
               Padding(
                   padding: EdgeInsets.all(20.0),
@@ -89,6 +144,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
+                        controller: _nameController,
                       ),
                       SizedBox(
                         height: 60,
@@ -118,25 +174,19 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                                 color: Colors.white,
                               ),
                               itemHeight: 52,
-                              value: '010',
+                              value: _selectedFirstPhoneNumber,
                               isDense: false,
                               iconSize: 24,
                               dropdownColor: Colors.black,
-                              onChanged: (String? value) {},
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('010'),
-                                  value: '010',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('011'),
-                                  value: '011',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('080'),
-                                  value: '080',
-                                )
-                              ],
+                              items: firstPhoneNumbers
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e)))
+                                  .toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedFirstPhoneNumber = value!;
+                                });
+                              },
                             ),
                           ),
                           SizedBox(width: 12),
@@ -155,6 +205,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                                   color: Colors.white),
                               keyboardType: TextInputType.phone,
                               maxLength: 4,
+                              controller: _middlePhoneNumberController,
                             ),
                           ),
                           SizedBox(width: 12),
@@ -173,6 +224,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                                   color: Colors.white),
                               keyboardType: TextInputType.phone,
                               maxLength: 4,
+                              controller: _lastPhoneNumberController,
                             ),
                           )
                         ],
@@ -188,6 +240,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             width: 140,
                             height: 52,
                             child: DropdownButtonFormField<int>(
+                              value: _selectedYear,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
@@ -212,21 +265,17 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                               isDense: false,
                               iconSize: 24,
                               dropdownColor: Colors.black,
-                              onChanged: (int? value) {},
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('1997'),
-                                  value: 1997,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('1998'),
-                                  value: 1998,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('1999'),
-                                  value: 1999,
-                                )
-                              ],
+                              items: years
+                                  .map((e) => DropdownMenuItem(
+                                        value: e,
+                                        child: Text(e.toString()),
+                                      ))
+                                  .toList(),
+                              onChanged: (int? value) {
+                                setState(() {
+                                  _selectedYear = value!;
+                                });
+                              },
                             ),
                           ),
                           SizedBox(
@@ -234,6 +283,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                           ),
                           Expanded(
                             child: DropdownButtonFormField<int>(
+                              value: _selectedMonth,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
@@ -258,26 +308,23 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                               isDense: false,
                               iconSize: 24,
                               dropdownColor: Colors.black,
-                              onChanged: (int? value) {},
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('1월'),
-                                  value: 1,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('2월'),
-                                  value: 2,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('3월'),
-                                  value: 3,
-                                )
-                              ],
+                              items: months
+                                  .map((e) => DropdownMenuItem(
+                                        value: e,
+                                        child: Text(e.toString()),
+                                      ))
+                                  .toList(),
+                              onChanged: (int? value) {
+                                setState(() {
+                                  _selectedMonth = value!;
+                                });
+                              },
                             ),
                           ),
                           SizedBox(width: 12),
                           Expanded(
                             child: DropdownButtonFormField<int>(
+                              value: _selectedDay,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
@@ -302,21 +349,15 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                               isDense: false,
                               iconSize: 24,
                               dropdownColor: Colors.black,
-                              onChanged: (int? value) {},
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('1일'),
-                                  value: 1,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('2일'),
-                                  value: 2,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('3일'),
-                                  value: 3,
-                                )
-                              ],
+                              items: days
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e.toString())))
+                                  .toList(),
+                              onChanged: (int? value) {
+                                setState(() {
+                                  _selectedDay = value!;
+                                });
+                              },
                             ),
                           ),
                         ],
@@ -355,6 +396,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                         keyboardType: TextInputType.number,
+                        controller: _totalDayController,
                       ),
                       SizedBox(
                         height: 60,
@@ -376,6 +418,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                         keyboardType: TextInputType.number,
+                        controller: _usedDayController,
                       ),
                       SizedBox(
                         height: 60,
@@ -468,6 +511,7 @@ class _TraineeRegistration extends State<TraineeRegistration> {
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
+                        controller: _specificDetailsController,
                       ),
                       SizedBox(
                         height: 60,
