@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class CommonHeader extends StatelessWidget {
   final String title;
+  dynamic onPressed;
 
-  const CommonHeader({super.key, required this.title});
+  CommonHeader({super.key, required this.title, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,11 @@ class CommonHeader extends StatelessWidget {
         ),
         onPressed: () {
           // 뒤로 가기 동작 또는 다른 작업을 수행
-          Navigator.of(context).pop();
+          if (onPressed == null) {
+            Navigator.of(context).pop();
+          } else {
+            onPressed();
+          }
         },
       ),
       Text(title,
