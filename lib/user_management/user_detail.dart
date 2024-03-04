@@ -1,98 +1,229 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/common/constants.dart';
-import 'package:gymming_app/user_timetable/component/calendar.dart';
-import 'package:gymming_app/user_timetable/component/schedule_item.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/models/trainee_detail.dart';
 
-import '../user_timetable/model/schedule_info.dart';
+import '../common/component/common_header.dart';
+import '../repositories/trainee_repository.dart';
+import 'component/calendar_trainee_detail.dart';
 
 class UserDetail extends StatelessWidget {
-  // String from;
+  final TraineeDetail traineeDetail = TraineeRepository().getTraineeDetail();
 
   UserDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('회원 관리'),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: 52.0, // 이미지의 너비
-                      height: 52.0, // 이미지의 높이
-                      decoration: BoxDecoration(
-                        color: Colors.pink, // 초록색으로 채우기
-                        shape: BoxShape.circle, // 동그란 모양으로 설정
-                      )),
-                  IconButton(
-                    icon: Image.asset(
-                      'assets/icon_nav_arrow_right.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    onPressed: () {
-                      // 뒤로 가기 동작 또는 다른 작업을 수행
-                      // Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              Text('김운동',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white)),
-              Text(
-                '1998.06.16 | 남',
-                style: TextStyle(color: Colors.white),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '3 / 10 진행 | 23.10.08 등록',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Column(
+    return Scaffold(
+      extendBody: true,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CommonHeader(title: '기존 회원 관리'),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 28.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [],
-                      )
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // 응답 버튼 클릭 이벤트 처리
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.grey, // 버튼의 텍스트색
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(80.0),
+                                child: Image.asset(
+                                  traineeDetail.profileImg,
+                                  fit: BoxFit.cover,
+                                  width: 80.0,
+                                  height: 80.0,
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              Text(
+                                traineeDetail.name,
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    traineeDetail.birth,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 2,
+                                    height: 16,
+                                    color: BORDER_COLOR,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                  ),
+                                  Text(
+                                    traineeDetail.gender,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    traineeDetail.weekDay,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 2,
+                                    height: 16,
+                                    color: BORDER_COLOR,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                  ),
+                                  Text(
+                                    '${traineeDetail.usedDay}/${traineeDetail.totalDay} 진행',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 2,
+                                    height: 16,
+                                    color: BORDER_COLOR,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                  ),
+                                  Text(
+                                    '${traineeDetail.registeredDay} 등록',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    traineeDetail.phoneNumber,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: SECONDARY_COLOR,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.0),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // TODO: 연락하기 클릭 이벤트
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        minimumSize: Size(0, 25),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: BTN_COLOR,
+                                        textStyle: TextStyle(
+                                          fontSize: 14,
+                                        )),
+                                    child: Text('연락하기'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          PopupMenuButton(
+                            icon: Icon(Icons.more_vert,
+                                color: Colors.white, size: 20),
+                            color: BACKGROUND_COLOR,
+                            itemBuilder: (BuildContext context) => [
+                              PopupMenuItem(
+                                padding: EdgeInsets.fromLTRB(16, 0, 50, 0),
+                                child: Text(
+                                  '내용 편집',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () {
+                                  print('내용 편집');
+                                  // TODO: 수정 페이지 이동
+                                },
+                              ),
+                              PopupMenuItem(
+                                padding: EdgeInsets.fromLTRB(16, 0, 50, 0),
+                                child: Text(
+                                  '삭제',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () {
+                                  print('삭제');
+                                  // TODO: 삭제 페이지 이동
+                                },
+                              ),
+                            ],
+                            offset: Offset(-5, 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              side: BorderSide(color: TERITARY_COLOR),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Text('연락하기'),
-                  ),
-                ],
+                    Divider(
+                      thickness: 12,
+                      height: 12,
+                      color: BACKGROUND_COLOR,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 28.0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '수업 진행 이력',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: SECONDARY_COLOR,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          CalendarTraineeDetail(
+                              lessonDay: traineeDetail.lessonDay),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Divider(
-                thickness: 4,
-                color: Colors.grey,
-              ),
-              Calendar(),
-
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
