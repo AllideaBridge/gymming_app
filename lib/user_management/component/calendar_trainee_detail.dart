@@ -3,6 +3,9 @@ import 'package:gymming_app/common/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../common/component/icon_label.dart';
+import '../../common/utils/date_util.dart';
+
 class CalendarTraineeDetail extends StatefulWidget {
   final List<DateTime> lessonDay;
 
@@ -53,10 +56,81 @@ class _CalendarTraineeDetailState extends State<CalendarTraineeDetail> {
           shape: BoxShape.circle,
         ),
       ),
-      onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+      onDaySelected: (selectedDay, _) {
         setState(() {
-          this._selectedDay = selectedDay;
+          _selectedDay = selectedDay;
         });
+        // TODO: 클릭한 날의 레슨 정보 가져오는 API 호출
+        if (containsDateTime(widget.lessonDay, selectedDay)) {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: false,
+            builder: (BuildContext context) {
+              return Wrap(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 8, 20, 40),
+                    color: BACKGROUND_COLOR,
+                    child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                                child: Container(
+                              width: 60,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: BTN_COLOR,
+                              ),
+                            )),
+                            SizedBox(height: 28),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                // TODO: 레슨 상태에 따라 색상 변경
+                                color: PRIMARY2_COLOR,
+                              ),
+                              // TODO: 레슨 상태에 따라 내용 변경
+                              child: Text(
+                                '정상 출석',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 28),
+                            IconLabel(
+                              iconData: Icons.alarm,
+                              title: "일시",
+                              // TODO: API를 통해서 받아오기
+                              content:
+                                  DateUtil.getKoreanDayAndHour(selectedDay),
+                              titleColor: SECONDARY_COLOR,
+                              contentColor: Colors.white,
+                            ),
+                            SizedBox(height: 28),
+                            IconLabel(
+                              iconData: Icons.location_on_outlined,
+                              title: "장소",
+                              // TODO: API를 통해서 받아오기
+                              content: 'GYMGYM | 방이동',
+                              titleColor: SECONDARY_COLOR,
+                              contentColor: Colors.white,
+                            ),
+                          ],
+                        )),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       },
       eventLoader: _getEventList,
       selectedDayPredicate: (DateTime day) =>
