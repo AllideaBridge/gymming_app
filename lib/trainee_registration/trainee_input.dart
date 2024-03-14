@@ -521,7 +521,7 @@ class _TraineeInput extends State<TraineeInput> {
                           child: Row(
                             children: [
                               PrimaryButton(
-                                  title: '새로운 회원 등록', onPressed: () {}),
+                                  title: widget.isRegister ? '새로운 회원 등록' : '회원 정보 수정', onPressed: () {}),
                             ],
                           ))
                     ],
