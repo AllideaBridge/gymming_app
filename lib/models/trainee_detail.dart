@@ -9,6 +9,7 @@ class TraineeDetail {
   final String registeredDay;
   final String phoneNumber;
   final List<DateTime> lessonDay;
+  final String specificDetail;
 
   TraineeDetail({
     required this.profileImg,
@@ -21,5 +22,6 @@ class TraineeDetail {
     required this.registeredDay,
     required this.phoneNumber,
     required this.lessonDay,
+    required this.specificDetail
   });
 }

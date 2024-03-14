@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/models/trainee_detail.dart';
+import 'package:gymming_app/trainee_registration/trainee_delete.dart';
+import 'package:gymming_app/trainee_registration/trainee_input.dart';
 
 import '../common/component/common_header.dart';
 import '../repositories/trainee_repository.dart';
@@ -164,8 +166,13 @@ class UserDetail extends StatelessWidget {
                                   ),
                                 ),
                                 onTap: () {
-                                  print('내용 편집');
-                                  // TODO: 수정 페이지 이동
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TraineeInput(
+                                                isRegister: false,
+                                                traineeDetail: traineeDetail,
+                                              )));
                                 },
                               ),
                               PopupMenuItem(
@@ -178,8 +185,11 @@ class UserDetail extends StatelessWidget {
                                   ),
                                 ),
                                 onTap: () {
-                                  print('삭제');
-                                  // TODO: 삭제 페이지 이동
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TraineeDelete(
+                                              name: traineeDetail.name)));
                                 },
                               ),
                             ],
