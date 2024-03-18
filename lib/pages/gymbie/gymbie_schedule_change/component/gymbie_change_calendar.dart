@@ -40,12 +40,12 @@ class _CalendarState extends State<CalendarModal> {
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         rightChevronIcon: Image.asset(
-          'assets/icon_nav_arrow_right.png',
+          'assets/images/icon_nav_arrow_right.png',
           width: 16,
           height: 16,
         ),
         leftChevronIcon: Image.asset(
-          'assets/icon_nav_arrow_left.png',
+          'assets/images/icon_nav_arrow_left.png',
           width: 16,
           height: 16,
         ),

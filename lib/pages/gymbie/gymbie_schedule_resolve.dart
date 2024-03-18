@@ -40,7 +40,7 @@ class ScheduleChangeComplete extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/change_compeleted.png'),
+                    Image.asset('assets/images/change_compeleted.png'),
                     SizedBox(height: 80),
                     buildTitleAndTime(type == CHANGE ? '변경 전' : '취소한 일정',
                         originDay, '', SECONDARY_COLOR),
@@ -102,7 +102,7 @@ class ScheduleChangeComplete extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Image.asset(
-          'assets/clock.png',
+          'assets/images/clock.png',
           width: 20,
           height: 20,
         ),

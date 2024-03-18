@@ -130,17 +130,17 @@ class ScheduleCancelConfirm extends StatelessWidget {
       case 'Time':
         title = '일시';
         info = DateUtil.getKoreanDayAndHour(scheduleInfo.startTime);
-        imgUrl = 'assets/clock.png';
+        imgUrl = 'assets/images/clock.png';
         break;
       case 'Lesson':
         title = '수업';
         info = '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너';
-        imgUrl = 'assets/calendar.png';
+        imgUrl = 'assets/images/calendar.png';
         break;
       case 'Location':
         title = '장소';
         info = '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}';
-        imgUrl = 'assets/location.png';
+        imgUrl = 'assets/images/location.png';
         break;
     }
 

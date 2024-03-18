@@ -5,7 +5,7 @@ class RequestRepository {
     RequestList(
         type: '변경',
         status: '승인',
-        profileImg: 'assets/trainerExample.png',
+        profileImg: 'assets/images/trainerExample.png',
         name: '김헬스',
         originDay: '8월 6일 09:00',
         changeDay: '8월 7일 20:00',
@@ -13,7 +13,7 @@ class RequestRepository {
     RequestList(
         type: '취소',
         status: '승인',
-        profileImg: 'assets/trainerExample2.png',
+        profileImg: 'assets/images/trainerExample2.png',
         name: '이헬스',
         originDay: '8월 8일 09:00',
         changeDay: '',
@@ -21,7 +21,7 @@ class RequestRepository {
     RequestList(
         type: '취소',
         status: '거절',
-        profileImg: 'assets/trainerExample3.png',
+        profileImg: 'assets/images/trainerExample3.png',
         name: '박헬스',
         originDay: '8월 12일 09:00',
         changeDay: '',
@@ -29,7 +29,7 @@ class RequestRepository {
     RequestList(
         type: '변경',
         status: '승인',
-        profileImg: 'assets/trainerExample4.png',
+        profileImg: 'assets/images/trainerExample4.png',
         name: '최헬스',
         originDay: '8월 13일 09:00',
         changeDay: '8월 14일 10:00',
@@ -37,7 +37,7 @@ class RequestRepository {
     RequestList(
         type: '변경',
         status: '거절',
-        profileImg: 'assets/trainerExample5.png',
+        profileImg: 'assets/images/trainerExample5.png',
         name: '고헬스',
         originDay: '8월 19일 09:00',
         changeDay: '8월 19일 13:00',
@@ -45,7 +45,7 @@ class RequestRepository {
     RequestList(
         type: '변경',
         status: '승인',
-        profileImg: 'assets/trainerExample6.png',
+        profileImg: 'assets/images/trainerExample6.png',
         name: '고헬스',
         originDay: '8월 21일 08:30',
         changeDay: '8월 26일 18:00',
@@ -53,7 +53,7 @@ class RequestRepository {
     RequestList(
         type: '변경',
         status: '거절',
-        profileImg: 'assets/trainerExample.png',
+        profileImg: 'assets/images/trainerExample.png',
         name: '한헬스',
         originDay: '8월 21일 07:00',
         changeDay: '8월 23일 06:00',

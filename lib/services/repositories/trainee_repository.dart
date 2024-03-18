@@ -5,7 +5,7 @@ class TraineeRepository {
   final List<TraineeList> _dummyTrainees = [
     TraineeList(
       name: '김헬스',
-      profileImg: 'assets/trainerExample.png',
+      profileImg: 'assets/images/trainerExample.png',
       weekday: '월, 수, 금',
       usedDay: 3,
       totalDay: 10,
@@ -14,7 +14,7 @@ class TraineeRepository {
     ),
     TraineeList(
       name: '조헬스',
-      profileImg: 'assets/trainerExample2.png',
+      profileImg: 'assets/images/trainerExample2.png',
       weekday: '월, 수',
       usedDay: 6,
       totalDay: 10,
@@ -23,7 +23,7 @@ class TraineeRepository {
     ),
     TraineeList(
       name: '이헬스',
-      profileImg: 'assets/trainerExample3.png',
+      profileImg: 'assets/images/trainerExample3.png',
       weekday: '금',
       usedDay: 0,
       totalDay: 10,
@@ -32,7 +32,7 @@ class TraineeRepository {
     ),
     TraineeList(
       name: '박헬스',
-      profileImg: 'assets/trainerExample.png',
+      profileImg: 'assets/images/trainerExample.png',
       weekday: '월, 수, 금',
       usedDay: 3,
       totalDay: 10,
@@ -41,7 +41,7 @@ class TraineeRepository {
     ),
     TraineeList(
       name: '임헬스',
-      profileImg: 'assets/trainerExample2.png',
+      profileImg: 'assets/images/trainerExample2.png',
       weekday: '월, 수',
       usedDay: 6,
       totalDay: 10,
@@ -50,7 +50,7 @@ class TraineeRepository {
     ),
     TraineeList(
       name: '최헬스',
-      profileImg: 'assets/trainerExample3.png',
+      profileImg: 'assets/images/trainerExample3.png',
       weekday: '금',
       usedDay: 0,
       totalDay: 10,
@@ -60,7 +60,7 @@ class TraineeRepository {
   ];
 
   final TraineeDetail _dummyTrainee = TraineeDetail(
-      profileImg: 'assets/trainerExample3.png',
+      profileImg: 'assets/images/trainerExample3.png',
       name: '김헬스',
       birth: '1998.08.08',
       gender: '여',

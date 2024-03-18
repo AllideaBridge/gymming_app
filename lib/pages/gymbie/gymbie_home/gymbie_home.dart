@@ -25,7 +25,7 @@ class UserTimeTable extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ExploreScreen()));
             },
           ),
-          Image.asset('assets/arrow.png')
+          Image.asset('assets/images/arrow.png')
         ],
         backgroundColor: Colors.black,
       ),
