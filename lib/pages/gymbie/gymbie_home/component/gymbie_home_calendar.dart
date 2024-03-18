@@ -7,38 +7,62 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({Key? key}) : super(key: key);
+class GymbieHomeCalendar extends StatefulWidget {
+  const GymbieHomeCalendar({Key? key}) : super(key: key);
 
   @override
-  State<Calendar> createState() => _CalendarState();
+  State<GymbieHomeCalendar> createState() => _GymbieHomeCalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
-  Set<dynamic> _isScheduled = {};
-  DateTime now = DateTime.now();
+class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
+
+  late Future<Set<String>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    fetchData(now.year, now.month);
+    futureSchedules = fetchScheduleList(DateTime.now().year, DateTime.now().month);
   }
 
-  Future<void> fetchData(int year, int month) async {
-    final response = await http
-        .get(Uri.parse('http://10.0.2.2:5000/schedules/1/$year/$month'));
+  Future<Set<String>> fetchScheduleList(int year, int month) async {
+    var url = Uri.parse('http://10.0.2.2:5000/schedules/1/$year/$month');
+    final response = await http.get(url);
     if (response.statusCode == 200) {
-      setState(() {
-        _isScheduled =
-            json.decode(response.body).map((item) => item.toString()).toSet();
-      });
+      final List body = json.decode(response.body);
+      return body.map((item) => item.toString()).toSet();
     } else {
-      throw Exception('Failed to load data');
+      throw Exception("failed to load album");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: futureSchedules,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final schedules = snapshot.data!;
+            return buildCalendar(schedules);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          return const CircularProgressIndicator();
+        });
+  }
+
+  Widget buildCalendar(Set<dynamic> schedules) {
+    //event loader 용 함수
+    List<bool> getScheduleEvents(DateTime day) {
+      if (schedules.contains(
+          "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10
+              ? "0"
+              : ""}${day.day}")) {
+        return [true];
+      }
+      return [];
+    }
+
     const defaultTextStyle = TextStyle(color: Colors.white);
     return TableCalendar(
       focusedDay: Provider.of<StateDateTime>(context).selectedDateTime,
@@ -65,7 +89,7 @@ class _CalendarState extends State<Calendar> {
         Provider.of<StateDateTime>(context, listen: false)
             .changeStateDate(selectedDay);
       },
-      eventLoader: _getEventList,
+      eventLoader: getScheduleEvents,
       calendarBuilders: CalendarBuilders(markerBuilder: (context, date, event) {
         if (event.isNotEmpty) {
           return Container(
@@ -85,17 +109,9 @@ class _CalendarState extends State<Calendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          fetchData(day.year, day.month);
+          futureSchedules =  fetchScheduleList(day.year, day.month);
         });
       },
     );
-  }
-
-  List<bool> _getEventList(DateTime day) {
-    if (_isScheduled.contains(
-        "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10 ? "0" : ""}${day.day}")) {
-      return [true];
-    }
-    return [];
   }
 }

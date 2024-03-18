@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import '../../../../common/colors.dart';
 import '../../../../services/models/schedule_info.dart';
 
-class ScheduleList extends StatelessWidget {
-  const ScheduleList({super.key});
+class GymbieScheduleList extends StatelessWidget {
+  const GymbieScheduleList({super.key});
 
   @override
   Widget build(BuildContext context) {
