@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../common/colors.dart';
+
 class GymbieHomeCalendar extends StatefulWidget {
   const GymbieHomeCalendar({Key? key}) : super(key: key);
 
@@ -15,13 +17,13 @@ class GymbieHomeCalendar extends StatefulWidget {
 }
 
 class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
-
   late Future<Set<String>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    futureSchedules = fetchScheduleList(DateTime.now().year, DateTime.now().month);
+    futureSchedules =
+        fetchScheduleList(DateTime.now().year, DateTime.now().month);
   }
 
   Future<Set<String>> fetchScheduleList(int year, int month) async {
@@ -55,9 +57,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
     //event loader 용 함수
     List<bool> getScheduleEvents(DateTime day) {
       if (schedules.contains(
-          "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10
-              ? "0"
-              : ""}${day.day}")) {
+          "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10 ? "0" : ""}${day.day}")) {
         return [true];
       }
       return [];
@@ -84,6 +84,10 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
         weekendTextStyle: defaultTextStyle,
         outsideTextStyle: TextStyle(color: Colors.white24),
         tablePadding: EdgeInsets.all(4),
+        selectedDecoration: BoxDecoration(
+          color: CALENDAR_PICKED_COLOR,
+          shape: BoxShape.circle,
+        ),
       ),
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         Provider.of<StateDateTime>(context, listen: false)
@@ -95,7 +99,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
           return Container(
             width: 35,
             decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.6), shape: BoxShape.circle),
+                color: Colors.white.withOpacity(0.5), shape: BoxShape.circle),
           );
         }
         return null;
@@ -109,7 +113,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules =  fetchScheduleList(day.year, day.month);
+          futureSchedules = fetchScheduleList(day.year, day.month);
         });
       },
     );

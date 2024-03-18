@@ -9,3 +9,4 @@ const Color BORDER_COLOR = Color(0xff3c3c3c);
 const Color BTN_COLOR = Color(0xff494949);
 const Color INDICATOR_COLOR = Color(0xff151515);
 const Color TERITARY_COLOR = Color(0xff7A7A7A);
+const Color CALENDAR_PICKED_COLOR = Color(0xffff7575);

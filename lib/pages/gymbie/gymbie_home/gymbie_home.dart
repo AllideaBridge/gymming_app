@@ -31,7 +31,7 @@ class UserTimeTable extends StatelessWidget {
       ),
       drawer: UserDrawer(),
       body: Column(
-        children: [GymbieHomeCalendar(), GymbieScheduleList()],
+        children: [GymbieHomeCalendar(), ScheduleList()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
