@@ -31,7 +31,7 @@ class ExploreScreen extends StatelessWidget {
                   foregroundColor: MaterialStatePropertyAll(Colors.white)),
               child: Text('Timetable'),
             ),
-            Image.asset('assets/arrow.png')
+            Image.asset('assets/images/arrow.png')
           ],
           backgroundColor: Colors.black,
         ),

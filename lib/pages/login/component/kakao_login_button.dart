@@ -43,6 +43,6 @@ class KakaoLoginButton extends StatelessWidget {
             }
           }
         },
-        child: Image.asset('assets/kakao_login.png'));
+        child: Image.asset('assets/images/kakao_login.png'));
   }
 }

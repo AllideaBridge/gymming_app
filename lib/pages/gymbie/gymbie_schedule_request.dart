@@ -142,7 +142,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Image.asset(
-          'assets/clock.png',
+          'assets/images/clock.png',
           width: 20,
           height: 20,
         ),
@@ -176,7 +176,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Image.asset(
-          'assets/talkBox.png',
+          'assets/images/talkBox.png',
           width: 20,
           height: 20,
         ),

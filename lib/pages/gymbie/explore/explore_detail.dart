@@ -21,7 +21,7 @@ class ExploreDetail extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Image.asset(
-                            'assets/icon_nav_arrow_left.png',
+                            'assets/images/icon_nav_arrow_left.png',
                             height: 24,
                             width: 24,
                           ),

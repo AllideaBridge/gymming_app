@@ -126,9 +126,9 @@ class ReasonState extends State<Reason> {
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white)),
                             isOpen
-                                ? Image.asset('assets/icon_nav_arrow_up.png',
+                                ? Image.asset('assets/images/icon_nav_arrow_up.png',
                                     width: 20, height: 20)
-                                : Image.asset('assets/icon_nav_arrow_down.png',
+                                : Image.asset('assets/images/icon_nav_arrow_down.png',
                                     width: 20, height: 20),
                           ],
                         ),

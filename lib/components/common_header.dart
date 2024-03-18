@@ -11,7 +11,7 @@ class CommonHeader extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       IconButton(
         icon: Image.asset(
-          'assets/icon_nav_arrow_left.png',
+          'assets/images/images/icon_nav_arrow_left.png',
           height: 24,
           width: 24,
         ),

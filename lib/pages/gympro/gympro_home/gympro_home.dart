@@ -27,7 +27,7 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
             onPressed: () {
               print('Image Button Tapped!');
             },
-            icon: Image.asset('assets/alarm.png'),
+            icon: Image.asset('assets/images/alarm.png'),
           )
         ],
         backgroundColor: Colors.black,
