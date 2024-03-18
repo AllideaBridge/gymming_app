@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../common/colors.dart';
 
-class TimeModal extends StatefulWidget {
-  const TimeModal(
+class GymbieSelectTime extends StatefulWidget {
+  const GymbieSelectTime(
       {super.key, required this.selectedDay, required this.changeSelectedTime});
 
   final DateTime selectedDay;
   final Function(String) changeSelectedTime;
 
   @override
-  State<TimeModal> createState() => _TimeModal();
+  State<GymbieSelectTime> createState() => _GymbieSelectTimeState();
 }
 
-class _TimeModal extends State<TimeModal> {
+class _GymbieSelectTimeState extends State<GymbieSelectTime> {
   final List<Time> times = [
     Time(time: '06:00', isPossible: false),
     Time(time: '07:00', isPossible: false),
@@ -45,7 +45,7 @@ class _TimeModal extends State<TimeModal> {
   }
 
   @override
-  void didUpdateWidget(TimeModal oldWidget) {
+  void didUpdateWidget(GymbieSelectTime oldWidget) {
     super.didUpdateWidget(oldWidget);
     // selectedDay 변수가 변경될 때 실행되는 로직을 여기에 추가
     if (widget.selectedDay != oldWidget.selectedDay) {

@@ -10,18 +10,18 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/models/schedule_info.dart';
 
-class ScheduleChange extends StatefulWidget {
-  const ScheduleChange(
+class GymbieScheduleChange extends StatefulWidget {
+  const GymbieScheduleChange(
       {super.key, required this.originDay, required this.scheduleInfo});
 
   final DateTime originDay;
   final ScheduleInfo scheduleInfo;
 
   @override
-  State<ScheduleChange> createState() => _ScheduleChangeState();
+  State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
 }
 
-class _ScheduleChangeState extends State<ScheduleChange> {
+class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateTime.now();
   String _selectedTime = '';
 
@@ -51,7 +51,7 @@ class _ScheduleChangeState extends State<ScheduleChange> {
             child: Column(
               children: [
                 CommonHeader(title: '일정 $CHANGE'),
-                CalendarModal(
+                GymbieChangeCalendar(
                   originDay: widget.originDay,
                   changeSelectedDay: _changeSelectedDay,
                 ),
@@ -59,7 +59,7 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                   height: 10,
                 ),
                 Expanded(
-                  child: TimeModal(
+                  child: GymbieSelectTime(
                       selectedDay: _selectedDay,
                       changeSelectedTime: _changeSelectedTime),
                 ),
