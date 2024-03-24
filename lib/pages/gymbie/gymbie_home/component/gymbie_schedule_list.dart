@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
@@ -30,7 +29,7 @@ class GymbieScheduleList extends StatelessWidget {
             item["trainer_name"],
             item["center_name"],
             item["center_location"],
-            5);
+            5); //todo remain time 계산하기
         result.add(schedule);
       }
       return result;
