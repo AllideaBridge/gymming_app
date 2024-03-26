@@ -6,7 +6,6 @@ class StateDateTime with ChangeNotifier {
   StateDateTime({required this.selectedDateTime});
 
   void changeStateDate(DateTime selectedDateTime) {
-    print('here : $selectedDateTime');
     if (this.selectedDateTime.isAtSameMomentAs(selectedDateTime)) {
       return;
     }

@@ -54,7 +54,7 @@ class ScheduleClicked extends StatelessWidget {
                 children: [
                   SecondaryButton(
                       title: "취소하기",
-                      onPressed: (context) {
+                      onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -64,7 +64,7 @@ class ScheduleClicked extends StatelessWidget {
                   SizedBox(width: 12),
                   PrimaryButton(
                       title: "변경하기",
-                      onPressed: (context) {
+                      onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
