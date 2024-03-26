@@ -3,6 +3,8 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_change_calendar.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_select_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
+import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -24,11 +26,21 @@ class GymbieScheduleChange extends StatefulWidget {
 class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateTime.now();
   String _selectedTime = '';
+  late AvailableTimes _availableTimes = AvailableTimes(
+      availabilityEndTime: '',
+      availabilityStartTime: '',
+      lessonMinutes: 30,
+      lessonChangeRange: 10,
+      schedules: []);
 
-  void _changeSelectedDay(DateTime selectedDay) {
+  void _changeSelectedDay(DateTime selectedDay) async {
+    var result =
+        await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
+            '1', selectedDay.year, selectedDay.month, selectedDay.day);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
+      _availableTimes = result;
     });
   }
 
@@ -60,8 +72,13 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                 ),
                 Expanded(
                   child: GymbieSelectTime(
-                      selectedDay: _selectedDay,
-                      changeSelectedTime: _changeSelectedTime),
+                    selectedDay: _selectedDay,
+                    changeSelectedTime: _changeSelectedTime,
+                    availableTimes: _availableTimes,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 SizedBox(
                   width: 350,
