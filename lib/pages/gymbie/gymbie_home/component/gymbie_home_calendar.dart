@@ -1,44 +1,56 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({Key? key}) : super(key: key);
+import '../../../../common/colors.dart';
+
+class GymbieHomeCalendar extends StatefulWidget {
+  const GymbieHomeCalendar({Key? key}) : super(key: key);
 
   @override
-  State<Calendar> createState() => _CalendarState();
+  State<GymbieHomeCalendar> createState() => _GymbieHomeCalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
-  Set<dynamic> _isScheduled = {};
-  DateTime now = DateTime.now();
+class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
+  final scheduleRepository = ScheduleRepository(client: http.Client());
+  late Future<Set<String>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    fetchData(now.year, now.month);
-  }
-
-  Future<void> fetchData(int year, int month) async {
-    final response = await http
-        .get(Uri.parse('http://10.0.2.2:5000/schedules/1/$year/$month'));
-    if (response.statusCode == 200) {
-      setState(() {
-        _isScheduled =
-            json.decode(response.body).map((item) => item.toString()).toSet();
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
+    futureSchedules = scheduleRepository.fetchScheduleByMonth(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: futureSchedules,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final schedules = snapshot.data!;
+            return buildCalendar(schedules);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          return const CircularProgressIndicator();
+        });
+  }
+
+  Widget buildCalendar(Set<dynamic> schedules) {
+    //event loader 용 함수
+    List<bool> getScheduleEvents(DateTime day) {
+      if (schedules.contains(
+          "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10 ? "0" : ""}${day.day}")) {
+        return [true];
+      }
+      return [];
+    }
+
     const defaultTextStyle = TextStyle(color: Colors.white);
     return TableCalendar(
       focusedDay: Provider.of<StateDateTime>(context).selectedDateTime,
@@ -60,18 +72,22 @@ class _CalendarState extends State<Calendar> {
         weekendTextStyle: defaultTextStyle,
         outsideTextStyle: TextStyle(color: Colors.white24),
         tablePadding: EdgeInsets.all(4),
+        selectedDecoration: BoxDecoration(
+          color: CALENDAR_PICKED_COLOR,
+          shape: BoxShape.circle,
+        ),
       ),
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         Provider.of<StateDateTime>(context, listen: false)
             .changeStateDate(selectedDay);
       },
-      eventLoader: _getEventList,
+      eventLoader: getScheduleEvents,
       calendarBuilders: CalendarBuilders(markerBuilder: (context, date, event) {
         if (event.isNotEmpty) {
           return Container(
             width: 35,
             decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.6), shape: BoxShape.circle),
+                color: Colors.white.withOpacity(0.5), shape: BoxShape.circle),
           );
         }
         return null;
@@ -85,17 +101,9 @@ class _CalendarState extends State<Calendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          fetchData(day.year, day.month);
+          futureSchedules = scheduleRepository.fetchScheduleByMonth(day);
         });
       },
     );
-  }
-
-  List<bool> _getEventList(DateTime day) {
-    if (_isScheduled.contains(
-        "${day.year}-${day.month < 10 ? "0" : ""}${day.month}-${day.day < 10 ? "0" : ""}${day.day}")) {
-      return [true];
-    }
-    return [];
   }
 }

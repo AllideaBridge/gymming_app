@@ -1,23 +1,37 @@
+
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_item.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_modal.dart';
 import 'package:gymming_app/services//utils/date_util.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../common/colors.dart';
 import '../../../../services/models/schedule_info.dart';
 
-class ScheduleList extends StatelessWidget {
-  const ScheduleList({super.key});
+class GymbieScheduleList extends StatelessWidget {
+  final scheduleRepository = ScheduleRepository(client: http.Client());
+  late Future<List<ScheduleInfo>> schedules;
 
   @override
   Widget build(BuildContext context) {
-    List<ScheduleInfo> schedules = List.generate(
-        3,
-        (index) => ScheduleInfo(DateTime.now(), DateTime.now(), "PT", "김헬스",
-            "GYMMING", "방이동", index));
+    var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
+    schedules = scheduleRepository.fetchScheduleByDay(selectedDateTime);
 
+    return FutureBuilder(future: schedules, builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        final schedules = snapshot.data!;
+        return buildScheduleList(schedules, selectedDateTime, context);
+      } else if (snapshot.hasError) {
+        return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
+      }
+      return const CircularProgressIndicator();
+    });
+  }
+
+  Widget buildScheduleList(List<ScheduleInfo> schedules, DateTime selectedDateTime, context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -31,7 +45,7 @@ class ScheduleList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                getScheduleListTitleString(context),
+                DateUtil.getKoreanDay(selectedDateTime),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -43,15 +57,15 @@ class ScheduleList extends StatelessWidget {
                   shrinkWrap: true,
                   children: schedules
                       .map((schedule) => GestureDetector(
-                          onTap: () {
-                            showScheduleBottomSheet(context, schedule);
-                          },
-                          child: Column(
-                            children: [
-                              ScheduleItem(scheduleInfo: schedule),
-                              SizedBox(width: 28, height: 28),
-                            ],
-                          )))
+                      onTap: () {
+                        showScheduleBottomSheet(context, schedule);
+                      },
+                      child: Column(
+                        children: [
+                          ScheduleItem(scheduleInfo: schedule),
+                          SizedBox(width: 28, height: 28),
+                        ],
+                      )))
                       .toList(),
                 ),
               )
@@ -73,10 +87,5 @@ class ScheduleList extends StatelessWidget {
                 child: ScheduleClicked(scheduleInfo: schedule)),
           );
         });
-  }
-
-  String getScheduleListTitleString(BuildContext context) {
-    var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
-    return "오늘은\n${DateUtil.getKoreanDay(selectedDateTime)}";
   }
 }
