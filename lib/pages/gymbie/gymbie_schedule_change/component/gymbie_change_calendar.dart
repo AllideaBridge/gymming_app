@@ -4,18 +4,18 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../common/colors.dart';
 
-class CalendarModal extends StatefulWidget {
-  const CalendarModal(
+class GymbieChangeCalendar extends StatefulWidget {
+  const GymbieChangeCalendar(
       {super.key, required this.originDay, required this.changeSelectedDay});
 
   final DateTime originDay;
   final Function(DateTime) changeSelectedDay;
 
   @override
-  State<CalendarModal> createState() => _CalendarState();
+  State<GymbieChangeCalendar> createState() => _GymbieChangeCalendarState();
 }
 
-class _CalendarState extends State<CalendarModal> {
+class _GymbieChangeCalendarState extends State<GymbieChangeCalendar> {
   DateTime selectedDay = DateTime.now();
 
   @override

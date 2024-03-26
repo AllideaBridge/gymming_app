@@ -3,6 +3,8 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_change_calendar.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_select_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
+import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -10,25 +12,35 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/models/schedule_info.dart';
 
-class ScheduleChange extends StatefulWidget {
-  const ScheduleChange(
+class GymbieScheduleChange extends StatefulWidget {
+  const GymbieScheduleChange(
       {super.key, required this.originDay, required this.scheduleInfo});
 
   final DateTime originDay;
   final ScheduleInfo scheduleInfo;
 
   @override
-  State<ScheduleChange> createState() => _ScheduleChangeState();
+  State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
 }
 
-class _ScheduleChangeState extends State<ScheduleChange> {
+class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateTime.now();
   String _selectedTime = '';
+  late AvailableTimes _availableTimes = AvailableTimes(
+      availabilityEndTime: '',
+      availabilityStartTime: '',
+      lessonMinutes: 30,
+      lessonChangeRange: 10,
+      schedules: []);
 
-  void _changeSelectedDay(DateTime selectedDay) {
+  void _changeSelectedDay(DateTime selectedDay) async {
+    var result =
+        await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
+            '1', selectedDay.year, selectedDay.month, selectedDay.day);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
+      _availableTimes = result;
     });
   }
 
@@ -51,7 +63,7 @@ class _ScheduleChangeState extends State<ScheduleChange> {
             child: Column(
               children: [
                 CommonHeader(title: '일정 $CHANGE'),
-                CalendarModal(
+                GymbieChangeCalendar(
                   originDay: widget.originDay,
                   changeSelectedDay: _changeSelectedDay,
                 ),
@@ -59,9 +71,14 @@ class _ScheduleChangeState extends State<ScheduleChange> {
                   height: 10,
                 ),
                 Expanded(
-                  child: TimeModal(
-                      selectedDay: _selectedDay,
-                      changeSelectedTime: _changeSelectedTime),
+                  child: GymbieSelectTime(
+                    selectedDay: _selectedDay,
+                    changeSelectedTime: _changeSelectedTime,
+                    availableTimes: _availableTimes,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 SizedBox(
                   width: 350,

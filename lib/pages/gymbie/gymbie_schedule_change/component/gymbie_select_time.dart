@@ -1,39 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/services/models/available_times.dart';
 
 import '../../../../common/colors.dart';
 
-class TimeModal extends StatefulWidget {
-  const TimeModal(
-      {super.key, required this.selectedDay, required this.changeSelectedTime});
+class GymbieSelectTime extends StatefulWidget {
+  const GymbieSelectTime(
+      {super.key,
+      required this.selectedDay,
+      required this.changeSelectedTime,
+      required this.availableTimes});
 
   final DateTime selectedDay;
   final Function(String) changeSelectedTime;
+  final AvailableTimes availableTimes;
 
   @override
-  State<TimeModal> createState() => _TimeModal();
+  State<GymbieSelectTime> createState() => _GymbieSelectTimeState();
 }
 
-class _TimeModal extends State<TimeModal> {
-  final List<Time> times = [
-    Time(time: '06:00', isPossible: false),
-    Time(time: '07:00', isPossible: false),
-    Time(time: '08:00', isPossible: false),
-    Time(time: '09:00', isPossible: true),
-    Time(time: '10:00', isPossible: true),
-    Time(time: '11:00', isPossible: true),
-    Time(time: '12:00', isPossible: true),
-    Time(time: '13:00', isPossible: true),
-    Time(time: '14:00', isPossible: true),
-    Time(time: '15:00', isPossible: false),
-    Time(time: '16:00', isPossible: true),
-    Time(time: '17:00', isPossible: true),
-    Time(time: '18:00', isPossible: false),
-    Time(time: '19:00', isPossible: false),
-    Time(time: '20:00', isPossible: true),
-    Time(time: '21:00', isPossible: true),
-    Time(time: '22:00', isPossible: false),
-    Time(time: '23:00', isPossible: false)
-  ];
+class _GymbieSelectTimeState extends State<GymbieSelectTime> {
+  var times = [];
 
   String selectedTime = '';
 
@@ -45,13 +31,11 @@ class _TimeModal extends State<TimeModal> {
   }
 
   @override
-  void didUpdateWidget(TimeModal oldWidget) {
+  void didUpdateWidget(GymbieSelectTime oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // selectedDay 변수가 변경될 때 실행되는 로직을 여기에 추가
     if (widget.selectedDay != oldWidget.selectedDay) {
-      // selectedDay가 변경된 경우, 원하는 동작 수행
-      // 예를 들어, 기본 시간을 리셋하거나 다른 작업 수행 가능
-      selectedTime = ''; // 예시: 기본 시간 리셋
+      selectedTime = '';
+      times = widget.availableTimes.generateTimeSlots();
     }
   }
 
@@ -118,16 +102,9 @@ final ButtonStyle selectedButtonStyle = ButtonStyle(
 );
 
 final TextStyle disabledTextStyle =
-    TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.3));
+    TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.3));
 
-const TextStyle defaultTextStyle = TextStyle(fontSize: 14, color: Colors.white);
+const TextStyle defaultTextStyle = TextStyle(fontSize: 13, color: Colors.white);
 
 const TextStyle selectedTextStyle =
-    TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold);
-
-class Time {
-  String time;
-  bool isPossible;
-
-  Time({required this.time, required this.isPossible});
-}
+    TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold);

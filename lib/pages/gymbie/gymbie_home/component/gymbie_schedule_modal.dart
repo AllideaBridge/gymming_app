@@ -68,7 +68,7 @@ class ScheduleClicked extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ScheduleChange(
+                                builder: (context) => GymbieScheduleChange(
                                       originDay:
                                           Provider.of<StateDateTime>(context)
                                               .selectedDateTime,
