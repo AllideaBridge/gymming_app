@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_item.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_modal.dart';
 import 'package:gymming_app/services//utils/date_util.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,39 +12,13 @@ import '../../../../common/colors.dart';
 import '../../../../services/models/schedule_info.dart';
 
 class GymbieScheduleList extends StatelessWidget {
+  final scheduleRepository = ScheduleRepository(client: http.Client());
   late Future<List<ScheduleInfo>> schedules;
-
-  Future<List<ScheduleInfo>> fetchScheduleOfDay(DateTime datetime) async {
-    var url = Uri.parse(
-        'http://10.0.2.2:5000/schedules/1/${datetime.year}/${datetime.month}/${datetime.day}');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final List<dynamic> body = json.decode(response.body);
-      final List<ScheduleInfo> result = [];
-      for (Map<String, dynamic> item in body) {
-        ScheduleInfo schedule = ScheduleInfo(
-            DateTime.parse(item["schedule_start_time"]),
-            DateTime.parse(item["schedule_start_time"]),
-            item["lesson_name"],
-            item["trainer_name"],
-            item["center_name"],
-            item["center_location"],
-            5); //todo remain time 계산하기
-        result.add(schedule);
-      }
-      return result;
-    } else {
-      throw Exception("api response error occurs");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
-    schedules = fetchScheduleOfDay(selectedDateTime);
-
-    print(selectedDateTime);
-    print(schedules);
+    schedules = scheduleRepository.fetchScheduleByDay(selectedDateTime);
 
     return FutureBuilder(future: schedules, builder: (context, snapshot) {
       if (snapshot.hasData) {
@@ -53,7 +27,6 @@ class GymbieScheduleList extends StatelessWidget {
       } else if (snapshot.hasError) {
         return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
       }
-
       return const CircularProgressIndicator();
     });
   }

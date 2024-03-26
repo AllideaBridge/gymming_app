@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,24 +16,13 @@ class GymbieHomeCalendar extends StatefulWidget {
 }
 
 class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
+  final scheduleRepository = ScheduleRepository(client: http.Client());
   late Future<Set<String>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    futureSchedules =
-        fetchScheduleList(DateTime.now().year, DateTime.now().month);
-  }
-
-  Future<Set<String>> fetchScheduleList(int year, int month) async {
-    var url = Uri.parse('http://10.0.2.2:5000/schedules/1/$year/$month');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final List body = json.decode(response.body);
-      return body.map((item) => item.toString()).toSet();
-    } else {
-      throw Exception("failed to load album");
-    }
+    futureSchedules = scheduleRepository.fetchScheduleByMonth(DateTime.now());
   }
 
   @override
@@ -113,7 +101,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules = fetchScheduleList(day.year, day.month);
+          futureSchedules = scheduleRepository.fetchScheduleByMonth(day);
         });
       },
     );
