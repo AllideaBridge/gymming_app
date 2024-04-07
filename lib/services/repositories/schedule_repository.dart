@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import '../models/schedule_info.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,7 @@ class ScheduleRepository {
 
   static final int dummyUserId = 1;
 
-  final String baseUrl = "http://10.0.2.2:5000/schedules";
+  static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> fetchScheduleByMonth(DateTime dateTime) async {
     final int year = dateTime.year;
@@ -32,31 +31,25 @@ class ScheduleRepository {
         '$baseUrl/$dummyUserId/${datetime.year}/${datetime.month}/${datetime.day}');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final List<dynamic> body = json.decode(response.body);
-      final List<ScheduleInfo> result = [];
-      for (Map<String, dynamic> item in body) {
-        ScheduleInfo schedule = ScheduleInfo(
-            item["schedule_id"],
-            DateTime.parse(item["schedule_start_time"]),
-            DateTime.parse(item["schedule_start_time"]),
-            //todo endTime
-            item["lesson_name"],
-            item["trainer_name"],
-            item["center_name"],
-            item["center_location"],
-            5); //todo remain time 계산하기
-        result.add(schedule);
+      try {
+        final List<dynamic> body = json.decode(response.body);
+        final List<ScheduleInfo> result = [];
+        for (Map<String, dynamic> item in body) {
+          result.add(ScheduleInfo.fromJson(item));
+        }
+        return result;
+      } catch (e) {
+        throw Exception("Failed to load data");
       }
-      return result;
     } else {
-      throw Exception("api response error occurs");
+      throw Exception("Failed to load data");
     }
   }
 
   static Future<AvailableTimes> getAvailableTimeListByTrainerIdAndDate(
       String trainerId, int year, int month, int day) async {
     final response = await http.get(Uri.parse(
-        'http://10.0.2.2:5000/schedules/trainer/$trainerId/$year/$month/$day'));
+        '$baseUrl/trainer/$trainerId/$year/$month/$day'));
     if (response.statusCode == 200) {
       try {
         return AvailableTimes.fromJson(json.decode(response.body));
@@ -65,6 +58,8 @@ class ScheduleRepository {
       }
     } else {
       throw Exception('Failed to load data');
+    }
+  }
 
   Future<bool> cancelSchedule(int scheduleId) async {
     var url = Uri.parse('$baseUrl/$scheduleId/cancel');

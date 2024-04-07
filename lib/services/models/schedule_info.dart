@@ -20,4 +20,17 @@ class ScheduleInfo {
   DateTime get endTime => _endTime;
   DateTime get startTime => _startTime;
   int get remainDays => _remainDays;
+
+  factory ScheduleInfo.fromJson(Map<String, dynamic> json) {
+    return ScheduleInfo(
+        json["schedule_id"],
+        DateTime.parse(json["schedule_start_time"]),
+        DateTime.parse(json["schedule_start_time"]),
+        //todo endTime
+        json["lesson_name"],
+        json["trainer_name"],
+        json["center_name"],
+        json["center_location"],
+        5);
+  }
 }
