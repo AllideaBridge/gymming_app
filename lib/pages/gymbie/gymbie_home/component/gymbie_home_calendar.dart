@@ -22,7 +22,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
   @override
   void initState() {
     super.initState();
-    futureSchedules = scheduleRepository.fetchScheduleByMonth(DateTime.now());
+    futureSchedules = scheduleRepository.getScheduleByMonth(DateTime.now());
   }
 
   @override
@@ -101,7 +101,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules = scheduleRepository.fetchScheduleByMonth(day);
+          futureSchedules = scheduleRepository.getScheduleByMonth(day);
         });
       },
     );

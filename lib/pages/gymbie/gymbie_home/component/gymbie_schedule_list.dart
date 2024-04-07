@@ -18,7 +18,7 @@ class GymbieScheduleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
-    schedules = scheduleRepository.fetchScheduleByDay(selectedDateTime);
+    schedules = scheduleRepository.getScheduleByDay(selectedDateTime);
 
     return FutureBuilder(future: schedules, builder: (context, snapshot) {
       if (snapshot.hasData) {
