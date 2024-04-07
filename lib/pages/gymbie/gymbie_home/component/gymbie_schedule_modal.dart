@@ -58,7 +58,7 @@ class ScheduleClicked extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ScheduleCancelConfirm(
+                                builder: (context) => GymbieScheduleCancel(
                                     scheduleInfo: scheduleInfo)));
                       }),
                   SizedBox(width: 12),
