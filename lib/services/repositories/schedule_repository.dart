@@ -13,20 +13,26 @@ class ScheduleRepository {
 
   static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
-  Future<Set<String>> fetchScheduleByMonth(DateTime dateTime) async {
+  Future<Set<String>> getScheduleByMonth(DateTime dateTime) async {
     final int year = dateTime.year;
     final int month = dateTime.month;
+
     var url = Uri.parse('$baseUrl/$dummyUserId/$year/$month');
+
     final response = await client.get(url);
     if (response.statusCode == 200) {
-      final List<dynamic> body = json.decode(response.body)["dates"];
-      return body.map((item) => item.toString()).toSet();
+      try {
+        final List<dynamic> body = json.decode(response.body)["dates"];
+        return body.map((item) => item.toString()).toSet();
+      } catch (e) {
+        throw Exception("Failed to load data");
+      }
     } else {
-      throw Exception("failed to load schedule by month");
+      throw Exception("Failed to load data");
     }
   }
 
-  Future<List<ScheduleInfo>> fetchScheduleByDay(DateTime datetime) async {
+  Future<List<ScheduleInfo>> getScheduleByDay(DateTime datetime) async {
     var url = Uri.parse(
         '$baseUrl/$dummyUserId/${datetime.year}/${datetime.month}/${datetime.day}');
     final response = await http.get(url);
