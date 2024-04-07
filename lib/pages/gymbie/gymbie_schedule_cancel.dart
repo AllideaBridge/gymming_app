@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/components/layouts/reason_layout.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/schedule_info.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -9,10 +12,11 @@ import '../../components/common_header.dart';
 import '../../components/layouts/reason_content.dart';
 import '../../services/utils/date_util.dart';
 
-class ScheduleCancelConfirm extends StatelessWidget {
+class GymbieScheduleCancel extends StatelessWidget {
+  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
   final ScheduleInfo scheduleInfo;
 
-  const ScheduleCancelConfirm({super.key, required this.scheduleInfo});
+  GymbieScheduleCancel({super.key, required this.scheduleInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +47,29 @@ class ScheduleCancelConfirm extends StatelessWidget {
                         child: Column(
                           children: [
                             SizedBox(height: 40),
-                            buildTitleAndInfo('Time'),
+                            IconLabel(
+                                iconData: Icons.alarm,
+                                title: '일시',
+                                content: DateUtil.getKoreanDayAndHour(
+                                    scheduleInfo.startTime),
+                                titleColor: SECONDARY_COLOR,
+                                contentColor: Colors.white),
                             SizedBox(height: 40),
-                            buildTitleAndInfo('Lesson'),
+                            IconLabel(
+                                iconData: Icons.calendar_today_outlined,
+                                title: '일정',
+                                content:
+                                    '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너',
+                                titleColor: SECONDARY_COLOR,
+                                contentColor: Colors.white),
                             SizedBox(height: 40),
-                            buildTitleAndInfo('Location'),
+                            IconLabel(
+                                iconData: Icons.location_on_outlined,
+                                title: '장소',
+                                content:
+                                    '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}',
+                                titleColor: SECONDARY_COLOR,
+                                contentColor: Colors.white),
                           ],
                         ),
                       ),
@@ -57,38 +79,7 @@ class ScheduleCancelConfirm extends StatelessWidget {
                           height: 56,
                           child: ElevatedButton(
                             onPressed: () {
-                              DateTime now = DateTime.now();
-                              int days = scheduleInfo.startTime
-                                  .difference(
-                                      DateTime(now.year, now.month, now.day))
-                                  .inDays;
-                              if (days >= scheduleInfo.remainDays) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ScheduleChangeComplete(
-                                            type: CANCEL,
-                                            originDay: scheduleInfo.startTime,
-                                          )),
-                                );
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Reason(
-                                              reasonContent: ReasonContent(
-                                                  CANCEL_TITLE,
-                                                  CANCEL_SUBTITLE,
-                                                  CHANGE_REASONS),
-                                              originDay: scheduleInfo.startTime,
-                                              selectedDay:
-                                                  scheduleInfo.startTime,
-                                              selectedTime:
-                                                  '${scheduleInfo.startTime.hour}:00',
-                                              type: CANCEL,
-                                            )));
-                              }
+                              showAfterClickCancel(context);
                             },
                             style: ButtonStyle(
                               backgroundColor:
@@ -121,57 +112,44 @@ class ScheduleCancelConfirm extends StatelessWidget {
     );
   }
 
-  Widget buildTitleAndInfo(String type) {
-    String imgUrl = '';
-    String title = '';
-    String info = '';
+  void showAfterClickCancel(context) async {
+    {
+      DateTime now = DateTime.now();
+      int days = scheduleInfo.startTime
+          .difference(DateTime(now.year, now.month, now.day))
+          .inDays;
 
-    switch (type) {
-      case 'Time':
-        title = '일시';
-        info = DateUtil.getKoreanDayAndHour(scheduleInfo.startTime);
-        imgUrl = 'assets/images/clock.png';
-        break;
-      case 'Lesson':
-        title = '수업';
-        info = '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너';
-        imgUrl = 'assets/images/calendar.png';
-        break;
-      case 'Location':
-        title = '장소';
-        info = '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}';
-        imgUrl = 'assets/images/location.png';
-        break;
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset(
-          imgUrl,
-          width: 20,
-          height: 20,
-        ),
-        SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: TextStyle(
-                  color: SECONDARY_COLOR,
-                  fontSize: 18.0,
+      if (days >= scheduleInfo.remainDays) {
+        //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
+        // api 호출
+        var cancelResult = await scheduleRepository.cancelSchedule(scheduleInfo.scheduleId);
+        //api 성공 -> 성공 페이지로 이동
+        if (cancelResult == true) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ScheduleChangeComplete(
+                  type: CANCEL,
+                  originDay: scheduleInfo.startTime,
                 )),
-            SizedBox(height: 8),
-            Text(
-              info,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+          );
+        } else {
+          //api 실패 -> 유지 (에러 메세지 띄우기?)
+        }
+      } else {
+        //예약일까지의 날짜 차이가 remainDays보다 짧은 경우 -> 취소 사유 입력
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Reason(
+                      reasonContent: ReasonContent(
+                          CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
+                      originDay: scheduleInfo.startTime,
+                      selectedDay: scheduleInfo.startTime,
+                      selectedTime: '${scheduleInfo.startTime.hour}:00',
+                      type: CANCEL,
+                    )));
+      }
+    }
   }
 }
