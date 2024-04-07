@@ -8,16 +8,43 @@ class ScheduleInfo {
   final String _centerLocation;
   final int _remainDays;
 
-
-  ScheduleInfo(this._scheduleId, this._startTime, this._endTime, this._lessonName,
-      this._trainerName, this._centerName, this._centerLocation, this._remainDays);
+  ScheduleInfo(
+      this._scheduleId,
+      this._startTime,
+      this._endTime,
+      this._lessonName,
+      this._trainerName,
+      this._centerName,
+      this._centerLocation,
+      this._remainDays);
 
   int get scheduleId => _scheduleId;
+
   String get centerLocation => _centerLocation;
+
   String get centerName => _centerName;
+
   String get trainerName => _trainerName;
+
   String get lessonName => _lessonName;
+
   DateTime get endTime => _endTime;
+
   DateTime get startTime => _startTime;
+
   int get remainDays => _remainDays;
+
+  factory ScheduleInfo.fromJson(Map<String, dynamic> json) {
+    return ScheduleInfo(
+        json["schedule_id"],
+        DateTime.parse(json["schedule_start_time"]),
+        // TODO EndTime 계산
+        DateTime.parse(json["schedule_start_time"]),
+        json["lesson_name"],
+        json["trainer_name"],
+        json["center_name"],
+        json["center_location"],
+        // TODO Remain Time 계산
+        5);
+  }
 }

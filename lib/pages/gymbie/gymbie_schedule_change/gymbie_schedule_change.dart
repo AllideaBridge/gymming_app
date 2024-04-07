@@ -5,6 +5,7 @@ import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:intl/intl.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -86,42 +87,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                   child: ElevatedButton(
                     onPressed: _selectedTime.isEmpty
                         ? null
-                        : () {
-                            DateTime now = DateTime.now();
-                            int days = widget.originDay
-                                .difference(
-                                    DateTime(now.year, now.month, now.day))
-                                .inDays;
-                            if (days >= widget.scheduleInfo.remainDays) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ScheduleChangeComplete(
-                                          type: CHANGE,
-                                          originDay:
-                                              widget.scheduleInfo.startTime,
-                                          selectedDay: _selectedDay,
-                                          selectedTime: _selectedTime,
-                                        )),
-                              );
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Reason(
-                                            reasonContent: ReasonContent(
-                                                CHANGE_TITLE,
-                                                CHANEG_SUBTITLE,
-                                                CHANGE_REASONS),
-                                            originDay:
-                                                widget.scheduleInfo.startTime,
-                                            selectedDay: _selectedDay,
-                                            selectedTime: _selectedTime,
-                                            type: CHANGE,
-                                          )));
-                            }
-                          },
+                        : () => clickChangeButton(context),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(buttonColor),
@@ -148,5 +114,52 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
             ),
           ),
         ));
+  }
+
+  void clickChangeButton(context) async {
+    DateTime now = DateTime.now();
+    int days = widget.originDay
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+
+    if (days >= widget.scheduleInfo.remainDays) {
+      var requestTime = DateTime(
+        _selectedDay.year,
+        _selectedDay.month,
+        _selectedDay.day,
+        DateFormat('HH:mm').parse(_selectedTime).hour,
+        DateFormat('HH:mm').parse(_selectedTime).minute,
+      );
+
+      print(DateFormat('yyyy-MM-dd HH:mm:ss').format(requestTime));
+      final response = await ScheduleRepository.updateSchedule(
+          widget.scheduleInfo.scheduleId,
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(requestTime));
+
+      if (response) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScheduleChangeComplete(
+                    type: CHANGE,
+                    originDay: widget.scheduleInfo.startTime,
+                    selectedDay: _selectedDay,
+                    selectedTime: _selectedTime,
+                  )),
+        );
+      }
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Reason(
+                    reasonContent: ReasonContent(
+                        CHANGE_TITLE, CHANEG_SUBTITLE, CHANGE_REASONS),
+                    originDay: widget.scheduleInfo.startTime,
+                    selectedDay: _selectedDay,
+                    selectedTime: _selectedTime,
+                    type: CHANGE,
+                  )));
+    }
   }
 }
