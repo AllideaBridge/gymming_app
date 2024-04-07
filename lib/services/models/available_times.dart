@@ -68,7 +68,7 @@ class AvailableTimes {
     while (startTime.isBefore(endTime)) {
       var isPossible = true;
       for (var i = 0; i < schedules.length; i++) {
-        final fullDateFormat = DateFormat("E, d MMM yyyy HH:mm:ss 'GMT'");
+        final fullDateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
         final schedule = schedules[i];
 

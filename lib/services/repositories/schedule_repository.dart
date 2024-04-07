@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 
-import '../models/schedule_info.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/available_times.dart';
+import '../models/schedule_info.dart';
 
 class ScheduleRepository {
   ScheduleRepository({required this.client});
@@ -12,7 +12,7 @@ class ScheduleRepository {
 
   static final int dummyUserId = 1;
 
-  final String baseUrl = "http://10.0.2.2:5000/schedules";
+  static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> fetchScheduleByMonth(DateTime dateTime) async {
     final int year = dateTime.year;
@@ -65,12 +65,27 @@ class ScheduleRepository {
       }
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  static Future<bool> updateSchedule(int scheduleId, String time) async {
+    final response = await http.post(Uri.parse('$baseUrl/$scheduleId/change')
+        .replace(queryParameters: {'request_time': time}));
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   Future<bool> cancelSchedule(int scheduleId) async {
     var url = Uri.parse('$baseUrl/$scheduleId/cancel');
     final response = await http.post(url);
     if (response.statusCode != 200) {
-      throw Exception("api response error occurs: error code = ${response.statusCode}");
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
     }
     final dynamic body = json.decode(response.body);
     if (body["message"] == "Schedule cancel successfully") {
