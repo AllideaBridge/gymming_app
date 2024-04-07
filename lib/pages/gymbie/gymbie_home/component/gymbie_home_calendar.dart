@@ -34,7 +34,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
             final schedules = snapshot.data!;
             return buildCalendar(schedules);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
           }
 
           return const CircularProgressIndicator();
