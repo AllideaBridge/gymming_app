@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_item.dart';
@@ -20,58 +19,63 @@ class GymbieScheduleList extends StatelessWidget {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
     schedules = scheduleRepository.getScheduleByDay(selectedDateTime);
 
-    return FutureBuilder(future: schedules, builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        final schedules = snapshot.data!;
-        return buildScheduleList(schedules, selectedDateTime, context);
-      } else if (snapshot.hasError) {
-        return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
-      }
-      return const CircularProgressIndicator();
-    });
+    return Expanded(
+        child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        color: BACKGROUND_COLOR,
+      ),
+      margin: EdgeInsets.only(top: 54),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 32, 20, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              DateUtil.getKoreanDay(selectedDateTime),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500),
+            ),
+            SizedBox(width: 28, height: 28),
+            FutureBuilder(
+                future: schedules,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final schedules = snapshot.data!;
+                    return buildScheduleList(schedules, context);
+                  } else if (snapshot.hasError) {
+                    return SizedBox(
+                      width: double.infinity,
+                        child: Text("${snapshot.error}",
+                      style: TextStyle(color: Colors.white),
+                    ));
+                  }
+                  return const CircularProgressIndicator();
+                })
+          ],
+        ),
+      ),
+    ));
   }
 
-  Widget buildScheduleList(List<ScheduleInfo> schedules, DateTime selectedDateTime, context) {
+  Widget buildScheduleList(List<ScheduleInfo> schedules, context) {
     return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          color: BACKGROUND_COLOR,
-        ),
-        margin: EdgeInsets.only(top: 54),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(20, 32, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                DateUtil.getKoreanDay(selectedDateTime),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500),
-              ),
-              SizedBox(width: 28, height: 28),
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: schedules
-                      .map((schedule) => GestureDetector(
-                      onTap: () {
-                        showScheduleBottomSheet(context, schedule);
-                      },
-                      child: Column(
-                        children: [
-                          ScheduleItem(scheduleInfo: schedule),
-                          SizedBox(width: 28, height: 28),
-                        ],
-                      )))
-                      .toList(),
-                ),
-              )
-            ],
-          ),
-        ),
+      child: ListView(
+        shrinkWrap: true,
+        children: schedules
+            .map((schedule) => GestureDetector(
+                onTap: () {
+                  showScheduleBottomSheet(context, schedule);
+                },
+                child: Column(
+                  children: [
+                    ScheduleItem(scheduleInfo: schedule),
+                    SizedBox(width: 28, height: 28),
+                  ],
+                )))
+            .toList(),
       ),
     );
   }
