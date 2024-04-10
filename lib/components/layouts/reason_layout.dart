@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_request.dart';
+import 'package:gymming_app/services/models/schedule_info.dart';
+import 'package:gymming_app/services/repositories/request_repository.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -10,7 +13,7 @@ import 'reason_content.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
-  final DateTime? originDay;
+  final ScheduleInfo? scheduleInfo;
   final DateTime? selectedDay;
   final String? selectedTime;
   final String type;
@@ -18,7 +21,7 @@ class Reason extends StatefulWidget {
   const Reason(
       {super.key,
       required this.reasonContent,
-      this.originDay,
+      this.scheduleInfo,
       this.selectedDay,
       this.selectedTime,
       required this.type});
@@ -126,10 +129,14 @@ class ReasonState extends State<Reason> {
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white)),
                             isOpen
-                                ? Image.asset('assets/images/icon_nav_arrow_up.png',
-                                    width: 20, height: 20)
-                                : Image.asset('assets/images/icon_nav_arrow_down.png',
-                                    width: 20, height: 20),
+                                ? Image.asset(
+                                    'assets/images/icon_nav_arrow_up.png',
+                                    width: 20,
+                                    height: 20)
+                                : Image.asset(
+                                    'assets/images/icon_nav_arrow_down.png',
+                                    width: 20,
+                                    height: 20),
                           ],
                         ),
                       ),
@@ -222,22 +229,40 @@ class ReasonState extends State<Reason> {
                       ),
                     ),
                     onPressed: widget.type != REJECT
-                        ? () {
-                            // TODO: 변경&취소 API 호출
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ScheduleChangeCompleteWithReason(
-                                          type: widget.type,
-                                          originDay: widget.originDay!,
-                                          selectedDay: widget.selectedDay!,
-                                          selectedTime: widget.selectedTime!,
-                                          reason: clicked == 0
-                                              ? textController.text
-                                              : widget.reasonContent
-                                                  .reasons[clicked],
-                                        )));
+                        ? () async {
+                            var response =
+                                await RequestRepository.createRequest({
+                              "schedule_id": widget.scheduleInfo!.scheduleId,
+                              "request_from": 'USER',
+                              "request_type":
+                                  widget.type == CHANGE ? 'MODIFY' : 'CANCEL',
+                              "request_description": clicked == 0
+                                  ? textController.text
+                                  : widget.reasonContent.reasons[clicked],
+                              "request_time": widget.type == CHANGE
+                                  ? DateUtil
+                                      .convertDatabaseFormatFromDayAndTime(
+                                          widget.selectedDay!,
+                                          widget.selectedTime!)
+                                  : null,
+                            });
+                            if (response) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ScheduleChangeCompleteWithReason(
+                                            type: widget.type,
+                                            originDay:
+                                                widget.scheduleInfo!.startTime,
+                                            selectedDay: widget.selectedDay!,
+                                            selectedTime: widget.selectedTime!,
+                                            reason: clicked == 0
+                                                ? textController.text
+                                                : widget.reasonContent
+                                                    .reasons[clicked],
+                                          )));
+                            }
                           }
                         : () {
                             // TODO: 거절 API 호출
