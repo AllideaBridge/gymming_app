@@ -9,7 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../../common/colors.dart';
 
 class GymbieHomeCalendar extends StatefulWidget {
-  const GymbieHomeCalendar({Key? key}) : super(key: key);
+  const   GymbieHomeCalendar({Key? key}) : super(key: key);
 
   @override
   State<GymbieHomeCalendar> createState() => _GymbieHomeCalendarState();
@@ -61,9 +61,9 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
         formatButtonVisible: false,
         rightChevronVisible: false,
         leftChevronVisible: false,
-        headerPadding: const EdgeInsets.all(8),
+        headerPadding: const EdgeInsets.only(left: 20, bottom: 20),
         titleTextStyle:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
         titleTextFormatter: (date, locale) =>
             "${date.year % 100} ${DateFormat.MMMM(locale).format(date).toUpperCase()}",
       ),

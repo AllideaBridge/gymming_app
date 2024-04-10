@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/pages/gymbie/drawer/gymbie_drawer.dart';
 import 'package:gymming_app/pages/gymbie/explore/explore_main.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_home_calendar.dart';
@@ -13,7 +14,12 @@ class UserTimeTable extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(color: Colors.white),
+        titleSpacing: 0,
+        titleTextStyle: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.white),
         title: const Text("Timetable"),
         actions: [
           GestureDetector(
@@ -23,8 +29,15 @@ class UserTimeTable extends StatelessWidget {
             },
             child: Row(
               children: [
-                Text('둘러보기', style: TextStyle(fontSize: 12, color: Colors.white),),
-                Icon(Icons.arrow_forward_ios_rounded, size: 12,)
+                Text(
+                  '둘러보기',
+                  style: TextStyle(fontSize: 12, color: Colors.white),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 12,
+                ),
+                SizedBox(width: 20)
               ],
             ),
           )
@@ -33,7 +46,11 @@ class UserTimeTable extends StatelessWidget {
       ),
       drawer: UserDrawer(),
       body: Column(
-        children: [GymbieHomeCalendar(), GymbieScheduleList()],
+        children: [
+          advertisementContainer(),
+          GymbieHomeCalendar(),
+          GymbieScheduleList()
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -44,5 +61,31 @@ class UserTimeTable extends StatelessWidget {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  //타임테이블, 둘러보기 시 사용할 화면
+  Widget advertisementContainer() {
+    return Container(
+        width: double.infinity,
+        height: 80,
+        decoration: BoxDecoration(
+          color: BORDER_COLOR,
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+        margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 20,
+              )
+            ],
+          ),
+        ));
   }
 }
