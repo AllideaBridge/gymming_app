@@ -35,6 +35,25 @@ class DateUtil {
     return '${day.month}월 ${day.day}일 ${getKoreanWeekDay(day)}요일 $hour';
   }
 
+  static String convertKoreanWithoutWeek(DateTime dateTime) {
+    String hour =
+        dateTime.hour < 10 ? '0${dateTime.hour}' : dateTime.hour.toString();
+    String minute = dateTime.minute < 10
+        ? '0${dateTime.minute}'
+        : dateTime.minute.toString();
+    return '${dateTime.month}월 ${dateTime.day}일 $hour:$minute';
+  }
+
+  static String convertDateTimeWithDot(DateTime dateTime) {
+    String day = dateTime.day.toString().padLeft(2, '0');
+    String month = dateTime.month.toString().padLeft(2, '0');
+    String year = dateTime.year.toString().substring(2); // 뒤 두 자리만 사용
+    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+
+    return '$year.$month.$day. $hour:$minute';
+  }
+
   static String convertDatabaseFormatFromDayAndTime(DateTime day, String time) {
     var dateTime = DateTime(
       day.year,
