@@ -13,7 +13,8 @@ import '../../components/layouts/reason_content.dart';
 import '../../services/utils/date_util.dart';
 
 class GymbieScheduleCancel extends StatelessWidget {
-  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
+  final ScheduleRepository scheduleRepository =
+      ScheduleRepository(client: http.Client());
   final ScheduleInfo scheduleInfo;
 
   GymbieScheduleCancel({super.key, required this.scheduleInfo});
@@ -122,16 +123,17 @@ class GymbieScheduleCancel extends StatelessWidget {
       if (days >= scheduleInfo.remainDays) {
         //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
         // api 호출
-        var cancelResult = await scheduleRepository.cancelSchedule(scheduleInfo.scheduleId);
+        var cancelResult =
+            await scheduleRepository.cancelSchedule(scheduleInfo.scheduleId);
         //api 성공 -> 성공 페이지로 이동
         if (cancelResult == true) {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ScheduleChangeComplete(
-                  type: CANCEL,
-                  originDay: scheduleInfo.startTime,
-                )),
+                      type: CANCEL,
+                      originDay: scheduleInfo.startTime,
+                    )),
           );
         } else {
           //api 실패 -> 유지 (에러 메세지 띄우기?)
@@ -144,7 +146,7 @@ class GymbieScheduleCancel extends StatelessWidget {
                 builder: (context) => Reason(
                       reasonContent: ReasonContent(
                           CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
-                      originDay: scheduleInfo.startTime,
+                      scheduleInfo: scheduleInfo,
                       selectedDay: scheduleInfo.startTime,
                       selectedTime: '${scheduleInfo.startTime.hour}:00',
                       type: CANCEL,

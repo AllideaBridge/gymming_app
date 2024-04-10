@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_requests/gympro_request_detail.dart';
 import 'package:gymming_app/services/repositories/request_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -8,7 +9,7 @@ import '../../../services/models/request_list.dart';
 
 class ResponseWaitingList extends StatelessWidget {
   final List<RequestList> requestList =
-      RequestRepository().getPendingRequestList();
+      RequestRepository(client: http.Client()).getPendingRequestList();
 
   @override
   Widget build(BuildContext context) {

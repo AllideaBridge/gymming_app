@@ -5,7 +5,7 @@ import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:intl/intl.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -123,18 +123,11 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         .inDays;
 
     if (days >= widget.scheduleInfo.remainDays) {
-      var requestTime = DateTime(
-        _selectedDay.year,
-        _selectedDay.month,
-        _selectedDay.day,
-        DateFormat('HH:mm').parse(_selectedTime).hour,
-        DateFormat('HH:mm').parse(_selectedTime).minute,
-      );
+      var requestTime = DateUtil.convertDatabaseFormatFromDayAndTime(
+          _selectedDay, _selectedTime);
 
-      print(DateFormat('yyyy-MM-dd HH:mm:ss').format(requestTime));
       final response = await ScheduleRepository.updateSchedule(
-          widget.scheduleInfo.scheduleId,
-          DateFormat('yyyy-MM-dd HH:mm:ss').format(requestTime));
+          widget.scheduleInfo.scheduleId, requestTime);
 
       if (response) {
         Navigator.push(
@@ -155,7 +148,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
               builder: (context) => Reason(
                     reasonContent: ReasonContent(
                         CHANGE_TITLE, CHANEG_SUBTITLE, CHANGE_REASONS),
-                    originDay: widget.scheduleInfo.startTime,
+                    scheduleInfo: widget.scheduleInfo,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                     type: CHANGE,

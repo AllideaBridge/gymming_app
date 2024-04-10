@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/chips/grey_chip.dart';
 import 'package:gymming_app/components/chips/primary_chip.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -10,7 +11,7 @@ import 'gympro_request_detail.dart';
 
 class CompletedList extends StatelessWidget {
   final List<RequestList> requestList =
-      RequestRepository().getCompletedRequestList();
+      RequestRepository(client: http.Client()).getCompletedRequestList();
 
   @override
   Widget build(BuildContext context) {

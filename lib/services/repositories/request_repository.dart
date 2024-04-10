@@ -1,6 +1,16 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import '../models/request_list.dart';
 
 class RequestRepository {
+  RequestRepository({required this.client});
+
+  final http.Client client;
+
+  static final String baseUrl = "http://10.0.2.2:5000/request";
+
   final List<RequestList> _dummyRequests = [
     RequestList(
         type: '변경',
@@ -66,5 +76,21 @@ class RequestRepository {
 
   List<RequestList> getCompletedRequestList() {
     return _dummyRequests;
+  }
+
+  static Future<bool> createRequest(Object body) async {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

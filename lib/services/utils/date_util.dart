@@ -1,4 +1,4 @@
-
+import 'package:intl/intl.dart';
 
 const LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const NOT_LEAP_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -33,5 +33,16 @@ class DateUtil {
   static String getKoreanDayAndExactHour(DateTime? day, String? hour) {
     if (day == null || hour == null) return '';
     return '${day.month}월 ${day.day}일 ${getKoreanWeekDay(day)}요일 $hour';
+  }
+
+  static String convertDatabaseFormatFromDayAndTime(DateTime day, String time) {
+    var dateTime = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      DateFormat('HH:mm').parse(time).hour,
+      DateFormat('HH:mm').parse(time).minute,
+    );
+    return dateTime.toString();
   }
 }

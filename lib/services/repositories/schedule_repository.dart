@@ -55,8 +55,8 @@ class ScheduleRepository {
 
   static Future<AvailableTimes> getAvailableTimeListByTrainerIdAndDate(
       String trainerId, int year, int month, int day) async {
-    final response = await http.get(Uri.parse(
-        '$baseUrl/trainer/$trainerId/$year/$month/$day'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/trainer/$trainerId/$year/$month/$day'));
     if (response.statusCode == 200) {
       try {
         return AvailableTimes.fromJson(json.decode(response.body));
@@ -69,10 +69,14 @@ class ScheduleRepository {
   }
 
   static Future<bool> updateSchedule(int scheduleId, String time) async {
-    final response = await http.post(Uri.parse('$baseUrl/$scheduleId/change')
-        .replace(queryParameters: {'request_time': time}));
+    final response = await http.post(
+      Uri.parse('$baseUrl/$scheduleId/change'),
+      body: json.encode({'request_time': time}),
+      headers: {
+        'Content-Type': 'application/json', // Content-Type 설정
+      },
+    );
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
     } else {
