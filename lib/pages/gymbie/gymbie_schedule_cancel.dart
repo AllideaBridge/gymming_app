@@ -119,8 +119,8 @@ class GymbieScheduleCancel extends StatelessWidget {
           .difference(DateTime(now.year, now.month, now.day))
           .inDays;
 
-      if (days >= scheduleInfo.remainDays) {
-        //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
+      //예약일까지의 날짜 차이가 lessonChangeLimit보다 긴 경우 -> 즉시 취소 가능
+      if (days >= scheduleInfo.lessonChangeLimit) {
         // api 호출
         var cancelResult = await scheduleRepository.cancelSchedule(scheduleInfo.scheduleId);
         //api 성공 -> 성공 페이지로 이동
@@ -137,7 +137,7 @@ class GymbieScheduleCancel extends StatelessWidget {
           //api 실패 -> 유지 (에러 메세지 띄우기?)
         }
       } else {
-        //예약일까지의 날짜 차이가 remainDays보다 짧은 경우 -> 취소 사유 입력
+        //예약일까지의 날짜 차이가 lessonChangeLimit보다 짧은 경우 -> 취소 사유 입력
         Navigator.push(
             context,
             MaterialPageRoute(

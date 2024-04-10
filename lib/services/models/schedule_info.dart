@@ -5,7 +5,7 @@ class ScheduleInfo {
   final String _trainerName;
   final String _centerName;
   final String _centerLocation;
-  final int _remainDays;
+  final int _lessonChangeLimit;
 
   ScheduleInfo(
       this._scheduleId,
@@ -14,7 +14,7 @@ class ScheduleInfo {
       this._trainerName,
       this._centerName,
       this._centerLocation,
-      this._remainDays);
+      this._lessonChangeLimit);
 
   int get scheduleId => _scheduleId;
 
@@ -28,7 +28,7 @@ class ScheduleInfo {
 
   DateTime get startTime => _startTime;
 
-  int get remainDays => _remainDays;
+  int get lessonChangeLimit => _lessonChangeLimit;
 
   factory ScheduleInfo.fromJson(Map<String, dynamic> json) {
     return ScheduleInfo(
@@ -38,7 +38,6 @@ class ScheduleInfo {
         json["trainer_name"],
         json["center_name"],
         json["center_location"],
-        // TODO Remain Time 계산
-        5);
+        int.parse(json["lesson_change_range"]));
   }
 }

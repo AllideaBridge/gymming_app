@@ -122,7 +122,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
 
-    if (days >= widget.scheduleInfo.remainDays) {
+    if (days >= widget.scheduleInfo.lessonChangeLimit) {
       var requestTime = DateTime(
         _selectedDay.year,
         _selectedDay.month,

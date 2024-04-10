@@ -16,16 +16,18 @@ class UserTimeTable extends StatelessWidget {
         titleTextStyle: TextStyle(color: Colors.white),
         title: const Text("Timetable"),
         actions: [
-          TextButton(
-            style: ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.white)),
-            child: Text('둘러보기'),
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ExploreScreen()));
             },
-          ),
-          Image.asset('assets/images/arrow.png')
+            child: Row(
+              children: [
+                Text('둘러보기', style: TextStyle(fontSize: 12, color: Colors.white),),
+                Icon(Icons.arrow_forward_ios_rounded, size: 12,)
+              ],
+            ),
+          )
         ],
         backgroundColor: Colors.black,
       ),
