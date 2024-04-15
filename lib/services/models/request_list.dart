@@ -44,6 +44,7 @@ class RequestList {
       DateTime.parse(json["schedule_start_time"]),
       json["request_id"],
       json["request_status"],
+      // TODO 응답값 생기면 프로필 이미지 변경
       'assets/images/trainerExample.png',
     );
   }
