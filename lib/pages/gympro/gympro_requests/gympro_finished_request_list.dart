@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/chips/grey_chip.dart';
 import 'package:gymming_app/components/chips/primary_chip.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
@@ -9,12 +10,27 @@ import '../../../services/models/request_list.dart';
 import '../../../services/repositories/request_repository.dart';
 import 'gympro_request_detail.dart';
 
-class CompletedList extends StatelessWidget {
-  final List<RequestList> requestList =
-      RequestRepository(client: http.Client()).getCompletedRequestList();
-
+class GymproFinishedRequestList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: RequestRepository(client: http.Client())
+          .getRequestList('1', 'APPROVED,REJECTED'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}',
+              style: TextStyle(color: Colors.white));
+        } else {
+          final requestList = snapshot.data!;
+          return buildList(requestList);
+        }
+      },
+    );
+  }
+
+  Widget buildList(List<RequestList> requestList) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: ListView.separated(
@@ -38,7 +54,7 @@ class CompletedList extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
                     child: Image.asset(
-                      requestList[index].profileImg,
+                      requestList[index].userProfileImg,
                       fit: BoxFit.cover,
                       width: 32.0,
                       height: 32.0,
@@ -61,7 +77,7 @@ class CompletedList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  requestList[index].name,
+                                  requestList[index].userName,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -71,7 +87,7 @@ class CompletedList extends StatelessWidget {
                                   width: 8.0,
                                 ),
                                 Text(
-                                  '${requestList[index].requestDay} 요청',
+                                  '${DateUtil.convertDateTimeWithDot(requestList[index].createdAt)} 요청',
                                   style: TextStyle(
                                       fontSize: 14, color: SECONDARY_COLOR),
                                 ),
@@ -83,7 +99,8 @@ class CompletedList extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  requestList[index].originDay,
+                                  DateUtil.convertKoreanWithoutWeek(
+                                      requestList[index].scheduleStartTime),
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.white),
                                 ),
@@ -91,9 +108,10 @@ class CompletedList extends StatelessWidget {
                                 Icon(Icons.arrow_forward_rounded,
                                     size: 12, color: Colors.white),
                                 SizedBox(width: 8.0),
-                                requestList[index].type == CHANGE
+                                requestList[index].requestType == 'MODIFY'
                                     ? Text(
-                                        requestList[index].changeDay,
+                                        DateUtil.convertKoreanWithoutWeek(
+                                            requestList[index].requestTime),
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.white),
                                       )
@@ -106,7 +124,7 @@ class CompletedList extends StatelessWidget {
                             ),
                           ],
                         ),
-                        requestList[index].status == '승인'
+                        requestList[index].requestStatus == 'APPROVED'
                             ? PrimaryChip(title: '승인')
                             : GreyChip(title: '거절')
                       ],

@@ -135,8 +135,8 @@ class UserDrawer extends StatelessWidget {
                             title: "요청",
                             leftTabName: "응답 대기",
                             rightTabName: "완료",
-                            leftComponent: ResponseWaitingList(),
-                            rightComponent: CompletedList(),
+                            leftComponent: GymproPendingRequestList(),
+                            rightComponent: GymproFinishedRequestList(),
                           )));
             },
           ),
