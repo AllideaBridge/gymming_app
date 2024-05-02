@@ -11,14 +11,14 @@ import '../../../common/colors.dart';
 import '../../../common/constants.dart';
 import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
-import '../../../services/models/schedule_info.dart';
+import '../../../services/models/schedule_detail.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
       {super.key, required this.originDay, required this.scheduleInfo});
 
   final DateTime originDay;
-  final ScheduleInfo scheduleInfo;
+  final ScheduleDetail scheduleInfo;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
@@ -122,7 +122,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
 
-    if (days >= widget.scheduleInfo.remainDays) {
+    if (days >= widget.scheduleInfo.lessonChangeRange) {
       var requestTime = DateUtil.convertDatabaseFormatFromDayAndTime(
           _selectedDay, _selectedTime);
 

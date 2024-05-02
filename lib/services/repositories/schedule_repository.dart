@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/available_times.dart';
-import '../models/schedule_info.dart';
+import '../models/schedule_detail.dart';
 
 class ScheduleRepository {
   ScheduleRepository({required this.client});
@@ -11,14 +12,15 @@ class ScheduleRepository {
   final http.Client client;
 
   static final int dummyUserId = 1;
-
+  static final String typeMonth = 'month';
+  static final String typeDay = 'day';
   static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> getScheduleByMonth(DateTime dateTime) async {
-    final int year = dateTime.year;
-    final int month = dateTime.month;
-
-    var url = Uri.parse('$baseUrl/$dummyUserId/$year/$month');
+    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+      'datetime': DateUtil.convertDateTimeWithDash(dateTime),
+      'type': typeMonth
+    });
 
     final response = await client.get(url);
     if (response.statusCode == 200) {
@@ -26,30 +28,31 @@ class ScheduleRepository {
         final List<dynamic> body = json.decode(response.body)["dates"];
         return body.map((item) => item.toString()).toSet();
       } catch (e) {
-        throw Exception("Failed to load data");
+        throw Exception("Failed to load data : ${e.toString()}");
       }
     } else {
-      throw Exception("Failed to load data");
+      throw Exception(
+          "Failed to load data : status code is ${response.statusCode}");
     }
   }
 
-  Future<List<ScheduleInfo>> getScheduleByDay(DateTime datetime) async {
-    var url = Uri.parse(
-        '$baseUrl/$dummyUserId/${datetime.year}/${datetime.month}/${datetime.day}');
+  Future<List<ScheduleDetail>> getScheduleByDay(DateTime datetime) async {
+    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+      'datetime': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeDay
+    });
+
     final response = await http.get(url);
     if (response.statusCode == 200) {
       try {
-        final List<dynamic> body = json.decode(response.body);
-        final List<ScheduleInfo> result = [];
-        for (Map<String, dynamic> item in body) {
-          result.add(ScheduleInfo.fromJson(item));
-        }
-        return result;
+        return ScheduleDetail.parseScheduleDetailList(
+            json.decode(response.body));
       } catch (e) {
-        throw Exception("Failed to load data");
+        throw Exception("Failed to load data : ${e.toString()}");
       }
     } else {
-      throw Exception("Failed to load data");
+      throw Exception(
+          "Failed to load data : status code is ${response.statusCode}");
     }
   }
 
@@ -71,7 +74,7 @@ class ScheduleRepository {
   static Future<bool> updateSchedule(int scheduleId, String time) async {
     final response = await http.post(
       Uri.parse('$baseUrl/$scheduleId/change'),
-      body: json.encode({'request_time': time}),
+      body: json.encode({'start_time': time}),
       headers: {
         'Content-Type': 'application/json', // Content-Type 설정
       },

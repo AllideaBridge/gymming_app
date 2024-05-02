@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/services/models/schedule_info.dart';
+import 'package:gymming_app/services/models/schedule_detail.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../common/colors.dart';
 
 class ScheduleItem extends StatelessWidget {
-  final ScheduleInfo scheduleInfo;
+  final ScheduleDetail scheduleInfo;
 
   const ScheduleItem({super.key, required this.scheduleInfo});
 
