@@ -27,12 +27,7 @@ class GymbieScheduleChange extends StatefulWidget {
 class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateTime.now();
   String _selectedTime = '';
-  late AvailableTimes _availableTimes = AvailableTimes(
-      availabilityEndTime: '',
-      availabilityStartTime: '',
-      lessonMinutes: 30,
-      lessonChangeRange: 10,
-      schedules: []);
+  List<AvailableTimes> _availableTimesList = [];
 
   void _changeSelectedDay(DateTime selectedDay) async {
     var result =
@@ -41,7 +36,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
-      _availableTimes = result;
+      _availableTimesList = result;
     });
   }
 
@@ -75,7 +70,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                   child: GymbieSelectTime(
                     selectedDay: _selectedDay,
                     changeSelectedTime: _changeSelectedTime,
-                    availableTimes: _availableTimes,
+                    availableTimesList: _availableTimesList,
                   ),
                 ),
                 const SizedBox(

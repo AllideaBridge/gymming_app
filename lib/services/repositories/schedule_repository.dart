@@ -17,46 +17,46 @@ class ScheduleRepository {
   static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> getScheduleByMonth(DateTime dateTime) async {
-    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-      'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
-      'type': typeMonth
-    });
-
-    final response = await client.get(url);
-    if (response.statusCode == 200) {
-      try {
-        final List<dynamic> body = json.decode(response.body)["result"];
-        return body.map((item) => item.toString()).toSet();
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
+    return ScheduleDetail.getDummyMonthlyScheduleList();
+    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+    //   'type': typeMonth
+    // });
+    // final response = await client.get(url);
+    // if (response.statusCode == 200) {
+    //   try {
+    //     final List<dynamic> body = json.decode(response.body)["result"];
+    //     return body.map((item) => item.toString()).toSet();
+    //   } catch (e) {
+    //     throw Exception("Failed to load data : ${e.toString()}");
+    //   }
+    // } else {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
   }
 
   Future<List<ScheduleDetail>> getScheduleByDay(DateTime dateTime) async {
-    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-      'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
-      'type': typeDay
-    });
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      try {
-        List<dynamic> body = json.decode(response.body)['result'];
-        return ScheduleDetail.parseScheduleDetailList(body);
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
+    return ScheduleDetail.getDummyScheduleDetailList();
+    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+    //   'type': typeDay
+    // });
+    // final response = await http.get(url);
+    // if (response.statusCode == 200) {
+    //   try {
+    //     List<dynamic> body = json.decode(response.body)['result'];
+    //     return ScheduleDetail.parseScheduleDetailList(body);
+    //   } catch (e) {
+    //     throw Exception("Failed to load data : ${e.toString()}");
+    //   }
+    // } else {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
   }
 
-  static Future<AvailableTimes> getAvailableTimeListByTrainerIdAndDate(
+  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
       String trainerId, DateTime dateTime) async {
     Uri uri =
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
@@ -67,7 +67,7 @@ class ScheduleRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       try {
-        return AvailableTimes.fromJson(json.decode(response.body));
+        return AvailableTimes.getAvailableTimesList(json.decode(response.body));
       } catch (e) {
         throw Exception('Failed to load data');
       }
