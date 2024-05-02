@@ -17,7 +17,7 @@ const CHANGE = "변경";
 const CANCEL = "취소";
 const REJECT = "거절";
 const WAITING_LIST = 'waiting_list';
-const COMPLETED_LIST = 'completed_list';
+const RESOLVED_LIST = 'completed_list';
 const SIZE20 = 20.0;
 const SIZE45 = 45.0;
 

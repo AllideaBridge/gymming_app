@@ -5,17 +5,19 @@ import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
-import '../../../common/constants.dart';
-import '../../../services/models/request_list.dart';
-import '../../../services/repositories/request_repository.dart';
+import '../../../services/models/change_ticket.dart';
+import '../../../services/repositories/change_ticket_repository.dart';
 import 'gympro_request_detail.dart';
 
 class GymproFinishedRequestList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: RequestRepository(client: http.Client())
-          .getRequestList('1', 'APPROVED,REJECTED'),
+      // TODO TrainerId 로그인된 값으로 변경
+      // TODO Status 값(RESOLVED) 상수화
+      // TODO 무한 스크롤 page 늘어나는 기능 구현
+      future: ChangeTicketRepository(client: http.Client())
+          .getChangeTicketList(1, 'RESOLVED', 1),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -23,27 +25,26 @@ class GymproFinishedRequestList extends StatelessWidget {
           return Text('Error: ${snapshot.error}',
               style: TextStyle(color: Colors.white));
         } else {
-          final requestList = snapshot.data!;
-          return buildList(requestList);
+          final changeTicketList = snapshot.data!;
+          return buildList(changeTicketList);
         }
       },
     );
   }
 
-  Widget buildList(List<RequestList> requestList) {
+  Widget buildList(List<ChangeTicket> changeTicketList) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: ListView.separated(
-        itemCount: requestList.length,
+        itemCount: changeTicketList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RequestDetail(
-                            from: WAITING_LIST,
-                          )));
+                      builder: (context) => GymproRequestDetail(
+                          changeTicket: changeTicketList[index])));
             },
             child: Card(
               color: Colors.black,
@@ -54,7 +55,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
                     child: Image.asset(
-                      requestList[index].userProfileImg,
+                      changeTicketList[index].userProfileImage,
                       fit: BoxFit.cover,
                       width: 32.0,
                       height: 32.0,
@@ -77,7 +78,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  requestList[index].userName,
+                                  changeTicketList[index].userName,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -87,7 +88,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                                   width: 8.0,
                                 ),
                                 Text(
-                                  '${DateUtil.convertDateTimeWithDot(requestList[index].createdAt)} 요청',
+                                  '${DateUtil.convertDateTimeWithDot(changeTicketList[index].createdAt)} 요청',
                                   style: TextStyle(
                                       fontSize: 14, color: SECONDARY_COLOR),
                                 ),
@@ -100,7 +101,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                               children: [
                                 Text(
                                   DateUtil.convertKoreanWithoutWeek(
-                                      requestList[index].scheduleStartTime),
+                                      changeTicketList[index].asIsDate),
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.white),
                                 ),
@@ -108,10 +109,10 @@ class GymproFinishedRequestList extends StatelessWidget {
                                 Icon(Icons.arrow_forward_rounded,
                                     size: 12, color: Colors.white),
                                 SizedBox(width: 8.0),
-                                requestList[index].requestType == 'MODIFY'
+                                changeTicketList[index].requestType == 'MODIFY'
                                     ? Text(
                                         DateUtil.convertKoreanWithoutWeek(
-                                            requestList[index].requestTime),
+                                            changeTicketList[index].toBeDate),
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.white),
                                       )
@@ -124,7 +125,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                             ),
                           ],
                         ),
-                        requestList[index].requestStatus == 'APPROVED'
+                        changeTicketList[index].requestStatus == 'APPROVED'
                             ? PrimaryChip(title: '승인')
                             : GreyChip(title: '거절')
                       ],
