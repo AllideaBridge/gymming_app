@@ -1,37 +1,42 @@
-
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_item.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_modal.dart';
 import 'package:gymming_app/services//utils/date_util.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../../../common/colors.dart';
-import '../../../../services/models/schedule_info.dart';
+import '../../../../services/models/schedule_detail.dart';
 
 class GymbieScheduleList extends StatelessWidget {
   final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<ScheduleInfo>> schedules;
+  late Future<List<ScheduleDetail>> schedules;
 
   @override
   Widget build(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
     schedules = scheduleRepository.getScheduleByDay(selectedDateTime);
 
-    return FutureBuilder(future: schedules, builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        final schedules = snapshot.data!;
-        return buildScheduleList(schedules, selectedDateTime, context);
-      } else if (snapshot.hasError) {
-        return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
-      }
-      return const CircularProgressIndicator();
-    });
+    return FutureBuilder(
+        future: schedules,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final schedules = snapshot.data!;
+            return buildScheduleList(schedules, selectedDateTime, context);
+          } else if (snapshot.hasError) {
+            return Text(
+              "${snapshot.error}",
+              style: TextStyle(color: Colors.white),
+            );
+          }
+          return const CircularProgressIndicator();
+        });
   }
 
-  Widget buildScheduleList(List<ScheduleInfo> schedules, DateTime selectedDateTime, context) {
+  Widget buildScheduleList(
+      List<ScheduleDetail> schedules, DateTime selectedDateTime, context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -57,15 +62,15 @@ class GymbieScheduleList extends StatelessWidget {
                   shrinkWrap: true,
                   children: schedules
                       .map((schedule) => GestureDetector(
-                      onTap: () {
-                        showScheduleBottomSheet(context, schedule);
-                      },
-                      child: Column(
-                        children: [
-                          ScheduleItem(scheduleInfo: schedule),
-                          SizedBox(width: 28, height: 28),
-                        ],
-                      )))
+                          onTap: () {
+                            showScheduleBottomSheet(context, schedule);
+                          },
+                          child: Column(
+                            children: [
+                              ScheduleItem(scheduleInfo: schedule),
+                              SizedBox(width: 28, height: 28),
+                            ],
+                          )))
                       .toList(),
                 ),
               )
@@ -76,7 +81,7 @@ class GymbieScheduleList extends StatelessWidget {
     );
   }
 
-  void showScheduleBottomSheet(BuildContext context, ScheduleInfo schedule) {
+  void showScheduleBottomSheet(BuildContext context, ScheduleDetail schedule) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {

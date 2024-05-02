@@ -54,6 +54,10 @@ class DateUtil {
     return '$year.$month.$day. $hour:$minute';
   }
 
+  static String convertDateTimeWithDash(DateTime day) {
+    return DateFormat("yyyy-MM-dd").format(day);
+  }
+
   static String convertDatabaseFormatFromDayAndTime(DateTime day, String time) {
     var dateTime = DateTime(
       day.year,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/components/layouts/reason_layout.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
-import 'package:gymming_app/services/models/schedule_info.dart';
+import 'package:gymming_app/services/models/schedule_detail.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +15,7 @@ import '../../services/utils/date_util.dart';
 class GymbieScheduleCancel extends StatelessWidget {
   final ScheduleRepository scheduleRepository =
       ScheduleRepository(client: http.Client());
-  final ScheduleInfo scheduleInfo;
+  final ScheduleDetail scheduleInfo;
 
   GymbieScheduleCancel({super.key, required this.scheduleInfo});
 
@@ -120,7 +120,7 @@ class GymbieScheduleCancel extends StatelessWidget {
           .difference(DateTime(now.year, now.month, now.day))
           .inDays;
 
-      if (days >= scheduleInfo.remainDays) {
+      if (days >= scheduleInfo.lessonChangeRange) {
         //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
         // api 호출
         var cancelResult =

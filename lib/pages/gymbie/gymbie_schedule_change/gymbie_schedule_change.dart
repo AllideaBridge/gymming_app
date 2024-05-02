@@ -11,14 +11,14 @@ import '../../../common/colors.dart';
 import '../../../common/constants.dart';
 import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
-import '../../../services/models/schedule_info.dart';
+import '../../../services/models/schedule_detail.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
       {super.key, required this.originDay, required this.scheduleInfo});
 
   final DateTime originDay;
-  final ScheduleInfo scheduleInfo;
+  final ScheduleDetail scheduleInfo;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
@@ -27,21 +27,16 @@ class GymbieScheduleChange extends StatefulWidget {
 class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateTime.now();
   String _selectedTime = '';
-  late AvailableTimes _availableTimes = AvailableTimes(
-      availabilityEndTime: '',
-      availabilityStartTime: '',
-      lessonMinutes: 30,
-      lessonChangeRange: 10,
-      schedules: []);
+  List<AvailableTimes> _availableTimesList = [];
 
   void _changeSelectedDay(DateTime selectedDay) async {
     var result =
         await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
-            '1', selectedDay.year, selectedDay.month, selectedDay.day);
+            '1', selectedDay);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
-      _availableTimes = result;
+      _availableTimesList = result;
     });
   }
 
@@ -75,7 +70,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                   child: GymbieSelectTime(
                     selectedDay: _selectedDay,
                     changeSelectedTime: _changeSelectedTime,
-                    availableTimes: _availableTimes,
+                    availableTimesList: _availableTimesList,
                   ),
                 ),
                 const SizedBox(
@@ -122,7 +117,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
 
-    if (days >= widget.scheduleInfo.remainDays) {
+    if (days >= widget.scheduleInfo.lessonChangeRange) {
       var requestTime = DateUtil.convertDatabaseFormatFromDayAndTime(
           _selectedDay, _selectedTime);
 

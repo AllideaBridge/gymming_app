@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/available_times.dart';
-import '../models/schedule_info.dart';
+import '../models/schedule_detail.dart';
 
 class ScheduleRepository {
   ScheduleRepository({required this.client});
@@ -11,55 +12,62 @@ class ScheduleRepository {
   final http.Client client;
 
   static final int dummyUserId = 1;
-
+  static final String typeMonth = 'month';
+  static final String typeDay = 'day';
   static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> getScheduleByMonth(DateTime dateTime) async {
-    final int year = dateTime.year;
-    final int month = dateTime.month;
-
-    var url = Uri.parse('$baseUrl/$dummyUserId/$year/$month');
-
-    final response = await client.get(url);
-    if (response.statusCode == 200) {
-      try {
-        final List<dynamic> body = json.decode(response.body)["dates"];
-        return body.map((item) => item.toString()).toSet();
-      } catch (e) {
-        throw Exception("Failed to load data");
-      }
-    } else {
-      throw Exception("Failed to load data");
-    }
+    return ScheduleDetail.getDummyMonthlyScheduleList();
+    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+    //   'type': typeMonth
+    // });
+    // final response = await client.get(url);
+    // if (response.statusCode == 200) {
+    //   try {
+    //     final List<dynamic> body = json.decode(response.body)["result"];
+    //     return body.map((item) => item.toString()).toSet();
+    //   } catch (e) {
+    //     throw Exception("Failed to load data : ${e.toString()}");
+    //   }
+    // } else {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
   }
 
-  Future<List<ScheduleInfo>> getScheduleByDay(DateTime datetime) async {
-    var url = Uri.parse(
-        '$baseUrl/$dummyUserId/${datetime.year}/${datetime.month}/${datetime.day}');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      try {
-        final List<dynamic> body = json.decode(response.body);
-        final List<ScheduleInfo> result = [];
-        for (Map<String, dynamic> item in body) {
-          result.add(ScheduleInfo.fromJson(item));
-        }
-        return result;
-      } catch (e) {
-        throw Exception("Failed to load data");
-      }
-    } else {
-      throw Exception("Failed to load data");
-    }
+  Future<List<ScheduleDetail>> getScheduleByDay(DateTime dateTime) async {
+    return ScheduleDetail.getDummyScheduleDetailList();
+    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+    //   'type': typeDay
+    // });
+    // final response = await http.get(url);
+    // if (response.statusCode == 200) {
+    //   try {
+    //     List<dynamic> body = json.decode(response.body)['result'];
+    //     return ScheduleDetail.parseScheduleDetailList(body);
+    //   } catch (e) {
+    //     throw Exception("Failed to load data : ${e.toString()}");
+    //   }
+    // } else {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
   }
 
-  static Future<AvailableTimes> getAvailableTimeListByTrainerIdAndDate(
-      String trainerId, int year, int month, int day) async {
-    final response = await http
-        .get(Uri.parse('$baseUrl/trainer/$trainerId/$year/$month/$day'));
+  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
+      String trainerId, DateTime dateTime) async {
+    Uri uri =
+        Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
+      'datetime': DateUtil.convertDateTimeWithDash(dateTime),
+      'type': typeDay,
+    });
+
+    final response = await http.get(uri);
     if (response.statusCode == 200) {
       try {
-        return AvailableTimes.fromJson(json.decode(response.body));
+        return AvailableTimes.getAvailableTimesList(json.decode(response.body));
       } catch (e) {
         throw Exception('Failed to load data');
       }
@@ -69,9 +77,13 @@ class ScheduleRepository {
   }
 
   static Future<bool> updateSchedule(int scheduleId, String time) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/$scheduleId/change'),
-      body: json.encode({'request_time': time}),
+    final response = await http.put(
+      Uri.parse('$baseUrl/$scheduleId'),
+      body: json.encode({
+        'id': scheduleId,
+        'start_time': time,
+        'status': 'MODIFIED', //todo 변경 필요함
+      }),
       headers: {
         'Content-Type': 'application/json', // Content-Type 설정
       },
@@ -85,14 +97,15 @@ class ScheduleRepository {
   }
 
   Future<bool> cancelSchedule(int scheduleId) async {
-    var url = Uri.parse('$baseUrl/$scheduleId/cancel');
-    final response = await http.post(url);
+    var url = Uri.parse('$baseUrl/$scheduleId');
+    final response = await http.delete(url);
     if (response.statusCode != 200) {
       throw Exception(
           "api response error occurs: error code = ${response.statusCode}");
     }
     final dynamic body = json.decode(response.body);
     if (body["message"] == "Schedule cancel successfully") {
+      //todo 변경 필요함
       return true;
     } else {
       return false;

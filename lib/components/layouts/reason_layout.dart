@@ -14,7 +14,7 @@ import 'reason_content.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
-  final ScheduleInfo? scheduleInfo;
+  final ScheduleDetail? scheduleInfo;
   final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;

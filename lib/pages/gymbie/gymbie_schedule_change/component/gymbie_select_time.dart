@@ -8,11 +8,11 @@ class GymbieSelectTime extends StatefulWidget {
       {super.key,
       required this.selectedDay,
       required this.changeSelectedTime,
-      required this.availableTimes});
+      required this.availableTimesList});
 
   final DateTime selectedDay;
   final Function(String) changeSelectedTime;
-  final AvailableTimes availableTimes;
+  final List<AvailableTimes> availableTimesList;
 
   @override
   State<GymbieSelectTime> createState() => _GymbieSelectTimeState();
@@ -35,7 +35,7 @@ class _GymbieSelectTimeState extends State<GymbieSelectTime> {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedDay != oldWidget.selectedDay) {
       selectedTime = '';
-      times = widget.availableTimes.generateTimeSlots();
+      times = widget.availableTimesList;
     }
   }
 
