@@ -3,8 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_request.dart';
 import 'package:gymming_app/services/models/schedule_info.dart';
-import 'package:gymming_app/services/repositories/request_repository.dart';
+import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
+import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -16,6 +17,7 @@ class Reason extends StatefulWidget {
   final ScheduleInfo? scheduleInfo;
   final DateTime? selectedDay;
   final String? selectedTime;
+  final int? requestId;
   final String type;
 
   const Reason(
@@ -24,6 +26,7 @@ class Reason extends StatefulWidget {
       this.scheduleInfo,
       this.selectedDay,
       this.selectedTime,
+      this.requestId,
       required this.type});
 
   @override
@@ -230,42 +233,14 @@ class ReasonState extends State<Reason> {
                     ),
                     onPressed: widget.type != REJECT
                         ? () async {
-                            var response =
-                                await RequestRepository.createRequest({
-                              "schedule_id": widget.scheduleInfo!.scheduleId,
-                              "request_from": 'USER',
-                              "request_type":
-                                  widget.type == CHANGE ? 'MODIFY' : 'CANCEL',
-                              "request_description": clicked == 0
-                                  ? textController.text
-                                  : widget.reasonContent.reasons[clicked],
-                              "request_time": widget.type == CHANGE
-                                  ? DateUtil
-                                      .convertDatabaseFormatFromDayAndTime(
-                                          widget.selectedDay!,
-                                          widget.selectedTime!)
-                                  : null,
-                            });
+                            bool response = await sendCreateChangeTicket();
+
                             if (response) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ScheduleChangeCompleteWithReason(
-                                            type: widget.type,
-                                            originDay:
-                                                widget.scheduleInfo!.startTime,
-                                            selectedDay: widget.selectedDay!,
-                                            selectedTime: widget.selectedTime!,
-                                            reason: clicked == 0
-                                                ? textController.text
-                                                : widget.reasonContent
-                                                    .reasons[clicked],
-                                          )));
+                              moveToCompletePage(context);
                             }
                           }
                         : () {
-                            // TODO: 거절 API 호출
+                            sendRejectChangeTicket();
                             _showToast('운동 일정 변경을 거절하셨습니다.');
                             Navigator.pop(context);
                           },
@@ -283,5 +258,49 @@ class ReasonState extends State<Reason> {
         ),
       ),
     );
+  }
+
+  Future<bool> sendCreateChangeTicket() async {
+    final body = {
+      'change_from': 'USER',
+      'change_type': widget.type == CANCEL ? 'CANCEL' : 'MODIFY',
+      'change_reason': clicked == 0
+          ? textController.text
+          : widget.reasonContent.reasons[clicked],
+      'start_time': widget.type == CHANGE
+          ? DateUtil.convertDatabaseFormatFromDayAndTime(
+              widget.selectedDay!, widget.selectedTime!)
+          : null,
+    };
+    var response = await ChangeTicketRepository(client: http.Client())
+        .createChangeTicket(body);
+    return response;
+  }
+
+  void sendRejectChangeTicket() async {
+    final body = {
+      'change_from': 'TRAINER',
+      'change_type': 'REJECTED',
+      'change_reason': clicked == 0
+          ? textController.text
+          : widget.reasonContent.reasons[clicked],
+    };
+    await ChangeTicketRepository(client: http.Client())
+        .modifyChangeTicket(widget.requestId!, body);
+  }
+
+  void moveToCompletePage(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ScheduleChangeCompleteWithReason(
+                  type: widget.type,
+                  originDay: widget.scheduleInfo!.startTime,
+                  selectedDay: widget.selectedDay!,
+                  selectedTime: widget.selectedTime!,
+                  reason: clicked == 0
+                      ? textController.text
+                      : widget.reasonContent.reasons[clicked],
+                )));
   }
 }

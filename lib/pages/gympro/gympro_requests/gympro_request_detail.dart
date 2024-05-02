@@ -6,7 +6,10 @@ import 'package:gymming_app/components/chips/grey_chip.dart';
 import 'package:gymming_app/components/chips/primary_chip.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
-import 'package:gymming_app/services/models/request_detail_dto.dart';
+import 'package:gymming_app/pages/gympro/gympro_requests/gympro_pending_request_list.dart';
+import 'package:gymming_app/services/models/change_ticket.dart';
+import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../common/colors.dart';
 import '../../../../common/constants.dart';
@@ -14,26 +17,16 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/utils/toast_util.dart';
 
-class RequestDetail extends StatefulWidget {
-  final String from;
+class GymproRequestDetail extends StatefulWidget {
+  final ChangeTicket changeTicket;
 
-  //dummy instance
-  final RequestDetailDTO requestDetailDTO = RequestDetailDTO(
-      profileImg: "assets/trainerExample.png",
-      name: "김민희",
-      originDay: "8월 6일 목요일 09:00",
-      changeDay: "8월 7일 금요일 20:00",
-      requestDay: "23. 10. 08. 16:07",
-      requestStatus: "inProgress",
-      reason: "몸이 아파서");
-
-  RequestDetail({super.key, required this.from});
+  GymproRequestDetail({super.key, required this.changeTicket});
 
   @override
-  _RequestDetailState createState() => _RequestDetailState();
+  _GymproRequestDetailState createState() => _GymproRequestDetailState();
 }
 
-class _RequestDetailState extends State<RequestDetail> {
+class _GymproRequestDetailState extends State<GymproRequestDetail> {
   late FToast fToast;
   late bool _isCompleted;
   late bool _isAccepted;
@@ -43,8 +36,9 @@ class _RequestDetailState extends State<RequestDetail> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
-    _isCompleted = widget.requestDetailDTO.requestStatus != "inProgress";
-    _isAccepted = widget.requestDetailDTO.requestStatus == "accepted";
+    // TODO status 상수화
+    _isCompleted = widget.changeTicket.requestStatus != "WAITING";
+    _isAccepted = widget.changeTicket.requestStatus == "APPROVED";
   }
 
   _showToast(msg) {
@@ -63,8 +57,6 @@ class _RequestDetailState extends State<RequestDetail> {
 
   @override
   Widget build(BuildContext context) {
-    RequestDetailDTO requestDetail = widget.requestDetailDTO;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -80,7 +72,7 @@ class _RequestDetailState extends State<RequestDetail> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(50.0),
                           child: Image.asset(
-                            widget.requestDetailDTO.profileImg,
+                            widget.changeTicket.userProfileImage,
                             fit: BoxFit.cover,
                             width: 48.0,
                             height: 48.0,
@@ -95,7 +87,7 @@ class _RequestDetailState extends State<RequestDetail> {
                             Row(
                               children: [
                                 Text(
-                                  requestDetail.name,
+                                  widget.changeTicket.userName,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -111,7 +103,7 @@ class _RequestDetailState extends State<RequestDetail> {
                             ),
                             SizedBox(height: 4.0),
                             Text(
-                              '${requestDetail.requestDay} 요청',
+                              '${widget.changeTicket.createdAt} 요청',
                               style: TextStyle(
                                   fontSize: 14, color: SECONDARY_COLOR),
                             )
@@ -154,7 +146,7 @@ class _RequestDetailState extends State<RequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 전',
-                            content: requestDetail.originDay,
+                            content: widget.changeTicket.asIsDate.toString(),
                             titleColor: SECONDARY_COLOR,
                             contentColor: SECONDARY_COLOR),
                         SizedBox(
@@ -163,7 +155,7 @@ class _RequestDetailState extends State<RequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 후',
-                            content: requestDetail.changeDay,
+                            content: widget.changeTicket.toBeDate.toString(),
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                         SizedBox(
@@ -172,7 +164,7 @@ class _RequestDetailState extends State<RequestDetail> {
                         IconLabel(
                             iconData: Icons.message_outlined,
                             title: '변경 사유',
-                            content: requestDetail.reason,
+                            content: widget.changeTicket.userMessage,
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                       ],
@@ -187,7 +179,11 @@ class _RequestDetailState extends State<RequestDetail> {
                               SecondaryButton(
                                   title: '목록으로 이동',
                                   onPressed: () {
-                                    // TODO: 목록으로 이동 버튼 클릭 이벤트
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                GymproPendingRequestList()));
                                   })
                             ]
                           : [
@@ -202,6 +198,8 @@ class _RequestDetailState extends State<RequestDetail> {
                                                       REJECT_TITLE,
                                                       REJECT_SUBTITLE,
                                                       REJECT_REASONS),
+                                                  requestId: widget
+                                                      .changeTicket.requestId,
                                                   type: REJECT,
                                                 )));
                                   }),
@@ -209,7 +207,7 @@ class _RequestDetailState extends State<RequestDetail> {
                               PrimaryButton(
                                 title: '승인',
                                 onPressed: () {
-                                  // TODO: 승인 버튼 클릭 이벤트
+                                  sendApproveChangeTicket();
                                   _showToast('승인 되었습니다.');
                                   setState(() {
                                     _isCompleted = true;
@@ -223,5 +221,15 @@ class _RequestDetailState extends State<RequestDetail> {
         ),
       ),
     );
+  }
+
+  void sendApproveChangeTicket() async {
+    final body = {
+      'change_from': 'TRAINER',
+      'status': 'APPROVED',
+      'start_time': widget.changeTicket.toBeDate,
+    };
+    await ChangeTicketRepository(client: http.Client())
+        .modifyChangeTicket(widget.changeTicket.requestId, body);
   }
 }
