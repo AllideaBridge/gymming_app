@@ -143,7 +143,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
               builder: (context) => Reason(
                     reasonContent: ReasonContent(
                         CHANGE_TITLE, CHANEG_SUBTITLE, CHANGE_REASONS),
-                    scheduleInfo: widget.scheduleInfo,
+                    scheduleDetail: widget.scheduleInfo,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                     type: CHANGE,
