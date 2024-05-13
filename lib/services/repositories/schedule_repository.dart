@@ -79,23 +79,24 @@ class ScheduleRepository {
   }
 
   static Future<bool> updateSchedule(int scheduleId, String time) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/$scheduleId'),
-      body: json.encode({
-        'id': scheduleId,
-        'start_time': time,
-        'status': 'MODIFIED', //todo 변경 필요함
-      }),
-      headers: {
-        'Content-Type': 'application/json', // Content-Type 설정
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return true;
+    // final response = await http.put(
+    //   Uri.parse('$baseUrl/$scheduleId'),
+    //   body: json.encode({
+    //     'id': scheduleId,
+    //     'start_time': time,
+    //     'status': 'MODIFIED',
+    //   }),
+    //   headers: {
+    //     'Content-Type': 'application/json', // Content-Type 설정
+    //   },
+    // );
+    //
+    // if (response.statusCode == 200) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   }
 
   Future<bool> cancelSchedule(int scheduleId) async {

@@ -51,7 +51,7 @@ class ScheduleDetail {
 
   // api 완성되기 전 dummy 값
   static Set<String> getDummyMonthlyScheduleList() {
-    return {'2024-05-02', '2024-05-03', '2024-05-04'};
+    return {'2024-05-17', '2024-05-18', '2024-05-19'};
   }
 
   // api 완성되기 전 dummy 값
