@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
@@ -101,17 +99,17 @@ class ScheduleRepository {
 
   Future<bool> cancelSchedule(int scheduleId) async {
     var url = Uri.parse('$baseUrl/$scheduleId');
-    final response = await http.delete(url);
-    if (response.statusCode != 200) {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
-    final dynamic body = json.decode(response.body);
-    if (body["message"] == "Schedule cancel successfully") {
-      //todo 변경 필요함
-      return true;
-    } else {
-      return false;
-    }
+    return true;
+    // final response = await http.delete(url);
+    // if (response.statusCode != 200) {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
+    // final dynamic body = json.decode(response.body);
+    // if (body["message"] == "Schedule cancel successfully") {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   }
 }

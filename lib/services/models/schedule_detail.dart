@@ -57,10 +57,10 @@ class ScheduleDetail {
   // api 완성되기 전 dummy 값
   static List<ScheduleDetail> getDummyScheduleDetailList() {
     return [
-      ScheduleDetail(
-          1, DateTime.now(), 'ee', 'dummy', 'dummy_center', 'dummy_loc', 3),
-      ScheduleDetail(
-          1, DateTime.now(), 'ee', 'dummy', 'dummy_center', 'dummy_loc', 3)
+      ScheduleDetail(1, DateTime.parse('2024-05-15 13:00:00'), 'ee', 'dummy',
+          'dummy_center', 'dummy_loc', 3),
+      ScheduleDetail(1, DateTime.parse('2024-05-15 15:00:00'), 'ee', 'dummy',
+          'dummy_center', 'dummy_loc', 3)
     ];
   }
 }
