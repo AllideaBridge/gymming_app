@@ -15,9 +15,9 @@ import '../../services/utils/date_util.dart';
 class GymbieScheduleCancel extends StatelessWidget {
   final ScheduleRepository scheduleRepository =
       ScheduleRepository(client: http.Client());
-  final ScheduleDetail scheduleInfo;
+  final ScheduleDetail scheduleDetail;
 
-  GymbieScheduleCancel({super.key, required this.scheduleInfo});
+  GymbieScheduleCancel({super.key, required this.scheduleDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class GymbieScheduleCancel extends StatelessWidget {
                                 iconData: Icons.alarm,
                                 title: '일시',
                                 content: DateUtil.getKoreanDayAndHour(
-                                    scheduleInfo.startTime),
+                                    scheduleDetail.startTime),
                                 titleColor: SECONDARY_COLOR,
                                 contentColor: Colors.white),
                             SizedBox(height: 40),
@@ -60,7 +60,7 @@ class GymbieScheduleCancel extends StatelessWidget {
                                 iconData: Icons.calendar_today_outlined,
                                 title: '일정',
                                 content:
-                                    '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너',
+                                    '${scheduleDetail.lessonName} | ${scheduleDetail.trainerName} 트레이너',
                                 titleColor: SECONDARY_COLOR,
                                 contentColor: Colors.white),
                             SizedBox(height: 40),
@@ -68,7 +68,7 @@ class GymbieScheduleCancel extends StatelessWidget {
                                 iconData: Icons.location_on_outlined,
                                 title: '장소',
                                 content:
-                                    '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}',
+                                    '${scheduleDetail.centerName} | ${scheduleDetail.centerLocation}',
                                 titleColor: SECONDARY_COLOR,
                                 contentColor: Colors.white),
                           ],
@@ -114,44 +114,42 @@ class GymbieScheduleCancel extends StatelessWidget {
   }
 
   void showAfterClickCancel(context) async {
-    {
-      DateTime now = DateTime.now();
-      int days = scheduleInfo.startTime
-          .difference(DateTime(now.year, now.month, now.day))
-          .inDays;
+    DateTime now = DateTime.now();
+    int days = scheduleDetail.startTime
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
 
-      if (days >= scheduleInfo.lessonChangeRange) {
-        //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
-        // api 호출
-        var cancelResult =
-            await scheduleRepository.cancelSchedule(scheduleInfo.scheduleId);
-        //api 성공 -> 성공 페이지로 이동
-        if (cancelResult == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ScheduleChangeComplete(
-                      type: CANCEL,
-                      originDay: scheduleInfo.startTime,
-                    )),
-          );
-        } else {
-          //api 실패 -> 유지 (에러 메세지 띄우기?)
-        }
-      } else {
-        //예약일까지의 날짜 차이가 remainDays보다 짧은 경우 -> 취소 사유 입력
+    if (days >= scheduleDetail.lessonChangeRange) {
+      //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
+      // api 호출
+      var cancelResult =
+          await scheduleRepository.cancelSchedule(scheduleDetail.scheduleId);
+      //api 성공 -> 성공 페이지로 이동
+      if (cancelResult == true) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Reason(
-                      reasonContent: ReasonContent(
-                          CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
-                      scheduleInfo: scheduleInfo,
-                      selectedDay: scheduleInfo.startTime,
-                      selectedTime: '${scheduleInfo.startTime.hour}:00',
-                      type: CANCEL,
-                    )));
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScheduleChangeComplete(
+                    type: CANCEL,
+                    originDay: scheduleDetail.startTime,
+                  )),
+        );
+      } else {
+        //api 실패 -> 유지 (에러 메세지 띄우기?)
       }
+    } else {
+      //예약일까지의 날짜 차이가 remainDays보다 짧은 경우 -> 취소 사유 입력
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Reason(
+                    reasonContent: ReasonContent(
+                        CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
+                    scheduleDetail: scheduleDetail,
+                    selectedDay: scheduleDetail.startTime,
+                    selectedTime: '${scheduleDetail.startTime.hour}:00',
+                    type: CANCEL,
+                  )));
     }
   }
 }

@@ -12,9 +12,9 @@ import '../../../gymbie/gymbie_schedule_cancel.dart';
 import '../../../gymbie/gymbie_schedule_change/gymbie_schedule_change.dart';
 
 class ScheduleClicked extends StatelessWidget {
-  final ScheduleDetail scheduleInfo;
+  final ScheduleDetail scheduleDetail;
 
-  const ScheduleClicked({super.key, required this.scheduleInfo});
+  const ScheduleClicked({super.key, required this.scheduleDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ScheduleClicked extends StatelessWidget {
           IconLabel(
             iconData: Icons.alarm,
             title: "일시",
-            content: DateUtil.getKoreanDayAndHour(scheduleInfo.startTime),
+            content: DateUtil.getKoreanDayAndHour(scheduleDetail.startTime),
             titleColor: SECONDARY_COLOR,
             contentColor: Colors.white,
           ),
@@ -35,7 +35,7 @@ class ScheduleClicked extends StatelessWidget {
             iconData: Icons.calendar_today_outlined,
             title: "일정",
             content:
-                '${scheduleInfo.lessonName} | ${scheduleInfo.trainerName} 트레이너',
+                '${scheduleDetail.lessonName} | ${scheduleDetail.trainerName} 트레이너',
             titleColor: SECONDARY_COLOR,
             contentColor: Colors.white,
           ),
@@ -43,7 +43,7 @@ class ScheduleClicked extends StatelessWidget {
             iconData: Icons.location_on,
             title: "장소",
             content:
-                '${scheduleInfo.centerName} | ${scheduleInfo.centerLocation}',
+                '${scheduleDetail.centerName} | ${scheduleDetail.centerLocation}',
             titleColor: SECONDARY_COLOR,
             contentColor: Colors.white,
           ),
@@ -59,7 +59,7 @@ class ScheduleClicked extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => GymbieScheduleCancel(
-                                    scheduleInfo: scheduleInfo)));
+                                    scheduleDetail: scheduleDetail)));
                       }),
                   SizedBox(width: 12),
                   PrimaryButton(
@@ -72,7 +72,7 @@ class ScheduleClicked extends StatelessWidget {
                                       originDay:
                                           Provider.of<StateDateTime>(context)
                                               .selectedDateTime,
-                                      scheduleInfo: scheduleInfo,
+                                      scheduleDetail: scheduleDetail,
                                     )));
                       })
                 ],

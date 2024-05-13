@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_request.dart';
-import 'package:gymming_app/services/models/schedule_info.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
+import '../../services/models/schedule_detail.dart';
 import '../../services/utils/toast_util.dart';
 import 'reason_content.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
-  final ScheduleDetail? scheduleInfo;
+  final ScheduleDetail? scheduleDetail;
   final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;
@@ -23,7 +23,7 @@ class Reason extends StatefulWidget {
   const Reason(
       {super.key,
       required this.reasonContent,
-      this.scheduleInfo,
+      this.scheduleDetail,
       this.selectedDay,
       this.selectedTime,
       this.requestId,
@@ -295,7 +295,7 @@ class ReasonState extends State<Reason> {
         MaterialPageRoute(
             builder: (context) => ScheduleChangeCompleteWithReason(
                   type: widget.type,
-                  originDay: widget.scheduleInfo!.startTime,
+                  originDay: widget.scheduleDetail!.startTime,
                   selectedDay: widget.selectedDay!,
                   selectedTime: widget.selectedTime!,
                   reason: clicked == 0

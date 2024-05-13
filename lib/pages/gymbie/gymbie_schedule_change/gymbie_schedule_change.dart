@@ -15,10 +15,10 @@ import '../../../services/models/schedule_detail.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
-      {super.key, required this.originDay, required this.scheduleInfo});
+      {super.key, required this.originDay, required this.scheduleDetail});
 
   final DateTime originDay;
-  final ScheduleDetail scheduleInfo;
+  final ScheduleDetail scheduleDetail;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
@@ -117,12 +117,12 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
 
-    if (days >= widget.scheduleInfo.lessonChangeRange) {
+    if (days >= widget.scheduleDetail.lessonChangeRange) {
       var requestTime = DateUtil.convertDatabaseFormatFromDayAndTime(
           _selectedDay, _selectedTime);
 
       final response = await ScheduleRepository.updateSchedule(
-          widget.scheduleInfo.scheduleId, requestTime);
+          widget.scheduleDetail.scheduleId, requestTime);
 
       if (response) {
         Navigator.push(
@@ -130,7 +130,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
           MaterialPageRoute(
               builder: (context) => ScheduleChangeComplete(
                     type: CHANGE,
-                    originDay: widget.scheduleInfo.startTime,
+                    originDay: widget.scheduleDetail.startTime,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                   )),
@@ -143,7 +143,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
               builder: (context) => Reason(
                     reasonContent: ReasonContent(
                         CHANGE_TITLE, CHANEG_SUBTITLE, CHANGE_REASONS),
-                    scheduleInfo: widget.scheduleInfo,
+                    scheduleDetail: widget.scheduleDetail,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                     type: CHANGE,
