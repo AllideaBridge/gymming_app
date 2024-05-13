@@ -17,11 +17,11 @@ class ScheduleRepository {
   static final String baseUrl = "http://10.0.2.2:5000/schedules";
 
   Future<Set<String>> getScheduleByMonth(DateTime dateTime) async {
+    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+      'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+      'type': typeMonth
+    });
     return ScheduleDetail.getDummyMonthlyScheduleList();
-    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
-    //   'type': typeMonth
-    // });
     // final response = await client.get(url);
     // if (response.statusCode == 200) {
     //   try {
@@ -37,11 +37,12 @@ class ScheduleRepository {
   }
 
   Future<List<ScheduleDetail>> getScheduleByDay(DateTime dateTime) async {
+    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+      'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
+      'type': typeDay
+    });
+
     return ScheduleDetail.getDummyScheduleDetailList();
-    // Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-    //   'dateTime': DateUtil.convertDateTimeWithDash(dateTime),
-    //   'type': typeDay
-    // });
     // final response = await http.get(url);
     // if (response.statusCode == 200) {
     //   try {
@@ -64,16 +65,17 @@ class ScheduleRepository {
       'type': typeDay,
     });
 
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      try {
-        return AvailableTimes.getAvailableTimesList(json.decode(response.body));
-      } catch (e) {
-        throw Exception('Failed to load data');
-      }
-    } else {
-      throw Exception('Failed to load data');
-    }
+    return AvailableTimes.getDummyAvailableTimesList();
+    // final response = await http.get(uri);
+    // if (response.statusCode == 200) {
+    //   try {
+    //     return AvailableTimes.getAvailableTimesList(json.decode(response.body));
+    //   } catch (e) {
+    //     throw Exception('Failed to load data');
+    //   }
+    // } else {
+    //   throw Exception('Failed to load data');
+    // }
   }
 
   static Future<bool> updateSchedule(int scheduleId, String time) async {
