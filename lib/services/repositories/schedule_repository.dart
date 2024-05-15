@@ -19,11 +19,11 @@ class ScheduleRepository {
 
   /*
     회원의 한달 별 스케쥴 조회
-    URL: schedules/<user_id>?day=datetime&type=month
+    URL: schedules/<user_id>?day=date&type=month
    */
   Future<Set<String>> getScheduleByMonth(DateTime datetime) async {
     Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-      'datetime': DateUtil.convertDateTimeWithDash(datetime),
+      'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeMonth
     });
     return ScheduleDetail.getDummyMonthlyScheduleList();
@@ -43,11 +43,11 @@ class ScheduleRepository {
 
   /*
     회원의 하루 중 스케쥴 조회
-    URL: schedules/<user_id>?day=datetime&type=day
+    URL: schedules/<user_id>?day=date&type=day
    */
   Future<List<ScheduleDetail>> getScheduleByDay(DateTime datetime) async {
     Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
-      'datetime': DateUtil.convertDateTimeWithDash(datetime),
+      'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay
     });
 
@@ -68,13 +68,13 @@ class ScheduleRepository {
 
   /*
     회원의 하루 중 트레이너 별 예약 가능한 시간 조회
-    URL: schedules/trainer/<trainer_id>?datetime=datetime&type=day
+    URL: schedules/trainer/<trainer_id>?date=date&type=day
    */
-  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
+  Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
       String trainerId, DateTime datetime) async {
     Uri url =
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
-      'datetime': DateUtil.convertDateTimeWithDash(datetime),
+      'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay,
     });
     return AvailableTimes.getDummyAvailableTimesList();
@@ -90,15 +90,28 @@ class ScheduleRepository {
     // }
   }
 
-  static Future<List<LessonList>> getTrainerScheduleByWeek(
-      DateTime datetime) async {
+  /*
+    트레이너의 일주일 스케줄 조회
+    URL: schedules/trainer/<trainer_id>?date=date&type=week
+   */
+  Future<List<LessonList>> getTrainerScheduleByWeek(DateTime datetime) async {
     Uri url =
         Uri.parse('$baseUrl/trainer/$dummyTrainerId').replace(queryParameters: {
-      'datetime': DateUtil.convertDateTimeWithDash(datetime),
+      'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeWeek,
     });
     // final response = await http.get(url);
-    return null;
+    // if (response.statusCode == 200) {
+    //   try {
+    //     return LessonList.parseLessonListList(json.decode(response.body));
+    //   } catch (e) {
+    //     throw Exception("Failed to load data : ${e.toString()}");
+    //   }
+    // } else {
+    //   throw Exception(
+    //       "api response error occurs: error code = ${response.statusCode}");
+    // }
+    return LessonList.getDummyLessonListList();
   }
 
   /*
