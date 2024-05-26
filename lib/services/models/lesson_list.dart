@@ -31,11 +31,11 @@ class LessonList {
   //api 완성되기 전 dummy 값
   static List<LessonList> getDummyLessonListList() {
     return [
-      LessonList(1, "조성민", DateTime.parse('2024-05-15T13:00:00'), 60),
-      LessonList(1, "김성관", DateTime.parse('2024-05-15T15:00:00'), 60),
-      LessonList(1, "조성민", DateTime.parse('2024-05-17T13:00:00'), 60),
-      LessonList(1, "김성관", DateTime.parse('2024-05-17T15:00:00'), 60),
-      LessonList(1, "김도균", DateTime.parse('2024-05-18T13:00:00'), 120),
+      LessonList(1, "조성민", DateTime.parse('2024-05-24T13:00:00'), 60),
+      LessonList(1, "김성관", DateTime.parse('2024-05-24T15:00:00'), 60),
+      LessonList(1, "조성민", DateTime.parse('2024-05-25T13:00:00'), 60),
+      LessonList(1, "김성관", DateTime.parse('2024-05-25T15:00:00'), 60),
+      LessonList(1, "김도균", DateTime.parse('2024-05-26T13:00:00'), 120),
     ];
   }
 }

@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:gymming_app/services/models/lesson_list.dart';
 
 class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+  Meeting(this.name, this.from, this.to, this.background, this.isAllDay);
 
-  String eventName;
+  String name;
   DateTime from;
   DateTime to;
   Color background;

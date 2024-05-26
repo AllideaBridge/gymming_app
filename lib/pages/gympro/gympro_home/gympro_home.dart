@@ -57,6 +57,7 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
               style: TextStyle(color: Colors.white),
             );
           }
+          return const CircularProgressIndicator();
         },
       ),
       //TODO: 나중에 제거

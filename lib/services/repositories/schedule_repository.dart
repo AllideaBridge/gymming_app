@@ -70,7 +70,7 @@ class ScheduleRepository {
     회원의 하루 중 트레이너 별 예약 가능한 시간 조회
     URL: schedules/trainer/<trainer_id>?date=date&type=day
    */
-  Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
+  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
       String trainerId, DateTime datetime) async {
     Uri url =
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
