@@ -1,5 +1,6 @@
 class ScheduleDetail {
   final int _scheduleId;
+  final int _trainerId;
   final DateTime _startTime;
   final String _lessonName;
   final String _trainerName;
@@ -9,6 +10,7 @@ class ScheduleDetail {
 
   ScheduleDetail(
       this._scheduleId,
+      this._trainerId,
       this._startTime,
       this._lessonName,
       this._trainerName,
@@ -17,6 +19,8 @@ class ScheduleDetail {
       this._lessonChangeRange);
 
   int get scheduleId => _scheduleId;
+
+  int get trainerId => _trainerId;
 
   String get centerLocation => _centerLocation;
 
@@ -33,6 +37,7 @@ class ScheduleDetail {
   factory ScheduleDetail.fromJson(Map<String, dynamic> json) {
     return ScheduleDetail(
         json["schedule_id"],
+        json["trainer_id"],
         DateTime.parse(json["schedule_start_time"]),
         json["lesson_name"],
         json["trainer_name"],
@@ -57,9 +62,9 @@ class ScheduleDetail {
   // api 완성되기 전 dummy 값
   static List<ScheduleDetail> getDummyScheduleDetailList() {
     return [
-      ScheduleDetail(1, DateTime.parse('2024-05-15T13:00:00'), 'ee', 'dummy',
+      ScheduleDetail(1, 1, DateTime.parse('2024-05-15T13:00:00'), 'ee', 'dummy',
           'dummy_center', 'dummy_loc', 3),
-      ScheduleDetail(1, DateTime.parse('2024-05-15T15:00:00'), 'ee', 'dummy',
+      ScheduleDetail(1, 1, DateTime.parse('2024-05-15T15:00:00'), 'ee', 'dummy',
           'dummy_center', 'dummy_loc', 3)
     ];
   }

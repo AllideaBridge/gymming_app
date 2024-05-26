@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/services/models/Meeting.dart';
 import 'package:gymming_app/services/models/lesson_list.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -7,7 +8,7 @@ class LessonDataSource extends CalendarDataSource {
   LessonDataSource(List<LessonList> source) {
     List<Meeting> meetings = [];
     for (LessonList lessonList in source) {
-      meetings.add(Meeting.fromLessonList(lessonList, Colors.yellow));
+      meetings.add(Meeting.fromLessonList(lessonList, PRIMARY_COLOR));
     }
     appointments = meetings;
   }
