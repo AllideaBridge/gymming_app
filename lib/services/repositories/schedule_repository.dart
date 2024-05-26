@@ -71,7 +71,7 @@ class ScheduleRepository {
     URL: schedules/trainer/<trainer_id>?date=date&type=day
    */
   static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
-      String trainerId, DateTime datetime) async {
+      int trainerId, DateTime datetime) async {
     Uri url =
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),

@@ -32,7 +32,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   void _changeSelectedDay(DateTime selectedDay) async {
     var result =
         await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
-            '1', selectedDay);
+            widget.scheduleDetail.trainerId, selectedDay);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
