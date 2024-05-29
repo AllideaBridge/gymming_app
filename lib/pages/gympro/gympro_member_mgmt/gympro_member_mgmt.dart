@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_detail.dart';
-import 'package:gymming_app/services/models/trainee_list.dart';
-import 'package:gymming_app/services/repositories/trainee_repository.dart';
 import 'package:gymming_app/services/repositories/training_user_repository.dart';
 
 import '../../../common/colors.dart';
@@ -9,7 +7,6 @@ import '../../../services/models/training_user.dart';
 
 class UserManagementList extends StatefulWidget {
   final bool isPresent;
-  final List<TraineeList> traineeList = TraineeRepository().getTraineeList();
 
   UserManagementList({
     super.key,
