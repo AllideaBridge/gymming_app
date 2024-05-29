@@ -14,7 +14,7 @@ class TrainingUserRepository {
       int trainerId, bool isPresent) async {
     Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users')
         .replace(queryParameters: {
-      'training_user_delete_flag': isPresent,
+      'training_user_delete_flag': isPresent ? "true" : "false",
     });
     // initClient();
     // final response = await client.get(url);
@@ -29,6 +29,6 @@ class TrainingUserRepository {
     //   throw Exception(
     //       "api response error occurs: error code = ${response.statusCode}");
     // }
-    return TrainingUser.getDummyTrainingUserList();
+    return TrainingUser.getDummyTrainingUserList(isPresent);
   }
 }

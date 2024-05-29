@@ -1,3 +1,5 @@
+import '../utils/date_util.dart';
+
 class TrainingUser {
   final int _userId;
   final String _userName;
@@ -34,6 +36,10 @@ class TrainingUser {
 
   DateTime get lastDate => _lastDate;
 
+  String getTrainingUserListDetailText(bool isPresent) {
+    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 | ${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)}';
+  }
+
   factory TrainingUser.fromJson(Map<String, dynamic> json) {
     return TrainingUser(
         json["user_id"],
@@ -55,26 +61,48 @@ class TrainingUser {
   }
 
   // api 완성되기 전 dummy 값
-  static List<TrainingUser> getDummyTrainingUserList() {
+  static List<TrainingUser> getDummyTrainingUserList(bool isPresent) {
+    if (isPresent) {
+      return [
+        TrainingUser(
+            1,
+            "John Doe",
+            "assets/images/trainerExample.png",
+            ["월", "수", "금"],
+            5,
+            10,
+            DateTime.parse('2024-05-15T13:00:00'),
+            DateTime.parse('2024-08-15T13:00:00')),
+        TrainingUser(
+            3,
+            "test uer 2",
+            "assets/images/trainerExample2.png",
+            ["화", "목", "토"],
+            5,
+            10,
+            DateTime.parse('2024-06-15T13:00:00'),
+            DateTime.parse('2024-09-15T13:00:00'))
+      ];
+    }
     return [
       TrainingUser(
-          1,
-          "John Doe",
-          "http://example.com/john",
-          ["월", "수", "금"],
-          5,
-          10,
+          3,
+          "Old man",
+          "assets/images/trainerExample3.png",
+          ["월", "수", "일"],
+          20,
+          20,
           DateTime.parse('2024-05-15T13:00:00'),
-          DateTime.parse('2024-08-15T13:00:00')),
+          DateTime.parse('2023-08-15T13:00:00')),
       TrainingUser(
           3,
-          "test uer 2",
-          "http://example.com/john",
-          ["화", "목", "토"],
-          5,
+          "expired user",
+          "assets/images/trainerExample4.png",
+          ["금", "일"],
           10,
-          DateTime.parse('2024-06-15T13:00:00'),
-          DateTime.parse('2024-09-15T13:00:00'))
+          15,
+          DateTime.parse('2024-05-15T13:00:00'),
+          DateTime.parse('2024-02-15T13:00:00')),
     ];
   }
 }
