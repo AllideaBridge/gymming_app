@@ -3,6 +3,7 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/drawer/gympro_drawer.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -23,6 +24,8 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
   @override
   void initState() {
     super.initState();
+    futureTrainerSchedules =
+        scheduleRepository.getTrainerScheduleByWeek(DateTime.now());
   }
 
   @override
@@ -102,10 +105,12 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
       ),
       onViewChanged: (ViewChangedDetails details) {
         List<DateTime> dates = details.visibleDates;
-        setState(() {
-          futureTrainerSchedules =
-              scheduleRepository.getTrainerScheduleByWeek(dates[0]);
-        });
+        if (!DateUtil.isTodayInDateList(dates)) {
+          setState(() {
+            futureTrainerSchedules =
+                scheduleRepository.getTrainerScheduleByWeek(dates[0]);
+          });
+        }
       },
     );
   }

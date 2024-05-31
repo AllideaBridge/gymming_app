@@ -68,4 +68,13 @@ class DateUtil {
     );
     return dateTime.toString();
   }
+
+  static bool isTodayInDateList(List<DateTime> dates) {
+    for (DateTime date in dates) {
+      if (isSameDate(date, DateTime.now())) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
