@@ -3,7 +3,6 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/drawer/gympro_drawer.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -19,13 +18,12 @@ class TrainerTimeTable extends StatefulWidget {
 
 class _TrainerTimeTableState extends State<TrainerTimeTable> {
   final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<LessonList>> futureTrainerSchedules;
+  Future<List<LessonList>> futureTrainerSchedules =
+      Future<List<LessonList>>.value([]);
 
   @override
   void initState() {
     super.initState();
-    futureTrainerSchedules =
-        scheduleRepository.getTrainerScheduleByWeek(DateTime.now());
   }
 
   @override
@@ -105,12 +103,12 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
       ),
       onViewChanged: (ViewChangedDetails details) {
         List<DateTime> dates = details.visibleDates;
-        if (!DateUtil.isTodayInDateList(dates)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             futureTrainerSchedules =
                 scheduleRepository.getTrainerScheduleByWeek(dates[0]);
           });
-        }
+        });
       },
     );
   }
