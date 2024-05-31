@@ -49,8 +49,10 @@ class UserManagementList extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => UserDetail()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GymproMemberDetail()));
                   },
                   child: Card(
                     color: Colors.black,

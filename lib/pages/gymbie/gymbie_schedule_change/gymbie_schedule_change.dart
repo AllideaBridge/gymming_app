@@ -11,14 +11,14 @@ import '../../../common/colors.dart';
 import '../../../common/constants.dart';
 import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
-import '../../../services/models/schedule_detail.dart';
+import '../../../services/models/schedule_user.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
       {super.key, required this.originDay, required this.scheduleDetail});
 
   final DateTime originDay;
-  final ScheduleDetail scheduleDetail;
+  final ScheduleUser scheduleDetail;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();

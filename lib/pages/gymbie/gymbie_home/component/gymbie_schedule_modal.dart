@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/components/buttons/primary_button.dart';
 import 'package:gymming_app/components/buttons/secondary_button.dart';
 import 'package:gymming_app/components/icon_label.dart';
-import 'package:gymming_app/services/models/schedule_detail.dart';
+import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ import '../../../gymbie/gymbie_schedule_cancel.dart';
 import '../../../gymbie/gymbie_schedule_change/gymbie_schedule_change.dart';
 
 class ScheduleClicked extends StatelessWidget {
-  final ScheduleDetail scheduleDetail;
+  final ScheduleUser scheduleDetail;
 
   const ScheduleClicked({super.key, required this.scheduleDetail});
 

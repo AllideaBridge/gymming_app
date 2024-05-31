@@ -1,30 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/components/state_date_time.dart';
+import 'package:gymming_app/services/models/schedule_detail.dart';
+import 'package:gymming_app/services/models/schedule_training_user.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../common/colors.dart';
 import '../../../../components/icon_label.dart';
 import '../../../../services/utils/date_util.dart';
 
-class CalendarTraineeDetail extends StatefulWidget {
-  final List<DateTime> lessonDay;
-
-  const CalendarTraineeDetail({super.key, required this.lessonDay});
+class GymproMemberDetailCalendar extends StatefulWidget {
+  const GymproMemberDetailCalendar({Key? key}) : super(key: key);
 
   @override
-  State<CalendarTraineeDetail> createState() => _CalendarTraineeDetailState();
+  State<GymproMemberDetailCalendar> createState() =>
+      _GymproMemberDetailCalendarState();
 }
 
-class _CalendarTraineeDetailState extends State<CalendarTraineeDetail> {
-  DateTime _selectedDay = DateTime.now();
+class _GymproMemberDetailCalendarState
+    extends State<GymproMemberDetailCalendar> {
+  final scheduleRepository = ScheduleRepository(client: http.Client());
+  late Future<List<ScheduleTrainingUser>> futureSchedules;
+
+  @override
+  void initState() {
+    super.initState();
+    futureSchedules =
+        scheduleRepository.getTrainingUserScheduleByMonth(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: futureSchedules,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final schedules = snapshot.data!;
+            return buildCalendar(schedules);
+          } else if (snapshot.hasError) {
+            return Text(
+              "${snapshot.error}",
+              style: TextStyle(color: Colors.white),
+            );
+          }
+
+          return const CircularProgressIndicator();
+        });
+  }
+
+  Widget buildCalendar(List<ScheduleTrainingUser> schedules) {
     const defaultTextStyle = TextStyle(color: Colors.white);
     const whiteTextStyle = TextStyle(color: Colors.white);
 
+    List<String> getEventList(DateTime day) {
+      if (containsDateTime(schedules, day)) {
+        return ['lessonDay'];
+      }
+      if (isSameDay(day, DateTime.now())) {
+        return ['today'];
+      }
+      return [];
+    }
+
     return TableCalendar(
-      focusedDay: _selectedDay,
+      focusedDay: Provider.of<StateDateTime>(context).selectedDateTime,
       firstDay: DateTime(1800),
       lastDay: DateTime(3000),
       calendarFormat: CalendarFormat.month,
@@ -33,10 +75,12 @@ class _CalendarTraineeDetailState extends State<CalendarTraineeDetail> {
         rightChevronIcon: Icon(
           Icons.arrow_forward_ios,
           size: 16,
+          color: Colors.white,
         ),
         leftChevronIcon: Icon(
           Icons.arrow_back_ios,
           size: 16,
+          color: Colors.white,
         ),
         titleCentered: true,
         titleTextStyle: const TextStyle(
@@ -56,87 +100,31 @@ class _CalendarTraineeDetailState extends State<CalendarTraineeDetail> {
           shape: BoxShape.circle,
         ),
       ),
-      onDaySelected: (selectedDay, _) {
-        setState(() {
-          _selectedDay = selectedDay;
-        });
-        // TODO: 클릭한 날의 레슨 정보 가져오는 API 호출
-        if (containsDateTime(widget.lessonDay, selectedDay)) {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: false,
-            builder: (BuildContext context) {
-              return Wrap(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(20, 8, 20, 40),
-                    color: BACKGROUND_COLOR,
-                    child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                                child: Container(
-                              width: 60,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: BTN_COLOR,
-                              ),
-                            )),
-                            SizedBox(height: 28),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 4, horizontal: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                // TODO: 레슨 상태에 따라 색상 변경
-                                color: PRIMARY2_COLOR,
-                              ),
-                              // TODO: 레슨 상태에 따라 내용 변경
-                              child: Text(
-                                '정상 출석',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 28),
-                            IconLabel(
-                              iconData: Icons.alarm,
-                              title: "일시",
-                              // TODO: API를 통해서 받아오기
-                              content:
-                                  DateUtil.getKoreanDayAndHour(selectedDay),
-                              titleColor: SECONDARY_COLOR,
-                              contentColor: Colors.white,
-                            ),
-                            SizedBox(height: 28),
-                            IconLabel(
-                              iconData: Icons.location_on_outlined,
-                              title: "장소",
-                              // TODO: API를 통해서 받아오기
-                              content: 'GYMGYM | 방이동',
-                              titleColor: SECONDARY_COLOR,
-                              contentColor: Colors.white,
-                            ),
-                          ],
-                        )),
-                  ),
-                ],
-              );
-            },
-          );
+      onDaySelected: (DateTime selectedDay, _) async {
+        Provider.of<StateDateTime>(context, listen: false)
+            .changeStateDate(selectedDay);
+
+        var scheduleId = findScheduleId(schedules, selectedDay);
+        if (scheduleId != -1) {
+          ScheduleDetail scheduleDetail =
+              await scheduleRepository.getScheduleDetail(scheduleId);
+          buildBottomSheet(scheduleDetail);
         }
       },
-      eventLoader: _getEventList,
+      eventLoader: getEventList,
       selectedDayPredicate: (DateTime day) =>
-          _selectedDay.year == day.year &&
-          _selectedDay.month == day.month &&
-          _selectedDay.day == day.day,
+          Provider.of<StateDateTime>(context).selectedDateTime.year ==
+              day.year &&
+          Provider.of<StateDateTime>(context).selectedDateTime.month ==
+              day.month &&
+          Provider.of<StateDateTime>(context).selectedDateTime.day == day.day,
+      onPageChanged: (DateTime day) {
+        Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
+        setState(() {
+          futureSchedules =
+              scheduleRepository.getTrainingUserScheduleByMonth(day);
+        });
+      },
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, date, events) {
           if (events.contains('today')) {
@@ -160,23 +148,83 @@ class _CalendarTraineeDetailState extends State<CalendarTraineeDetail> {
     );
   }
 
-  List<String> _getEventList(DateTime day) {
-    if (containsDateTime(widget.lessonDay, day)) {
-      return ['lessonDay'];
-    }
-    if (isSameDay(day, DateTime.now())) {
-      // print(day);
-      return ['today'];
-    }
-    return [];
+  void buildBottomSheet(ScheduleDetail scheduleDetail) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: false,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 8, 20, 40),
+              color: BACKGROUND_COLOR,
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                        child: Container(
+                      width: 60,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: BTN_COLOR,
+                      ),
+                    )),
+                    SizedBox(height: 28),
+                    IconLabel(
+                      iconData: Icons.alarm,
+                      title: "일시",
+                      content: DateUtil.getKoreanDayAndHour(
+                          scheduleDetail.startTime),
+                      titleColor: SECONDARY_COLOR,
+                      contentColor: Colors.white,
+                    ),
+                    SizedBox(height: 28),
+                    IconLabel(
+                      iconData: Icons.location_on_outlined,
+                      title: "장소",
+                      content:
+                          '${scheduleDetail.centerName} | ${scheduleDetail.centerLocation}',
+                      titleColor: SECONDARY_COLOR,
+                      contentColor: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  bool containsDateTime(List<DateTime> dateList, DateTime targetDateTime) {
-    for (DateTime date in dateList) {
-      if (isSameDay(date, targetDateTime)) {
-        return true;
+  bool containsDateTime(
+      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+    for (var schedule in scheduleList) {
+      {
+        if (schedule.startTime.year == targetDateTime.year &&
+            schedule.startTime.month == targetDateTime.month &&
+            schedule.startTime.day == targetDateTime.day) {
+          return true;
+        }
       }
     }
     return false;
+  }
+
+  int findScheduleId(
+      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+    for (var schedule in scheduleList) {
+      {
+        if (schedule.startTime.year == targetDateTime.year &&
+            schedule.startTime.month == targetDateTime.month &&
+            schedule.startTime.day == targetDateTime.day) {
+          return schedule.scheduleId;
+        }
+      }
+    }
+    return -1;
   }
 }

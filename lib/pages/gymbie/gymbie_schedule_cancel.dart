@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/components/layouts/reason_layout.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
-import 'package:gymming_app/services/models/schedule_detail.dart';
+import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +15,7 @@ import '../../services/utils/date_util.dart';
 class GymbieScheduleCancel extends StatelessWidget {
   final ScheduleRepository scheduleRepository =
       ScheduleRepository(client: http.Client());
-  final ScheduleDetail scheduleDetail;
+  final ScheduleUser scheduleDetail;
 
   GymbieScheduleCancel({super.key, required this.scheduleDetail});
 
