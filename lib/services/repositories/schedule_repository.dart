@@ -50,19 +50,18 @@ class ScheduleRepository {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeMonth
     });
-    return ScheduleUser.getDummyMonthlyScheduleList();
-    // final response = await client.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     final List<dynamic> body = json.decode(response.body)["result"];
-    //     return body.map((item) => item.toString()).toSet();
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> result = json.decode(response.body)["result"];
+        return result.map((item) => item.toString()).toSet();
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   /*
@@ -74,20 +73,18 @@ class ScheduleRepository {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay
     });
-
-    return ScheduleUser.getDummyScheduleDetailList();
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     List<dynamic> body = json.decode(response.body)['result'];
-    //     return ScheduleDetail.parseScheduleDetailList(body);
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> result = json.decode(response.body)['result'];
+        return ScheduleUser.parseScheduleDetailList(result);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   /*

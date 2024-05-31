@@ -23,8 +23,6 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
   @override
   void initState() {
     super.initState();
-    futureTrainerSchedules =
-        scheduleRepository.getTrainerScheduleByWeek(DateTime.now());
   }
 
   @override
@@ -72,10 +70,10 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
     );
   }
 
-  Widget buildCalendar(List<LessonList> futureTrainerSchedules) {
+  Widget buildCalendar(List<LessonList> trainerSchedules) {
     return SfCalendar(
       view: CalendarView.week,
-      dataSource: LessonDataSource(futureTrainerSchedules),
+      dataSource: LessonDataSource(trainerSchedules),
       appointmentTextStyle: TextStyle(
         fontSize: 11,
         color: Colors.black,
@@ -102,6 +100,13 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
           fontWeight: FontWeight.bold,
         ),
       ),
+      onViewChanged: (ViewChangedDetails details) {
+        List<DateTime> dates = details.visibleDates;
+        setState(() {
+          futureTrainerSchedules =
+              scheduleRepository.getTrainerScheduleByWeek(dates[0]);
+        });
+      },
     );
   }
 }
