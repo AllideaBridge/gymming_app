@@ -8,11 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../../../common/colors.dart';
-import '../../../../services/models/schedule_detail.dart';
+import '../../../../services/models/schedule_user.dart';
 
 class GymbieScheduleList extends StatelessWidget {
   final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<ScheduleDetail>> schedules;
+  late Future<List<ScheduleUser>> schedules;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class GymbieScheduleList extends StatelessWidget {
   }
 
   Widget buildScheduleList(
-      List<ScheduleDetail> schedules, DateTime selectedDateTime, context) {
+      List<ScheduleUser> schedules, DateTime selectedDateTime, context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -81,7 +81,7 @@ class GymbieScheduleList extends StatelessWidget {
     );
   }
 
-  void showScheduleBottomSheet(BuildContext context, ScheduleDetail schedule) {
+  void showScheduleBottomSheet(BuildContext context, ScheduleUser schedule) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {

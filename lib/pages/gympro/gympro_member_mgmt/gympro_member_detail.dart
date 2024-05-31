@@ -8,10 +8,10 @@ import '../../../components/common_header.dart';
 import '../../../services/repositories/trainee_repository.dart';
 import 'component/gympro_member_detail_calendar.dart';
 
-class UserDetail extends StatelessWidget {
+class GymproMemberDetail extends StatelessWidget {
   final TraineeDetail traineeDetail = TraineeRepository().getTraineeDetail();
 
-  UserDetail({super.key});
+  GymproMemberDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -224,8 +224,7 @@ class UserDetail extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 20),
-                          CalendarTraineeDetail(
-                              lessonDay: traineeDetail.lessonDay),
+                          GymproMemberDetailCalendar(),
                         ],
                       ),
                     ),

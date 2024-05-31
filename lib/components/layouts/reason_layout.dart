@@ -8,13 +8,13 @@ import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
-import '../../services/models/schedule_detail.dart';
+import '../../services/models/schedule_user.dart';
 import '../../services/utils/toast_util.dart';
 import 'reason_content.dart';
 
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
-  final ScheduleDetail? scheduleDetail;
+  final ScheduleUser? scheduleDetail;
   final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;

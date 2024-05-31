@@ -87,7 +87,7 @@ class _UserManagementListState extends State<UserManagementList> {
           return GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserDetail()));
+                  MaterialPageRoute(builder: (context) => GymproMemberDetail()));
             },
             child: Card(
               color: Colors.black,
