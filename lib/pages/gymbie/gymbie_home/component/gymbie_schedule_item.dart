@@ -30,7 +30,8 @@ class ScheduleItem extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
           ),
           SizedBox(width: 20, height: 20),
-          Column(
+          Flexible(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -39,6 +40,7 @@ class ScheduleItem extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(width: 8, height: 8),
               Text(
@@ -47,9 +49,10 @@ class ScheduleItem extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
+                overflow: TextOverflow.ellipsis,
               ),
             ],
-          )
+          ))
         ],
       ),
     );

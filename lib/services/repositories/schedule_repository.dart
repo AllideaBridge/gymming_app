@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:gymming_app/services/models/lesson_list.dart';
 import 'package:gymming_app/services/models/schedule_detail.dart';
 import 'package:gymming_app/services/models/schedule_training_user.dart';
@@ -44,23 +46,22 @@ class ScheduleRepository {
     URL: schedules/<user_id>?day=date&type=month
    */
   Future<Set<String>> getScheduleByMonth(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeMonth
     });
-    return ScheduleUser.getDummyMonthlyScheduleList();
-    // final response = await client.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     final List<dynamic> body = json.decode(response.body)["result"];
-    //     return body.map((item) => item.toString()).toSet();
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> result = json.decode(response.body)["result"];
+        return result.map((item) => item.toString()).toSet();
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   /*
@@ -68,24 +69,22 @@ class ScheduleRepository {
     URL: schedules/<user_id>?day=date&type=day
    */
   Future<List<ScheduleUser>> getScheduleByDay(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/$dummyUserId').replace(queryParameters: {
+    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay
     });
-
-    return ScheduleUser.getDummyScheduleDetailList();
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     List<dynamic> body = json.decode(response.body)['result'];
-    //     return ScheduleDetail.parseScheduleDetailList(body);
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> result = json.decode(response.body)['result'];
+        return ScheduleUser.parseScheduleDetailList(result);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   /*
@@ -99,17 +98,18 @@ class ScheduleRepository {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay,
     });
-    return AvailableTimes.getDummyAvailableTimesList();
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     return AvailableTimes.getAvailableTimesList(json.decode(response.body));
-    //   } catch (e) {
-    //     throw Exception('Failed to load data');
-    //   }
-    // } else {
-    //   throw Exception('Failed to load data');
-    // }
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> result = json.decode(response.body)['result'];
+        return AvailableTimes.getAvailableTimesList(result);
+      } catch (e) {
+        throw Exception('Failed to load data');
+      }
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
   /*
@@ -122,18 +122,18 @@ class ScheduleRepository {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeWeek,
     });
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     return LessonList.parseLessonListList(json.decode(response.body));
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
-    return LessonList.getDummyLessonListList();
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        return LessonList.parseLessonListList(json.decode(response.body));
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   /*
