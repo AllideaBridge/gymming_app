@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/common_header.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_change_calendar.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_schedule_change/component/gymbie_select_time.dart';
+import 'package:gymming_app/components/schedule_select_calendar.dart';
+import 'package:gymming_app/components/time_select_table.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 
-import '../../../common/colors.dart';
-import '../../../common/constants.dart';
-import '../../../components/layouts/reason_content.dart';
-import '../../../components/layouts/reason_layout.dart';
-import '../../../services/models/schedule_user.dart';
+import '../../common/colors.dart';
+import '../../common/constants.dart';
+import '../../components/layouts/reason_content.dart';
+import '../../components/layouts/reason_layout.dart';
+import '../../services/models/schedule_user.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
@@ -48,18 +48,15 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
 
   @override
   Widget build(BuildContext context) {
-    Color buttonColor =
-        _selectedTime.isEmpty ? PRIMARY_COLOR.withOpacity(0.3) : PRIMARY_COLOR;
-
     return Scaffold(
         extendBody: true,
         body: SafeArea(
-          child: Container(
+          child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 CommonHeader(title: '일정 $CHANGE'),
-                GymbieChangeCalendar(
+                ScheduleSelectCalendar(
                   originDay: widget.originDay,
                   changeSelectedDay: _changeSelectedDay,
                 ),
@@ -67,7 +64,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                   height: 10,
                 ),
                 Expanded(
-                  child: GymbieSelectTime(
+                  child: TimeSelectTable(
                     selectedDay: _selectedDay,
                     changeSelectedTime: _changeSelectedTime,
                     availableTimesList: _availableTimesList,
@@ -76,32 +73,11 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                 const SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  width: 350,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _selectedTime.isEmpty
-                        ? null
-                        : () => clickChangeButton(context),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(buttonColor),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      '변경 완료',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                buildFooterButton(
+                    context,
+                    _selectedTime.isEmpty
+                        ? PRIMARY_COLOR.withOpacity(0.3)
+                        : PRIMARY_COLOR),
                 const SizedBox(
                   height: 40,
                 ),
@@ -109,6 +85,33 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
             ),
           ),
         ));
+  }
+
+  SizedBox buildFooterButton(BuildContext context, Color buttonColor) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed:
+            _selectedTime.isEmpty ? null : () => clickChangeButton(context),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+        child: const Text(
+          '변경 완료',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 
   void clickChangeButton(context) async {

@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../common/colors.dart';
+import '../common/colors.dart';
 
-class GymbieChangeCalendar extends StatefulWidget {
-  const GymbieChangeCalendar(
-      {super.key, required this.originDay, required this.changeSelectedDay});
+class ScheduleSelectCalendar extends StatefulWidget {
+  const ScheduleSelectCalendar(
+      {super.key, this.originDay, required this.changeSelectedDay});
 
-  final DateTime originDay;
+  final DateTime? originDay;
   final Function(DateTime) changeSelectedDay;
 
   @override
-  State<GymbieChangeCalendar> createState() => _GymbieChangeCalendarState();
+  State<ScheduleSelectCalendar> createState() => _ScheduleSelectCalendarState();
 }
 
-class _GymbieChangeCalendarState extends State<GymbieChangeCalendar> {
+class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
   DateTime selectedDay = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    selectedDay = widget.originDay.add(const Duration(days: 1));
+    selectedDay = widget.originDay!.add(const Duration(days: 1));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.changeSelectedDay(selectedDay);
     });
@@ -101,7 +101,7 @@ class _GymbieChangeCalendarState extends State<GymbieChangeCalendar> {
   }
 
   List<String> _getEventList(DateTime day) {
-    if (isSameDay(day, widget.originDay)) {
+    if ((widget.originDay != null) && isSameDay(day, widget.originDay)) {
       return ['originDay'];
     }
     if (isSameDay(day, DateTime.now())) {

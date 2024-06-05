@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../../common/colors.dart';
 import '../../../../components/state_date_time.dart';
 import '../../../gymbie/gymbie_schedule_cancel.dart';
-import '../../../gymbie/gymbie_schedule_change/gymbie_schedule_change.dart';
+import '../../gymbie_schedule_change.dart';
 
 class ScheduleClicked extends StatelessWidget {
   final ScheduleUser scheduleDetail;
