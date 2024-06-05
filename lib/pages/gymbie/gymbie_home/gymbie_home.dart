@@ -35,8 +35,8 @@ class GymbieHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => TrainerTimeTable()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => GymproHome()));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),

@@ -115,7 +115,7 @@ class _TraineeInput extends State<TraineeInput> {
                         ? Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TrainerTimeTable()),
+                                builder: (context) => GymproHome()),
                             (route) => false,
                           )
                         : Navigator.pop(context);

@@ -21,7 +21,9 @@ class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
   @override
   void initState() {
     super.initState();
-    selectedDay = widget.originDay!.add(const Duration(days: 1));
+    if (widget.originDay != null) {
+      selectedDay = widget.originDay!.add(const Duration(days: 1));
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.changeSelectedDay(selectedDay);
     });
