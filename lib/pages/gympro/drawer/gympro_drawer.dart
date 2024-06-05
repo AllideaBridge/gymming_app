@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/gympro_gymbie_add.dart';
 
 import '../../../common/colors.dart';
@@ -155,6 +156,23 @@ class TrainerDrawer extends StatelessWidget {
               '앱 공지사항',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
+              '회원 화면으로 이동',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.pushAndRemoveUntil<dynamic>(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (BuildContext context) => GymbieHome(),
+                ),
+                (route) =>
+                    false, //if you want to disable back feature set to false
+              );
+            },
           ),
           ListTile(
             title: Text('드로어를 닫는다', style: TextStyle(color: Colors.white)),

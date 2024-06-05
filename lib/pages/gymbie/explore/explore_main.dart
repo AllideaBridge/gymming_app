@@ -25,7 +25,7 @@ class ExploreScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserTimeTable()));
+                    MaterialPageRoute(builder: (context) => GymbieHome()));
               },
               style: ButtonStyle(
                   foregroundColor: MaterialStatePropertyAll(Colors.white)),

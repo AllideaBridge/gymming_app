@@ -74,7 +74,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => UserTimeTable()),
+                      MaterialPageRoute(builder: (context) => GymbieHome()),
                       (Route<dynamic> route) =>
                           false, // 모든 라우트를 제거하므로 false를 반환합니다.
                     );
@@ -105,7 +105,7 @@ class ScheduleChangeCompleteWithReason extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => UserTimeTable()),
+                      MaterialPageRoute(builder: (context) => GymbieHome()),
                       (Route<dynamic> route) =>
                           false, // 모든 라우트를 제거하므로 false를 반환합니다.
                     );
