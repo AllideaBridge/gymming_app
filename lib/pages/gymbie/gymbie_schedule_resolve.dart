@@ -64,8 +64,7 @@ class ScheduleChangeComplete extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => UserTimeTable()),
+                        MaterialPageRoute(builder: (context) => GymbieHome()),
                         (Route<dynamic> route) => false,
                       );
                     },

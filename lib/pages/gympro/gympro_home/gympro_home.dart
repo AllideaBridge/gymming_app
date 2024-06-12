@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/drawer/gympro_drawer.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_disable_time.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
@@ -9,14 +9,17 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../../../common/colors.dart';
 import '../../../services/models/lesson_list.dart';
 
-class TrainerTimeTable extends StatefulWidget {
-  const TrainerTimeTable({Key? key}) : super(key: key);
+class GymproHome extends StatefulWidget {
+  const GymproHome({Key? key}) : super(key: key);
+
+  //todo provider 에서 id 를 받아와야 함(혹은 로그인화면 이후)
+  final int trainerId = 1;
 
   @override
-  State<TrainerTimeTable> createState() => _TrainerTimeTableState();
+  State<GymproHome> createState() => _GymproHomeState();
 }
 
-class _TrainerTimeTableState extends State<TrainerTimeTable> {
+class _GymproHomeState extends State<GymproHome> {
   final scheduleRepository = ScheduleRepository(client: http.Client());
   Future<List<LessonList>> futureTrainerSchedules =
       Future<List<LessonList>>.value([]);
@@ -62,8 +65,11 @@ class _TrainerTimeTableState extends State<TrainerTimeTable> {
       //TODO: 나중에 제거
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => UserTimeTable()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      GymproDisableTime(trainerId: widget.trainerId)));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),

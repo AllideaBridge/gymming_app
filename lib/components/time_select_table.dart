@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 
-import '../../../../common/colors.dart';
+import '../common/colors.dart';
 
-class GymbieSelectTime extends StatefulWidget {
-  const GymbieSelectTime(
+class TimeSelectTable extends StatefulWidget {
+  const TimeSelectTable(
       {super.key,
       required this.selectedDay,
       required this.changeSelectedTime,
@@ -15,10 +15,10 @@ class GymbieSelectTime extends StatefulWidget {
   final List<AvailableTimes> availableTimesList;
 
   @override
-  State<GymbieSelectTime> createState() => _GymbieSelectTimeState();
+  State<TimeSelectTable> createState() => _TimeSelectTableState();
 }
 
-class _GymbieSelectTimeState extends State<GymbieSelectTime> {
+class _TimeSelectTableState extends State<TimeSelectTable> {
   var times = [];
 
   String selectedTime = '';
@@ -31,7 +31,7 @@ class _GymbieSelectTimeState extends State<GymbieSelectTime> {
   }
 
   @override
-  void didUpdateWidget(GymbieSelectTime oldWidget) {
+  void didUpdateWidget(TimeSelectTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedDay != oldWidget.selectedDay) {
       selectedTime = '';

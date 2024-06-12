@@ -5,8 +5,8 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_home_calen
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_list.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 
-class UserTimeTable extends StatelessWidget {
-  const UserTimeTable({Key? key}) : super(key: key);
+class GymbieHome extends StatelessWidget {
+  const GymbieHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,8 @@ class UserTimeTable extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => TrainerTimeTable()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => GymproHome()));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
