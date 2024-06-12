@@ -137,6 +137,29 @@ class ScheduleRepository {
   }
 
   /*
+    스케줄 생성
+    URL: schedules
+    body: {
+      user_id: String,
+      trainer_id: String,
+      start_time: String(YYYY-MM-DDTHH:MM:SS)
+   */
+  static Future<bool> createSchedule(int userId, int trainerId) async {
+    final response = await http.post(Uri.parse(baseUrl),
+        body: json.encode({
+          'user_id': userId,
+          'trainer_id': trainerId,
+          'start_time': DateTime.now().toString()
+        }));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /*
     스케줄 수정
     URL: schedules/<schedule_id>
     body: {
@@ -147,24 +170,23 @@ class ScheduleRepository {
    */
   static Future<bool> updateSchedule(int scheduleId, String time) async {
     var url = Uri.parse('$baseUrl/$scheduleId');
-    return true;
-    // final response = await http.put(
-    //   url,
-    //   body: json.encode({
-    //     'id': scheduleId,
-    //     'start_time': time,
-    //     'status': 'MODIFIED',
-    //   }),
-    //   headers: {
-    //     'Content-Type': 'application/json', // Content-Type 설정
-    //   },
-    // );
-    //
-    // if (response.statusCode == 200) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    final response = await http.put(
+      url,
+      body: json.encode({
+        'id': scheduleId,
+        'start_time': time,
+        'status': 'MODIFIED',
+      }),
+      headers: {
+        'Content-Type': 'application/json', // Content-Type 설정
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*
@@ -173,18 +195,17 @@ class ScheduleRepository {
    */
   Future<bool> cancelSchedule(int scheduleId) async {
     var url = Uri.parse('$baseUrl/$scheduleId');
-    return true;
-    // final response = await http.delete(url);
-    // if (response.statusCode != 200) {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
-    // final dynamic body = json.decode(response.body);
-    // if (body["message"] == "Schedule cancel successfully") {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    final response = await http.delete(url);
+    if (response.statusCode != 200) {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
+    final dynamic body = json.decode(response.body);
+    if (body["message"] == "Schedule cancel successfully") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*

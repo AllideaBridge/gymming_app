@@ -105,6 +105,7 @@ class _GymproDisableTimeState extends State<GymproDisableTime> {
   }
 
   void clickConfirm(context) {
+    ScheduleRepository.createSchedule(0, widget.trainerId);
     return;
   }
 }
