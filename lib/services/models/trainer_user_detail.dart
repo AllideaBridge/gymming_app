@@ -44,7 +44,7 @@ class TrainerUserDetail {
 
   String get phoneNumber => _phoneNumber;
 
-  String get gender => _gender;
+  String get gender => _gender == 'M' ? GENDER_MALE : GENDER_FEMALE;
 
   String get email => _email;
 

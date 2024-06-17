@@ -30,7 +30,7 @@ const CANCEL_SUBTITLE = """이 운동 일정을 취소하시려면 사유를
 알려주셔야 합니다.""";
 const REJECT_SUBTITLE = "입력하시면 회원이 참고할 수 있어요.";
 
-const GENDER_MALE = "M";
-const GENDER_FEMALE = "F";
+const GENDER_MALE = "남";
+const GENDER_FEMALE = "여";
 
 const SOCIAL_KAKAO = 'kakao';
