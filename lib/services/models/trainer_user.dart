@@ -1,6 +1,6 @@
 import '../utils/date_util.dart';
 
-class TrainingUser {
+class TrainerUser {
   final int _userId;
   final String _userName;
   final String _userProfileImgUrl;
@@ -10,7 +10,7 @@ class TrainingUser {
   final DateTime _registeredDate;
   final DateTime _lastDate;
 
-  TrainingUser(
+  TrainerUser(
       this._userId,
       this._userName,
       this._userProfileImgUrl,
@@ -36,12 +36,12 @@ class TrainingUser {
 
   DateTime get lastDate => _lastDate;
 
-  String getTrainingUserListDetailText(bool isPresent) {
+  String getTrainerUserListDetailText(bool isPresent) {
     return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 | ${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)}';
   }
 
-  factory TrainingUser.fromJson(Map<String, dynamic> json) {
-    return TrainingUser(
+  factory TrainerUser.fromJson(Map<String, dynamic> json) {
+    return TrainerUser(
         json["user_id"],
         json["user_name"],
         json["user_profile_img_url"],
@@ -52,19 +52,19 @@ class TrainingUser {
         DateTime.parse(json["last_date"]));
   }
 
-  static List<TrainingUser> parseTrainingUserList(List<dynamic> body) {
-    final List<TrainingUser> result = [];
+  static List<TrainerUser> parseTrainerUserList(List<dynamic> body) {
+    final List<TrainerUser> result = [];
     for (Map<String, dynamic> item in body) {
-      result.add(TrainingUser.fromJson(item));
+      result.add(TrainerUser.fromJson(item));
     }
     return result;
   }
 
   // api 완성되기 전 dummy 값
-  static List<TrainingUser> getDummyTrainingUserList(bool isPresent) {
+  static List<TrainerUser> getDummyTrainerUserList(bool isPresent) {
     if (isPresent) {
       return [
-        TrainingUser(
+        TrainerUser(
             1,
             "John Doe",
             "assets/images/trainerExample.png",
@@ -73,7 +73,7 @@ class TrainingUser {
             10,
             DateTime.parse('2024-05-15T13:00:00'),
             DateTime.parse('2024-08-15T13:00:00')),
-        TrainingUser(
+        TrainerUser(
             3,
             "test uer 2",
             "assets/images/trainerExample2.png",
@@ -85,7 +85,7 @@ class TrainingUser {
       ];
     }
     return [
-      TrainingUser(
+      TrainerUser(
           3,
           "Old man",
           "assets/images/trainerExample3.png",
@@ -94,7 +94,7 @@ class TrainingUser {
           20,
           DateTime.parse('2024-05-15T13:00:00'),
           DateTime.parse('2023-08-15T13:00:00')),
-      TrainingUser(
+      TrainerUser(
           3,
           "expired user",
           "assets/images/trainerExample4.png",

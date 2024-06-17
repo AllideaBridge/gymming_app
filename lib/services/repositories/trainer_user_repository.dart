@@ -1,7 +1,7 @@
-import 'package:gymming_app/services/models/training_user.dart';
+import 'package:gymming_app/services/models/trainer_user.dart';
 import 'package:http/http.dart' as http;
 
-class TrainingUserRepository {
+class TrainerUserRepository {
   late final http.Client client;
 
   static final String baseUrl = "http://10.0.2.2:5000/trainer-user";
@@ -10,7 +10,7 @@ class TrainingUserRepository {
     client = http.Client();
   }
 
-  Future<List<TrainingUser>> getTrainingUserList(
+  Future<List<TrainerUser>> getTrainerUserList(
       int trainerId, bool isPresent) async {
     Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users')
         .replace(queryParameters: {
@@ -29,6 +29,6 @@ class TrainingUserRepository {
     //   throw Exception(
     //       "api response error occurs: error code = ${response.statusCode}");
     // }
-    return TrainingUser.getDummyTrainingUserList(isPresent);
+    return TrainerUser.getDummyTrainerUserList(isPresent);
   }
 }

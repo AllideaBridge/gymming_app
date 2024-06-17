@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_detail.dart';
-import 'package:gymming_app/services/repositories/training_user_repository.dart';
+import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 
 import '../../../common/colors.dart';
-import '../../../services/models/training_user.dart';
+import '../../../services/models/trainer_user.dart';
 
 class UserManagementList extends StatefulWidget {
   final bool isPresent;
 
-  UserManagementList({
+  const UserManagementList({
     super.key,
     required this.isPresent,
   });
@@ -18,15 +18,14 @@ class UserManagementList extends StatefulWidget {
 }
 
 class _UserManagementListState extends State<UserManagementList> {
-  final TrainingUserRepository trainingUserRepository =
-      TrainingUserRepository();
-  late Future<List<TrainingUser>> trainingUserList;
+  final TrainerUserRepository trainingUserRepository = TrainerUserRepository();
+  late Future<List<TrainerUser>> trainingUserList;
 
   @override
   Widget build(BuildContext context) {
     //todo trainerId 받아오기
     trainingUserList =
-        trainingUserRepository.getTrainingUserList(1, widget.isPresent);
+        trainingUserRepository.getTrainerUserList(1, widget.isPresent);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -79,15 +78,18 @@ class _UserManagementListState extends State<UserManagementList> {
   }
 
   Expanded buildMemberList(
-      BuildContext context, List<TrainingUser> trainingUserList) {
+      BuildContext context, List<TrainerUser> trainingUserList) {
     return Expanded(
       child: ListView.separated(
         itemCount: trainingUserList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => GymproMemberDetail()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GymproMemberDetail(
+                          trainingUserDetail: trainingUserList[index])));
             },
             child: Card(
               color: Colors.black,
@@ -120,7 +122,7 @@ class _UserManagementListState extends State<UserManagementList> {
                         ),
                         Text(
                           trainingUserList[index]
-                              .getTrainingUserListDetailText(widget.isPresent),
+                              .getTrainerUserListDetailText(widget.isPresent),
                           style:
                               TextStyle(fontSize: 16.0, color: SECONDARY_COLOR),
                         ),

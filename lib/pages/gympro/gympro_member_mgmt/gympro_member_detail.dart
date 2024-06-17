@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_gymbie_add.dart';
 import 'package:gymming_app/pages/gympro/gympro_gymbie_remove.dart';
-import 'package:gymming_app/services/models/trainee_detail.dart';
+import 'package:gymming_app/services/repositories/trainee_repository.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/common_header.dart';
-import '../../../services/repositories/trainee_repository.dart';
+import '../../../services/models/trainee_detail.dart';
+import '../../../services/models/trainer_user.dart';
 import 'component/gympro_member_detail_calendar.dart';
 
 class GymproMemberDetail extends StatelessWidget {
-  final TraineeDetail traineeDetail = TraineeRepository().getTraineeDetail();
+  final TrainerUser trainingUserDetail;
 
-  GymproMemberDetail({super.key});
+  //user detail 을 개별 API 통해서 가져오기 필요함..
+  final TraineeDetail userDetail = TraineeRepository().getTraineeDetail();
+
+  GymproMemberDetail({super.key, required this.trainingUserDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class GymproMemberDetail extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(80.0),
                                 child: Image.asset(
-                                  traineeDetail.profileImg,
+                                  trainingUserDetail.userProfileImgUrl,
                                   fit: BoxFit.cover,
                                   width: 80.0,
                                   height: 80.0,
@@ -47,7 +51,7 @@ class GymproMemberDetail extends StatelessWidget {
                               ),
                               SizedBox(height: 16.0),
                               Text(
-                                traineeDetail.name,
+                                trainingUserDetail.userName,
                                 style: TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -57,7 +61,7 @@ class GymproMemberDetail extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    traineeDetail.birth,
+                                    userDetail.birth,
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: SECONDARY_COLOR,
@@ -71,7 +75,7 @@ class GymproMemberDetail extends StatelessWidget {
                                         EdgeInsets.symmetric(horizontal: 8.0),
                                   ),
                                   Text(
-                                    traineeDetail.gender,
+                                    userDetail.gender,
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: SECONDARY_COLOR,
@@ -79,49 +83,15 @@ class GymproMemberDetail extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              Text(
+                                  trainingUserDetail
+                                      .getTrainerUserListDetailText(true),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: SECONDARY_COLOR)),
                               Row(
                                 children: [
                                   Text(
-                                    traineeDetail.weekDay,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: SECONDARY_COLOR,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 2,
-                                    height: 16,
-                                    color: BORDER_COLOR,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                  ),
-                                  Text(
-                                    '${traineeDetail.usedDay}/${traineeDetail.totalDay} 진행',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: SECONDARY_COLOR,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 2,
-                                    height: 16,
-                                    color: BORDER_COLOR,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                  ),
-                                  Text(
-                                    '${traineeDetail.registeredDay} 등록',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: SECONDARY_COLOR,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    traineeDetail.phoneNumber,
+                                    userDetail.phoneNumber,
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: SECONDARY_COLOR,
@@ -171,7 +141,7 @@ class GymproMemberDetail extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) => TraineeInput(
                                                 isRegister: false,
-                                                traineeDetail: traineeDetail,
+                                                traineeDetail: userDetail,
                                               )));
                                 },
                               ),
@@ -189,7 +159,7 @@ class GymproMemberDetail extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => TraineeDelete(
-                                              name: traineeDetail.name)));
+                                              name: userDetail.name)));
                                 },
                               ),
                             ],
