@@ -67,7 +67,8 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                       height: 12,
                       color: BACKGROUND_COLOR,
                     ),
-                    GymproMemberDetailCalendar(),
+                    GymproMemberDetailCalendar(
+                        trainerId: widget.trainerId, userId: widget.userId),
                   ],
                 ),
               ),

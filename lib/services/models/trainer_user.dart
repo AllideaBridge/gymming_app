@@ -4,7 +4,7 @@ class TrainerUser {
   final int _userId;
   final String _userName;
   final String _userProfileImgUrl;
-  final List<String> _exerciseDays;
+  final String _exerciseDays;
   final int _lessonCurrentCount;
   final int _lessonTotalCount;
   final DateTime _registeredDate;
@@ -26,7 +26,7 @@ class TrainerUser {
 
   String get userProfileImgUrl => _userProfileImgUrl;
 
-  List<String> get exerciseDays => _exerciseDays;
+  String get exerciseDays => _exerciseDays;
 
   int get lessonCurrentCount => _lessonCurrentCount;
 
@@ -45,7 +45,7 @@ class TrainerUser {
         json["user_id"],
         json["user_name"],
         json["user_profile_img_url"],
-        json["exercise_days"].split(','),
+        json["exercise_days"],
         json["lesson_current_count"],
         json["lesson_total_count"],
         DateTime.parse(json["registered_date"]),
@@ -68,7 +68,7 @@ class TrainerUser {
             1,
             "John Doe",
             "assets/images/trainerExample.png",
-            ["월", "수", "금"],
+            "월, 수, 금",
             5,
             10,
             DateTime.parse('2024-05-15T13:00:00'),
@@ -77,7 +77,7 @@ class TrainerUser {
             3,
             "test uer 2",
             "assets/images/trainerExample2.png",
-            ["화", "목", "토"],
+            "화, 목, 토",
             5,
             10,
             DateTime.parse('2024-06-15T13:00:00'),
@@ -89,7 +89,7 @@ class TrainerUser {
           3,
           "Old man",
           "assets/images/trainerExample3.png",
-          ["월", "수", "일"],
+          "월, 수, 일",
           20,
           20,
           DateTime.parse('2024-05-15T13:00:00'),
@@ -98,7 +98,7 @@ class TrainerUser {
           3,
           "expired user",
           "assets/images/trainerExample4.png",
-          ["금", "일"],
+          "목, 토",
           10,
           15,
           DateTime.parse('2024-05-15T13:00:00'),

@@ -18,13 +18,13 @@ class ScheduleTrainerUser {
     );
   }
 
-  static List<ScheduleTrainerUser> parseScheduleTrainingUserList(
+  static Set<ScheduleTrainerUser> parseScheduleTrainingUserList(
       List<dynamic> body) {
     final List<ScheduleTrainerUser> result = [];
     for (Map<String, dynamic> item in body) {
       result.add(ScheduleTrainerUser.fromJson(item));
     }
-    return result;
+    return result.toSet();
   }
 
   // api 완성되기 전 dummy 값
