@@ -50,6 +50,22 @@ class TrainerUserDetail {
 
   String get name => _name;
 
+  factory TrainerUserDetail.fromJson(Map<String, dynamic> json) {
+    return TrainerUserDetail(
+        json["name"],
+        json["email"],
+        json["gender"],
+        json["phone_number"],
+        json["profile_img_url"],
+        json["login_platform"],
+        json["delete_flag"],
+        DateTime.parse(json["birthday"]),
+        json["lesson_total_count"],
+        json["lesson_current_count"],
+        json["exercise_days"],
+        json["special_notice"]);
+  }
+
 // api 완성되기 전 dummy 값
   static TrainerUserDetail getDummyTrainerUserDetail() {
     return TrainerUserDetail(
