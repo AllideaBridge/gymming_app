@@ -8,6 +8,9 @@ import '../../../services/models/trainer_user.dart';
 class UserManagementList extends StatefulWidget {
   final bool isPresent;
 
+  //todo trainerId 받아오기
+  final int trainerId = 1;
+
   const UserManagementList({
     super.key,
     required this.isPresent,
@@ -23,9 +26,8 @@ class _UserManagementListState extends State<UserManagementList> {
 
   @override
   Widget build(BuildContext context) {
-    //todo trainerId 받아오기
-    trainingUserList =
-        trainingUserRepository.getTrainerUserList(1, widget.isPresent);
+    trainingUserList = trainingUserRepository.getTrainerUserList(
+        widget.trainerId, widget.isPresent);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -89,7 +91,9 @@ class _UserManagementListState extends State<UserManagementList> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => GymproMemberDetail(
-                          trainingUserDetail: trainingUserList[index])));
+                          trainerId: widget.trainerId,
+                          userId: trainingUserList[index].userId,
+                          isPresent: widget.isPresent)));
             },
             child: Card(
               color: Colors.black,

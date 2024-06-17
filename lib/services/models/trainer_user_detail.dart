@@ -50,6 +50,11 @@ class TrainerUserDetail {
 
   String get name => _name;
 
+  String getTrainerUserListDetailText(bool isPresent) {
+    //todo registeredDate or lastDate 필요
+    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 | 진행종료여부 아직안만듦}';
+  }
+
   factory TrainerUserDetail.fromJson(Map<String, dynamic> json) {
     return TrainerUserDetail(
         json["name"],
@@ -73,7 +78,7 @@ class TrainerUserDetail {
         'example.com',
         GENDER_MALE,
         '010-1234-5678',
-        'text.com',
+        "assets/images/trainerExample1.png",
         SOCIAL_KAKAO,
         false,
         DateTime(1997, 11, 10),

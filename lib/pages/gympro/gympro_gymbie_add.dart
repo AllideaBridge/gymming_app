@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/buttons/primary_button.dart';
 import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/services/models/trainer_user_detail.dart';
 
 import '../../../common/colors.dart';
-import '../../services/models/trainee_detail.dart';
 import 'gympro_home/gympro_home.dart';
 
 class TraineeInput extends StatefulWidget {
   final bool isRegister;
-  TraineeDetail? traineeDetail;
+  TrainerUserDetail? traineeDetail;
 
   TraineeInput({super.key, required this.isRegister, this.traineeDetail});
 
@@ -41,9 +41,9 @@ class _TraineeInput extends State<TraineeInput> {
     super.initState();
     if (widget.isRegister == false && widget.traineeDetail != null) {
       _selectedFirstPhoneNumber = widget.traineeDetail!.phoneNumber;
-      _selectedYear = int.parse(widget.traineeDetail!.birth.split(".")[0]);
-      _selectedMonth = int.parse(widget.traineeDetail!.birth.split(".")[1]);
-      _selectedDay = int.parse(widget.traineeDetail!.birth.split(".")[2]);
+      _selectedYear = widget.traineeDetail!.birthday.year;
+      _selectedMonth = widget.traineeDetail!.birthday.month;
+      _selectedDay = widget.traineeDetail!.birthday.day;
       _isMaleSelected = widget.traineeDetail!.gender == '남';
     }
 
@@ -59,14 +59,14 @@ class _TraineeInput extends State<TraineeInput> {
             : null);
     _totalDayController = TextEditingController(
         text: !widget.isRegister
-            ? widget.traineeDetail!.totalDay.toString()
+            ? widget.traineeDetail!.lessonTotalCount.toString()
             : null);
     _usedDayController = TextEditingController(
         text: !widget.isRegister
-            ? widget.traineeDetail!.usedDay.toString()
+            ? widget.traineeDetail!.lessonCurrentCount.toString()
             : null);
     _specificDetailsController = TextEditingController(
-        text: !widget.isRegister ? widget.traineeDetail!.specificDetail : null);
+        text: !widget.isRegister ? widget.traineeDetail!.specialNotes : null);
 
     setState(() {
       _selectedFirstPhoneNumber = firstPhoneNumbers[0];

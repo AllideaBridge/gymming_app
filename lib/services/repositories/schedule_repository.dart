@@ -212,14 +212,14 @@ class ScheduleRepository {
     트레이너의 회원관리 상세에서 한달 스케쥴 조회
     URL: schedules/trainer/<trainer_id>/users/<user_id>?date=date&type=month
    */
-  Future<List<ScheduleTrainingUser>> getTrainingUserScheduleByMonth(
+  Future<List<ScheduleTrainerUser>> getTrainerUserScheduleByMonth(
       DateTime datetime) async {
     Uri url = Uri.parse('$baseUrl/trainer/$dummyTrainerId/users/$dummyUserId')
         .replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeMonth
     });
-    return ScheduleTrainingUser.getDummyTrainingUserMonthlyScheduleList();
+    return ScheduleTrainerUser.getDummyTrainerUserMonthlyScheduleList();
     // final response = await client.get(url);
     // if (response.statusCode == 200) {
     //   try {

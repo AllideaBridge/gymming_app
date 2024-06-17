@@ -23,35 +23,55 @@ class GymproMemberDetailCalendar extends StatefulWidget {
 class _GymproMemberDetailCalendarState
     extends State<GymproMemberDetailCalendar> {
   final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<ScheduleTrainingUser>> futureSchedules;
+  late Future<List<ScheduleTrainerUser>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
     futureSchedules =
-        scheduleRepository.getTrainingUserScheduleByMonth(DateTime.now());
+        scheduleRepository.getTrainerUserScheduleByMonth(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: futureSchedules,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final schedules = snapshot.data!;
-            return buildCalendar(schedules);
-          } else if (snapshot.hasError) {
-            return Text(
-              "${snapshot.error}",
-              style: TextStyle(color: Colors.white),
-            );
-          }
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12.0,
+        vertical: 28.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '수업 진행 이력',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: SECONDARY_COLOR,
+            ),
+          ),
+          SizedBox(height: 20),
+          FutureBuilder(
+              future: futureSchedules,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final schedules = snapshot.data!;
+                  return buildCalendar(schedules);
+                } else if (snapshot.hasError) {
+                  return Text(
+                    "${snapshot.error}",
+                    style: TextStyle(color: Colors.white),
+                  );
+                }
 
-          return const CircularProgressIndicator();
-        });
+                return const CircularProgressIndicator();
+              })
+        ],
+      ),
+    );
   }
 
-  Widget buildCalendar(List<ScheduleTrainingUser> schedules) {
+  Widget buildCalendar(List<ScheduleTrainerUser> schedules) {
     const defaultTextStyle = TextStyle(color: Colors.white);
     const whiteTextStyle = TextStyle(color: Colors.white);
 
@@ -122,7 +142,7 @@ class _GymproMemberDetailCalendarState
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
           futureSchedules =
-              scheduleRepository.getTrainingUserScheduleByMonth(day);
+              scheduleRepository.getTrainerUserScheduleByMonth(day);
         });
       },
       calendarBuilders: CalendarBuilders(
@@ -201,7 +221,7 @@ class _GymproMemberDetailCalendarState
   }
 
   bool containsDateTime(
-      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+      List<ScheduleTrainerUser> scheduleList, DateTime targetDateTime) {
     for (var schedule in scheduleList) {
       {
         if (schedule.startTime.year == targetDateTime.year &&
@@ -215,7 +235,7 @@ class _GymproMemberDetailCalendarState
   }
 
   int findScheduleId(
-      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+      List<ScheduleTrainerUser> scheduleList, DateTime targetDateTime) {
     for (var schedule in scheduleList) {
       {
         if (schedule.startTime.year == targetDateTime.year &&
