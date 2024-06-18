@@ -29,7 +29,7 @@ class GymbieHome extends StatelessWidget {
         ],
         backgroundColor: Colors.black,
       ),
-      drawer: UserDrawer(),
+      drawer: GymbieDrawer(),
       body: Column(
         children: [GymbieHomeCalendar(), GymbieScheduleList()],
       ),

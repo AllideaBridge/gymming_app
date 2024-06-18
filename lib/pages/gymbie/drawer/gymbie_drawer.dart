@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/sample/sample_page.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/layouts/tab_layout.dart';
 import '../../../pages/gympro/gympro_requests/gympro_finished_request_list.dart';
 import '../../../pages/gympro/gympro_requests/gympro_pending_request_list.dart';
 
-class UserDrawer extends StatelessWidget {
-  const UserDrawer({super.key});
+class GymbieDrawer extends StatelessWidget {
+  const GymbieDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +139,17 @@ class UserDrawer extends StatelessWidget {
                             leftComponent: GymproPendingRequestList(),
                             rightComponent: GymproFinishedRequestList(),
                           )));
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
+              '샘플 페이지로 이동',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SamplePage()));
             },
           ),
           ListTile(
