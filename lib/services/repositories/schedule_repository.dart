@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:gymming_app/services/models/lesson_list.dart';
 import 'package:gymming_app/services/models/schedule_detail.dart';
-import 'package:gymming_app/services/models/schedule_training_user.dart';
+import 'package:gymming_app/services/models/schedule_trainer_user.dart';
 import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
@@ -39,101 +39,6 @@ class ScheduleRepository {
     //   throw Exception(
     //       "api response error occurs: error code = ${response.statusCode}");
     // }
-  }
-
-  /*
-    회원의 한달 별 스케쥴 조회
-    URL: schedules/<user_id>?day=date&type=month
-   */
-  Future<Set<String>> getScheduleByMonth(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeMonth
-    });
-    final response = await client.get(url);
-    if (response.statusCode == 200) {
-      try {
-        final List<dynamic> result = json.decode(response.body)["result"];
-        return result.map((item) => item.toString()).toSet();
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
-  }
-
-  /*
-    회원의 하루 중 스케쥴 조회
-    URL: schedules/<user_id>?day=date&type=day
-   */
-  Future<List<ScheduleUser>> getScheduleByDay(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeDay
-    });
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      try {
-        List<dynamic> result = json.decode(response.body)['result'];
-        return ScheduleUser.parseScheduleDetailList(result);
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
-  }
-
-  /*
-    회원의 하루 중 트레이너 별 예약 가능한 시간 조회
-    URL: schedules/trainer/<trainer_id>?date=date&type=day
-   */
-  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
-      int trainerId, DateTime datetime) async {
-    Uri url =
-        Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeDay,
-    });
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      try {
-        List<dynamic> result = json.decode(response.body)['result'];
-        return AvailableTimes.getAvailableTimesList(result);
-      } catch (e) {
-        throw Exception('Failed to load data');
-      }
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  /*
-    트레이너의 일주일 스케줄 조회
-    URL: schedules/trainer/<trainer_id>?date=date&type=week
-   */
-  Future<List<LessonList>> getTrainerScheduleByWeek(DateTime datetime) async {
-    Uri url =
-        Uri.parse('$baseUrl/trainer/$dummyTrainerId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeWeek,
-    });
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      try {
-        return LessonList.parseLessonListList(json.decode(response.body));
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
-    }
   }
 
   /*
@@ -209,28 +114,122 @@ class ScheduleRepository {
   }
 
   /*
-    트레이너의 회원관리 상세에서 한달 스케쥴 조회
-    URL: schedules/trainer/<trainer_id>/users/<user_id>?date=date&type=month
+    회원의 한달 별 스케쥴 조회
+    URL: schedules/users/<user_id>?day=date&type=month
    */
-  Future<List<ScheduleTrainingUser>> getTrainingUserScheduleByMonth(
-      DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/trainer/$dummyTrainerId/users/$dummyUserId')
-        .replace(queryParameters: {
+  Future<Set<String>> getScheduleByMonth(DateTime datetime) async {
+    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeMonth
     });
-    return ScheduleTrainingUser.getDummyTrainingUserMonthlyScheduleList();
-    // final response = await client.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     final List<dynamic> body = json.decode(response.body)["result"];
-    //     return body.map((item) => item.toString()).toSet();
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> result = json.decode(response.body)["result"];
+        return result.map((item) => item.toString()).toSet();
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
+  }
+
+  /*
+    회원의 하루 중 스케쥴 조회
+    URL: schedules/users/<user_id>?day=date&type=day
+   */
+  Future<List<ScheduleUser>> getScheduleByDay(DateTime datetime) async {
+    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeDay
+    });
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> result = json.decode(response.body)['result'];
+        return ScheduleUser.parseScheduleDetailList(result);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
+  }
+
+  /*
+    회원의 하루 중 트레이너 별 예약 가능한 시간 조회
+    URL: schedules/trainer/<trainer_id>?date=date&type=day
+   */
+  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
+      int trainerId, DateTime datetime) async {
+    Uri url =
+        Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeDay,
+    });
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> result = json.decode(response.body)['result'];
+        return AvailableTimes.getAvailableTimesList(result);
+      } catch (e) {
+        throw Exception('Failed to load data');
+      }
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  /*
+    트레이너의 일주일 스케줄 조회
+    URL: schedules/trainer/<trainer_id>?date=date&type=week
+   */
+  Future<List<LessonList>> getTrainerScheduleByWeek(DateTime datetime) async {
+    Uri url =
+        Uri.parse('$baseUrl/trainer/$dummyTrainerId').replace(queryParameters: {
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeWeek,
+    });
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      try {
+        return LessonList.parseLessonListList(json.decode(response.body));
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
+  }
+
+  /*
+    트레이너의 회원관리 상세에서 한달 스케쥴 조회
+    URL: schedules/trainer/<trainer_id>/users/<user_id>?date=date&type=month
+   */
+  Future<Set<ScheduleTrainerUser>> getTrainerUserScheduleByMonth(
+      int trainerId, int userId, DateTime datetime) async {
+    Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users/$userId').replace(
+        queryParameters: {
+          'date': DateUtil.convertDateTimeWithDash(datetime),
+          'type': typeMonth
+        });
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> body = json.decode(response.body)["result"];
+        return ScheduleTrainerUser.parseScheduleTrainingUserList(body);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 }

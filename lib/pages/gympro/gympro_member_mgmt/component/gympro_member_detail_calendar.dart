@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/services/models/schedule_detail.dart';
-import 'package:gymming_app/services/models/schedule_training_user.dart';
+import 'package:gymming_app/services/models/schedule_trainer_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -13,7 +13,12 @@ import '../../../../components/icon_label.dart';
 import '../../../../services/utils/date_util.dart';
 
 class GymproMemberDetailCalendar extends StatefulWidget {
-  const GymproMemberDetailCalendar({Key? key}) : super(key: key);
+  final int trainerId;
+  final int userId;
+
+  const GymproMemberDetailCalendar(
+      {Key? key, required this.trainerId, required this.userId})
+      : super(key: key);
 
   @override
   State<GymproMemberDetailCalendar> createState() =>
@@ -23,35 +28,55 @@ class GymproMemberDetailCalendar extends StatefulWidget {
 class _GymproMemberDetailCalendarState
     extends State<GymproMemberDetailCalendar> {
   final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<ScheduleTrainingUser>> futureSchedules;
+  late Future<Set<ScheduleTrainerUser>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    futureSchedules =
-        scheduleRepository.getTrainingUserScheduleByMonth(DateTime.now());
+    futureSchedules = scheduleRepository.getTrainerUserScheduleByMonth(
+        widget.trainerId, widget.userId, DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: futureSchedules,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final schedules = snapshot.data!;
-            return buildCalendar(schedules);
-          } else if (snapshot.hasError) {
-            return Text(
-              "${snapshot.error}",
-              style: TextStyle(color: Colors.white),
-            );
-          }
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12.0,
+        vertical: 28.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '수업 진행 이력',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: SECONDARY_COLOR,
+            ),
+          ),
+          SizedBox(height: 20),
+          FutureBuilder(
+              future: futureSchedules,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final schedules = snapshot.data!;
+                  return buildCalendar(schedules);
+                } else if (snapshot.hasError) {
+                  return Text(
+                    "${snapshot.error}",
+                    style: TextStyle(color: Colors.white),
+                  );
+                }
 
-          return const CircularProgressIndicator();
-        });
+                return const CircularProgressIndicator();
+              })
+        ],
+      ),
+    );
   }
 
-  Widget buildCalendar(List<ScheduleTrainingUser> schedules) {
+  Widget buildCalendar(Set<ScheduleTrainerUser> schedules) {
     const defaultTextStyle = TextStyle(color: Colors.white);
     const whiteTextStyle = TextStyle(color: Colors.white);
 
@@ -121,8 +146,8 @@ class _GymproMemberDetailCalendarState
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules =
-              scheduleRepository.getTrainingUserScheduleByMonth(day);
+          futureSchedules = scheduleRepository.getTrainerUserScheduleByMonth(
+              widget.trainerId, widget.userId, day);
         });
       },
       calendarBuilders: CalendarBuilders(
@@ -201,7 +226,7 @@ class _GymproMemberDetailCalendarState
   }
 
   bool containsDateTime(
-      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+      Set<ScheduleTrainerUser> scheduleList, DateTime targetDateTime) {
     for (var schedule in scheduleList) {
       {
         if (schedule.startTime.year == targetDateTime.year &&
@@ -215,7 +240,7 @@ class _GymproMemberDetailCalendarState
   }
 
   int findScheduleId(
-      List<ScheduleTrainingUser> scheduleList, DateTime targetDateTime) {
+      Set<ScheduleTrainerUser> scheduleList, DateTime targetDateTime) {
     for (var schedule in scheduleList) {
       {
         if (schedule.startTime.year == targetDateTime.year &&
