@@ -42,6 +42,7 @@ class _InputFieldState extends State<InputField> {
     return Column(
       children: [
         _buildTitle(),
+        SizedBox(height: 8.0),
         _buildTextField(),
       ],
     );
@@ -58,6 +59,7 @@ class _InputFieldState extends State<InputField> {
       ),
     ];
     if (widget.isRequired) {
+      children.add(SizedBox(width: 2.0));
       children.add(Text(
         '*',
         style: TextStyle(
