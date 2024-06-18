@@ -37,7 +37,7 @@ class TrainerUser {
   DateTime get lastDate => _lastDate;
 
   String getTrainerUserListDetailText(bool isPresent) {
-    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 | ${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)}';
+    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 |${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)} ${isPresent ? "등록" : "종료"}';
   }
 
   factory TrainerUser.fromJson(Map<String, dynamic> json) {

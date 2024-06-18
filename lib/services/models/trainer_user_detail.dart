@@ -1,5 +1,7 @@
 import 'package:gymming_app/common/constants.dart';
 
+import '../utils/date_util.dart';
+
 class TrainerUserDetail {
   final String _name;
   final String _email;
@@ -13,6 +15,8 @@ class TrainerUserDetail {
   final int _lessonCurrentCount;
   final String _exerciseDays;
   final String _specialNotes;
+  final DateTime _registeredDate;
+  final DateTime _lastDate;
 
   TrainerUserDetail(
       this._name,
@@ -26,7 +30,9 @@ class TrainerUserDetail {
       this._lessonTotalCount,
       this._lessonCurrentCount,
       this._exerciseDays,
-      this._specialNotes);
+      this._specialNotes,
+      this._registeredDate,
+      this._lastDate);
 
   String get specialNotes => _specialNotes;
 
@@ -50,9 +56,12 @@ class TrainerUserDetail {
 
   String get name => _name;
 
+  DateTime get registeredDate => _registeredDate;
+
+  DateTime get lastDate => _lastDate;
+
   String getTrainerUserListDetailText(bool isPresent) {
-    //todo registeredDate or lastDate 필요
-    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 | 24.06.03 등록';
+    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 |${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)} ${isPresent ? "등록" : "종료"}';
   }
 
   factory TrainerUserDetail.fromJson(Map<String, dynamic> json) {
@@ -68,7 +77,9 @@ class TrainerUserDetail {
         json["lesson_total_count"],
         json["lesson_current_count"],
         json["exercise_days"],
-        json["special_notice"]);
+        json["special_notice"],
+        DateTime.parse(json["registered_date"]),
+        DateTime.parse(json["last_date"]));
   }
 
 // api 완성되기 전 dummy 값
@@ -76,7 +87,7 @@ class TrainerUserDetail {
     return TrainerUserDetail(
         'john',
         'example.com',
-        GENDER_MALE,
+        'M',
         '010-1234-5678',
         "assets/images/trainerExample.png",
         SOCIAL_KAKAO,
@@ -85,6 +96,8 @@ class TrainerUserDetail {
         10,
         3,
         '월, 수, 금',
-        '없음');
+        '없음',
+        DateTime.parse('2024-05-15T13:00:00'),
+        DateTime.parse('2024-02-15T13:00:00'));
   }
 }
