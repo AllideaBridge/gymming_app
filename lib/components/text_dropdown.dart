@@ -49,11 +49,45 @@ class _TextDropdownState extends State<TextDropdown> {
     ]);
   }
 
+  GestureDetector buildDropdownBody() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isOpen = !_isOpen;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
+        decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+                  color: _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR, width: 2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _selectedItem.isEmpty
+                ? Text(widget.placeholder,
+                    style: TextStyle(fontSize: 20, color: TERITARY_COLOR))
+                : Text(_selectedItem,
+                    style: TextStyle(fontSize: 20, color: Colors.white)),
+            _isOpen
+                ? Image.asset('assets/images/icon_nav_arrow_up.png',
+                    width: 20, height: 20)
+                : Image.asset('assets/images/icon_nav_arrow_down.png',
+                    width: 20, height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
   Container buildDropdownItemList() {
     return Container(
       constraints: BoxConstraints(maxHeight: 248),
-      margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
-      padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
+      padding: EdgeInsets.fromLTRB(16, 16, 8, 16),
+      margin: EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
           border: Border.all(color: PRIMARY_COLOR),
           borderRadius: BorderRadius.circular(4),
@@ -74,43 +108,20 @@ class _TextDropdownState extends State<TextDropdown> {
                     _isOpen = !_isOpen;
                   });
                 },
-                child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-                    child: Text(widget.dropdownItems[index],
-                        style: TextStyle(fontSize: 20, color: Colors.white))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.dropdownItems[index],
+                        style: TextStyle(fontSize: 20, color: Colors.white)),
+                    if (index < widget.dropdownItems.length - 1)
+                      SizedBox(
+                        height: 24,
+                      ),
+                  ],
+                ),
               );
             }),
-      ),
-    );
-  }
-
-  GestureDetector buildDropdownBody() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isOpen = !_isOpen;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-        decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  color: _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR, width: 2)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(_selectedItem,
-                style: TextStyle(fontSize: 20, color: Colors.white)),
-            _isOpen
-                ? Image.asset('assets/images/icon_nav_arrow_up.png',
-                    width: 20, height: 20)
-                : Image.asset('assets/images/icon_nav_arrow_down.png',
-                    width: 20, height: 20),
-          ],
-        ),
       ),
     );
   }
