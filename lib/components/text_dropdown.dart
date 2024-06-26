@@ -56,6 +56,7 @@ class _TextDropdownState extends State<TextDropdown> {
                     child: Text(
                       item,
                       style: const TextStyle(fontSize: 16, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ))
               .toList(),
@@ -66,7 +67,7 @@ class _TextDropdownState extends State<TextDropdown> {
               widget.setter(_selectedItem);
             });
           },
-          buttonStyleData: const ButtonStyleData(
+          buttonStyleData: ButtonStyleData(
               padding: EdgeInsets.symmetric(horizontal: 16),
               height: 40,
               width: double.infinity,
@@ -75,11 +76,15 @@ class _TextDropdownState extends State<TextDropdown> {
                     bottom: BorderSide(color: SECONDARY_COLOR, width: 2)),
               )),
           dropdownStyleData: DropdownStyleData(
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-            color: Colors.black,
-            border: Border.all(width: 2, color: PRIMARY_COLOR),
-            borderRadius: BorderRadius.circular(12),
-          )),
+                  color: BACKGROUND_COLOR,
+                  border: Border.all(width: 2, color: PRIMARY_COLOR),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.zero,
+                      topRight: Radius.zero,
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)))),
           iconStyleData: const IconStyleData(
               icon: Icon(Icons.keyboard_arrow_up_rounded), iconSize: 12),
           menuItemStyleData: const MenuItemStyleData(
