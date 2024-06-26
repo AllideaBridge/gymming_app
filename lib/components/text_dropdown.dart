@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import '../common/colors.dart';
@@ -32,98 +33,61 @@ class TextDropdown extends StatefulWidget {
 }
 
 class _TextDropdownState extends State<TextDropdown> {
-  String _selectedItem = '';
-  bool _isOpen = false;
+  String? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       if (widget.title != null)
         inputFieldTitle(widget.title!, widget.isRequired),
-      Column(
-        children: [
-          buildDropdownBody(),
-          if (_isOpen) buildDropdownItemList(),
-        ],
-      ),
+      DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          hint: Text(
+            widget.placeholder,
+            style: TextStyle(
+              fontSize: 16,
+              color: TERITARY_COLOR,
+            ),
+          ),
+          items: widget.dropdownItems
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ))
+              .toList(),
+          value: _selectedItem,
+          onChanged: (String? value) {
+            setState(() {
+              _selectedItem = value;
+              widget.setter(_selectedItem);
+            });
+          },
+          buttonStyleData: const ButtonStyleData(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 40,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: SECONDARY_COLOR, width: 2)),
+              )),
+          dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border.all(width: 2, color: PRIMARY_COLOR),
+            borderRadius: BorderRadius.circular(12),
+          )),
+          iconStyleData: const IconStyleData(
+              icon: Icon(Icons.keyboard_arrow_up_rounded), iconSize: 12),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40,
+          ),
+        ),
+      )
     ]);
-  }
-
-  GestureDetector buildDropdownBody() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isOpen = !_isOpen;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
-        decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  color: _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR, width: 2)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _selectedItem.isEmpty
-                ? Text(widget.placeholder,
-                    style: TextStyle(fontSize: 20, color: TERITARY_COLOR))
-                : Text(_selectedItem,
-                    style: TextStyle(fontSize: 20, color: Colors.white)),
-            _isOpen
-                ? Image.asset('assets/images/icon_nav_arrow_up.png',
-                    width: 20, height: 20)
-                : Image.asset('assets/images/icon_nav_arrow_down.png',
-                    width: 20, height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container buildDropdownItemList() {
-    return Container(
-      constraints: BoxConstraints(maxHeight: 248),
-      padding: EdgeInsets.fromLTRB(16, 16, 8, 16),
-      margin: EdgeInsets.only(top: 8),
-      decoration: BoxDecoration(
-          border: Border.all(color: PRIMARY_COLOR),
-          borderRadius: BorderRadius.circular(4),
-          color: BACKGROUND_COLOR),
-      child: Scrollbar(
-        thumbVisibility: true,
-        thickness: 4.0,
-        radius: Radius.circular(10.0),
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.dropdownItems.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedItem = widget.dropdownItems[index];
-                    widget.setter(_selectedItem);
-                    _isOpen = !_isOpen;
-                  });
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.dropdownItems[index],
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                    if (index < widget.dropdownItems.length - 1)
-                      SizedBox(
-                        height: 24,
-                      ),
-                  ],
-                ),
-              );
-            }),
-      ),
-    );
   }
 
   Widget inputFieldTitle(String title, bool required) {
