@@ -19,11 +19,18 @@ class TextDropdown extends StatefulWidget {
   //선택된 값 부모 컴포넌트에 저장하는 메소드
   final Function setter;
 
+  //기본 저장된 값
+  final String originValue;
+
+  final double dropdownWidth;
+
   const TextDropdown({
     super.key,
     this.title,
     this.placeholder = '선택하세요',
     this.isRequired = false,
+    this.dropdownWidth = double.infinity,
+    this.originValue = '',
     required this.dropdownItems,
     required this.setter,
   });
@@ -34,6 +41,17 @@ class TextDropdown extends StatefulWidget {
 
 class _TextDropdownState extends State<TextDropdown> {
   String? _selectedItem;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.originValue != "") {
+      setState(() {
+        _selectedItem = widget.originValue;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +88,14 @@ class _TextDropdownState extends State<TextDropdown> {
           buttonStyleData: ButtonStyleData(
               padding: EdgeInsets.symmetric(horizontal: 16),
               height: 40,
-              width: double.infinity,
+              width: widget.dropdownWidth,
               decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: SECONDARY_COLOR, width: 2)),
               )),
           dropdownStyleData: DropdownStyleData(
               padding: EdgeInsets.all(16),
+              maxHeight: 200.0,
               decoration: BoxDecoration(
                   color: BACKGROUND_COLOR,
                   border: Border.all(width: 2, color: PRIMARY_COLOR),

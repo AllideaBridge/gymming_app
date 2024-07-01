@@ -34,3 +34,18 @@ const GENDER_MALE = "남";
 const GENDER_FEMALE = "여";
 
 const SOCIAL_KAKAO = 'kakao';
+
+const MONTHS = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12"
+];
