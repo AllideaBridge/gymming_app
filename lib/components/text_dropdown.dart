@@ -101,7 +101,7 @@ class _TextDropdownState extends State<TextDropdown> {
                     bottom: BorderSide(color: SECONDARY_COLOR, width: 2)),
               )),
           dropdownStyleData: DropdownStyleData(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(12),
               maxHeight: 200.0,
               decoration: BoxDecoration(
                   color: BACKGROUND_COLOR,

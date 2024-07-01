@@ -108,7 +108,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
               placeholder: '월',
               dropdownItems: MONTHS,
               setter: getMonth,
-              dropdownWidth: 93.0,
+              dropdownWidth: 92.0,
               originValue: _selectedMonth != null
                   ? getValueWithZero(_selectedMonth!)
                   : '',
@@ -120,7 +120,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
               placeholder: '일',
               dropdownItems: _dayList,
               setter: getDay,
-              dropdownWidth: 93.0,
+              dropdownWidth: 92.0,
               originValue:
                   _selectedDay != null ? getValueWithZero(_selectedDay!) : '',
             ),
