@@ -41,10 +41,10 @@ class TextDropdown extends StatefulWidget {
 
 class _TextDropdownState extends State<TextDropdown> {
   String? _selectedItem;
+  IconData _dropdownIcon = Icons.keyboard_arrow_down_rounded;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.originValue != "") {
       setState(() {
@@ -85,6 +85,13 @@ class _TextDropdownState extends State<TextDropdown> {
               widget.setter(_selectedItem);
             });
           },
+          onMenuStateChange: (bool isOpen) {
+            setState(() {
+              _dropdownIcon = isOpen
+                  ? Icons.keyboard_arrow_up_rounded
+                  : Icons.keyboard_arrow_down_rounded;
+            });
+          },
           buttonStyleData: ButtonStyleData(
               padding: EdgeInsets.symmetric(horizontal: 16),
               height: 40,
@@ -104,8 +111,7 @@ class _TextDropdownState extends State<TextDropdown> {
                       topRight: Radius.zero,
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12)))),
-          iconStyleData: const IconStyleData(
-              icon: Icon(Icons.keyboard_arrow_up_rounded), iconSize: 12),
+          iconStyleData: IconStyleData(icon: Icon(_dropdownIcon), iconSize: 20),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
           ),
