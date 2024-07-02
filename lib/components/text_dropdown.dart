@@ -41,7 +41,7 @@ class TextDropdown extends StatefulWidget {
 
 class _TextDropdownState extends State<TextDropdown> {
   String? _selectedItem;
-  IconData _dropdownIcon = Icons.keyboard_arrow_down_rounded;
+  bool _isOpen = false;
 
   @override
   void initState() {
@@ -61,11 +61,13 @@ class _TextDropdownState extends State<TextDropdown> {
       DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
           isExpanded: true,
+          value: _selectedItem,
           hint: Text(
             widget.placeholder,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               color: TERITARY_COLOR,
+              fontWeight: FontWeight.w500,
             ),
           ),
           items: widget.dropdownItems
@@ -73,12 +75,15 @@ class _TextDropdownState extends State<TextDropdown> {
                     value: item,
                     child: Text(
                       item,
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ))
               .toList(),
-          value: _selectedItem,
           onChanged: (String? value) {
             setState(() {
               _selectedItem = value;
@@ -87,31 +92,33 @@ class _TextDropdownState extends State<TextDropdown> {
           },
           onMenuStateChange: (bool isOpen) {
             setState(() {
-              _dropdownIcon = isOpen
-                  ? Icons.keyboard_arrow_up_rounded
-                  : Icons.keyboard_arrow_down_rounded;
+              _isOpen = isOpen;
             });
           },
           buttonStyleData: ButtonStyleData(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 40,
+              padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
+              height: 52,
               width: widget.dropdownWidth,
               decoration: BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: SECONDARY_COLOR, width: 2)),
+                    bottom: BorderSide(
+                        color: _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR,
+                        width: 2)),
               )),
           dropdownStyleData: DropdownStyleData(
-              padding: EdgeInsets.all(12),
+              offset: const Offset(0, -8),
+              padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+              scrollPadding: EdgeInsets.all(4),
               maxHeight: 200.0,
               decoration: BoxDecoration(
                   color: BACKGROUND_COLOR,
-                  border: Border.all(width: 2, color: PRIMARY_COLOR),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.zero,
-                      topRight: Radius.zero,
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12)))),
-          iconStyleData: IconStyleData(icon: Icon(_dropdownIcon), iconSize: 20),
+                  border: Border.all(width: 1, color: PRIMARY_COLOR),
+                  borderRadius: BorderRadius.all(Radius.circular(4)))),
+          iconStyleData: IconStyleData(
+              icon: Icon(_isOpen
+                  ? Icons.keyboard_arrow_up_rounded
+                  : Icons.keyboard_arrow_down_rounded),
+              iconSize: 24),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
           ),

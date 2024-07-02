@@ -70,7 +70,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
                 Text(
                   '생년월일',
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 ),
@@ -80,7 +80,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
                 Text(
                   '*',
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: PRIMARY2_COLOR),
                 ),
@@ -92,6 +92,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
           ],
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextDropdown(
               placeholder: '출생년도',
@@ -101,9 +102,6 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
               originValue:
                   _selectedYear != null ? _selectedYear.toString() : '',
             ),
-            SizedBox(
-              width: 12,
-            ),
             TextDropdown(
               placeholder: '월',
               dropdownItems: MONTHS,
@@ -112,9 +110,6 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
               originValue: _selectedMonth != null
                   ? getValueWithZero(_selectedMonth!)
                   : '',
-            ),
-            SizedBox(
-              width: 12,
             ),
             TextDropdown(
               placeholder: '일',
