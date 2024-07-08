@@ -14,14 +14,18 @@ class InputField extends StatefulWidget {
     - TextInputType.emailAddress: 이메일 형식
    */
   final TextInputType type;
+  final Function? validator;
+  final Function onValidationChanged;
 
   const InputField({
     super.key,
     required this.controller,
     required this.title,
+    required this.onValidationChanged,
     this.placeHolder = '입력하세요.',
     this.isRequired = false,
     this.type = TextInputType.text,
+    this.validator,
   });
 
   @override
@@ -29,22 +33,42 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
+  final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+    widget.controller.addListener(_validateForm);
+  }
+
+  void _validateForm() {
+    bool isValid = _formKey.currentState?.validate() ?? false;
+    widget.onValidationChanged(isValid);
+  }
 
   @override
   void dispose() {
     _focusNode.dispose();
+    widget.controller.removeListener(_validateForm);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildTitle(),
-        SizedBox(height: 8.0),
-        _buildTextField(),
-      ],
+    return Form(
+      key: _formKey,
+      onChanged: _validateForm,
+      child: Column(
+        children: [
+          _buildTitle(),
+          SizedBox(height: 8.0),
+          _buildTextFormField(widget.validator),
+        ],
+      ),
     );
   }
 
@@ -74,8 +98,9 @@ class _InputFieldState extends State<InputField> {
     );
   }
 
-  Widget _buildTextField() {
-    return TextField(
+  Widget _buildTextFormField(validator) {
+    return TextFormField(
+      validator: validator,
       controller: widget.controller,
       focusNode: _focusNode,
       style: TextStyle(
