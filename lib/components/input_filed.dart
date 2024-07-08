@@ -39,9 +39,6 @@ class _InputFieldState extends State<InputField> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _validateForm();
-    });
     widget.controller.addListener(_validateForm);
   }
 
