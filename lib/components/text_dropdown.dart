@@ -40,8 +40,10 @@ class TextDropdown extends StatefulWidget {
 }
 
 class _TextDropdownState extends State<TextDropdown> {
+  final _formKey = GlobalKey<FormState>();
   String? _selectedItem;
   bool _isOpen = false;
+  bool _isValid = true;
 
   @override
   void initState() {
@@ -55,76 +57,99 @@ class _TextDropdownState extends State<TextDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      if (widget.title != null)
-        inputFieldTitle(widget.title!, widget.isRequired),
-      DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-          isExpanded: true,
-          value: _selectedItem,
-          hint: Text(
-            widget.placeholder,
-            style: TextStyle(
-              fontSize: 20,
-              color: TERITARY_COLOR,
-              fontWeight: FontWeight.w500,
+    return Container(
+      width: widget.dropdownWidth,
+      child: Form(
+        key: _formKey,
+        child: Column(children: [
+          if (widget.title != null)
+            inputFieldTitle(widget.title!, widget.isRequired),
+          DropdownButtonHideUnderline(
+            child: DropdownButtonFormField2<String>(
+              isExpanded: true,
+              value: _selectedItem,
+              hint: Text(
+                widget.placeholder,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: TERITARY_COLOR,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              items: widget.dropdownItems
+                  .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              validator: (value) {
+                if (value == null) {
+                  return '드롭다운을 선택해 주세요.';
+                }
+                return null;
+              },
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedItem = value;
+                  widget.setter(_selectedItem);
+                  _isValid = _formKey.currentState!.validate();
+                });
+              },
+              onMenuStateChange: (bool isOpen) {
+                setState(() {
+                  _isOpen = isOpen;
+                  if (!isOpen) {
+                    _isValid = _formKey.currentState!.validate();
+                  }
+                });
+              },
+              decoration: InputDecoration.collapsed(hintText: ''),
+              buttonStyleData: ButtonStyleData(
+                  height: 52,
+                  padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: getBorderColor(), width: 2)),
+                  )),
+              dropdownStyleData: DropdownStyleData(
+                  offset: const Offset(0, -8),
+                  scrollPadding: EdgeInsets.all(4),
+                  padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+                  maxHeight: 200.0,
+                  decoration: BoxDecoration(
+                      color: BACKGROUND_COLOR,
+                      border: Border.all(width: 1, color: PRIMARY_COLOR),
+                      borderRadius: BorderRadius.all(Radius.circular(4)))),
+              iconStyleData: IconStyleData(
+                  icon: Icon(_isOpen
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded),
+                  iconSize: 24),
+              menuItemStyleData:
+                  const MenuItemStyleData(height: 40, padding: EdgeInsets.zero),
             ),
-          ),
-          items: widget.dropdownItems
-              .map((String item) => DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(
-                      item,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ))
-              .toList(),
-          onChanged: (String? value) {
-            setState(() {
-              _selectedItem = value;
-              widget.setter(_selectedItem);
-            });
-          },
-          onMenuStateChange: (bool isOpen) {
-            setState(() {
-              _isOpen = isOpen;
-            });
-          },
-          buttonStyleData: ButtonStyleData(
-              padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
-              height: 52,
-              width: widget.dropdownWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR,
-                        width: 2)),
-              )),
-          dropdownStyleData: DropdownStyleData(
-              offset: const Offset(0, -8),
-              padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-              scrollPadding: EdgeInsets.all(4),
-              maxHeight: 200.0,
-              decoration: BoxDecoration(
-                  color: BACKGROUND_COLOR,
-                  border: Border.all(width: 1, color: PRIMARY_COLOR),
-                  borderRadius: BorderRadius.all(Radius.circular(4)))),
-          iconStyleData: IconStyleData(
-              icon: Icon(_isOpen
-                  ? Icons.keyboard_arrow_up_rounded
-                  : Icons.keyboard_arrow_down_rounded),
-              iconSize: 24),
-          menuItemStyleData: const MenuItemStyleData(
-            height: 40,
-          ),
-        ),
-      )
-    ]);
+          )
+        ]),
+      ),
+    );
+  }
+
+  Color getBorderColor() {
+    if (_isValid) {
+      return _isOpen ? PRIMARY_COLOR : SECONDARY_COLOR;
+    }
+    return Colors.red[700]!;
   }
 
   Widget inputFieldTitle(String title, bool required) {
