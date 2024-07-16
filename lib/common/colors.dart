@@ -11,3 +11,4 @@ const Color INDICATOR_COLOR = Color(0xff151515);
 const Color TERITARY_COLOR = Color(0xff7A7A7A);
 const Color CALENDAR_PICKED_COLOR = Color(0xffff7575);
 const Color CARD_BACK_GROUD_COLOR = Color(0xff3d3d3d);
+const Color KAKAO_BACKGROUND_COLOR = Color(0xfffee500);
