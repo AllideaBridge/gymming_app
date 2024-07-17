@@ -3,6 +3,7 @@ import 'package:gymming_app/common/colors.dart';
 
 class InputField extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
   final String title;
   final String placeHolder;
   final bool isRequired;
@@ -20,6 +21,7 @@ class InputField extends StatefulWidget {
   const InputField({
     super.key,
     required this.controller,
+    required this.focusNode,
     required this.title,
     required this.onValidationChanged,
     this.placeHolder = '입력하세요.',
@@ -34,7 +36,6 @@ class InputField extends StatefulWidget {
 
 class _InputFieldState extends State<InputField> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -49,7 +50,6 @@ class _InputFieldState extends State<InputField> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
     widget.controller.removeListener(_validateForm);
     super.dispose();
   }
@@ -99,7 +99,7 @@ class _InputFieldState extends State<InputField> {
     return TextFormField(
       validator: validator,
       controller: widget.controller,
-      focusNode: _focusNode,
+      focusNode: widget.focusNode,
       style: TextStyle(
         color: Colors.white,
       ),

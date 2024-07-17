@@ -12,6 +12,13 @@ class GymproRegister extends StatefulWidget {
 }
 
 class GymproRegisterState extends State<GymproRegister> {
+  final Map<String, dynamic> _model_step1 = {
+    'name': '',
+    'phoneNumber': '',
+    'birth': DateTime.now(),
+    'gender': 'M',
+    'history': '',
+  };
   int _currentStep = 0;
 
   void _nextStep() {
@@ -49,7 +56,9 @@ class GymproRegisterState extends State<GymproRegister> {
           Expanded(
             child: SingleChildScrollView(
               child: IndexedStack(index: _currentStep, children: [
-                GymproInfoStep1(),
+                GymproInfoStep1(
+                  onPressedNext: () {},
+                ),
                 GymproInfoStep2(),
                 GymproInfoStep3(),
               ]),

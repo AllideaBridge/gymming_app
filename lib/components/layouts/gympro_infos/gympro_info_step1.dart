@@ -6,7 +6,9 @@ import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
 class GymproInfoStep1 extends StatefulWidget {
-  const GymproInfoStep1({super.key});
+  final Function onPressedNext;
+
+  const GymproInfoStep1({super.key, required this.onPressedNext});
 
   @override
   State<StatefulWidget> createState() => GymproInfoStep1State();
@@ -15,6 +17,10 @@ class GymproInfoStep1 extends StatefulWidget {
 class GymproInfoStep1State extends State<GymproInfoStep1> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _historyController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _phoneMiddleFocusNode = FocusNode();
+  final FocusNode _phoneEndFocusNode = FocusNode();
+  final FocusNode _historyFocusNode = FocusNode();
   final Map<String, dynamic> _model = {
     'name': '',
     'phoneNumber': '',
@@ -45,6 +51,10 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   void dispose() {
     _nameController.dispose();
     _historyController.dispose();
+    _nameFocusNode.dispose();
+    _phoneMiddleFocusNode.dispose();
+    _phoneEndFocusNode.dispose();
+    _historyFocusNode.dispose();
     super.dispose();
   }
 
@@ -78,37 +88,45 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          ProfileImage(
-            size: 130.0,
-          ),
-          SizedBox(height: 60.0),
-          InputField(
-            controller: _nameController,
-            title: '이름',
-            validator: (val) {
-              if (val.length < 1) return '이름은 필수값입니다.';
-            },
-            onValidationChanged: onChangedName,
-            isRequired: true,
-          ),
-          SizedBox(height: 60.0),
-          PhoneNumberSelect(
-            title: '전화번호',
-            setter: onChangedPhoneNumber,
-          ),
-          SizedBox(height: 60.0),
-          BirthdaySelect(
-            setter: onChangedBirthday,
-          ),
-          SizedBox(height: 60.0),
-          _buildGenderSelect(),
-          SizedBox(height: 60.0),
-          _buildHistoryField(),
-        ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            ProfileImage(
+              size: 130.0,
+            ),
+            SizedBox(height: 60.0),
+            InputField(
+              controller: _nameController,
+              focusNode: _nameFocusNode,
+              title: '이름',
+              validator: (val) {
+                if (val.length < 1) return '이름은 필수값입니다.';
+              },
+              onValidationChanged: onChangedName,
+              isRequired: true,
+            ),
+            SizedBox(height: 60.0),
+            PhoneNumberSelect(
+              title: '전화번호',
+              setter: onChangedPhoneNumber,
+              // middleFocusNode: _phoneMiddleFocusNode,
+              // endFocusNode: _phoneEndFocusNode,
+            ),
+            SizedBox(height: 60.0),
+            BirthdaySelect(
+              setter: onChangedBirthday,
+            ),
+            SizedBox(height: 60.0),
+            _buildGenderSelect(),
+            SizedBox(height: 60.0),
+            _buildHistoryField(),
+          ],
+        ),
       ),
     );
   }
@@ -178,6 +196,7 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
         children: [
           TextField(
             controller: _historyController,
+            focusNode: _historyFocusNode,
             maxLines: 50,
             decoration: InputDecoration(
               hintText: '트레이너 이력을 입력해주세요.',
