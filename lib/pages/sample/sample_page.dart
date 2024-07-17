@@ -12,7 +12,6 @@ class SamplePage extends StatefulWidget {
 
 class _SamplePageState extends State<SamplePage> {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
   bool _isValid = false;
   List<Map<String, dynamic>> availableTimeList = [];
 
@@ -50,7 +49,6 @@ class _SamplePageState extends State<SamplePage> {
             // 테스트할 컴포넌트를 아래 작성합니다.
             InputField(
               controller: _controller,
-              focusNode: _focusNode,
               title: '이름',
               validator: (val) {
                 if (val.length < 1) return '이름은 필수값입니다.';

@@ -17,9 +17,6 @@ class GymproInfoStep1 extends StatefulWidget {
 class GymproInfoStep1State extends State<GymproInfoStep1> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _historyController = TextEditingController();
-  final FocusNode _nameFocusNode = FocusNode();
-  final FocusNode _phoneMiddleFocusNode = FocusNode();
-  final FocusNode _phoneEndFocusNode = FocusNode();
   final FocusNode _historyFocusNode = FocusNode();
   final Map<String, dynamic> _model = {
     'name': '',
@@ -51,9 +48,6 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   void dispose() {
     _nameController.dispose();
     _historyController.dispose();
-    _nameFocusNode.dispose();
-    _phoneMiddleFocusNode.dispose();
-    _phoneEndFocusNode.dispose();
     _historyFocusNode.dispose();
     super.dispose();
   }
@@ -102,7 +96,6 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
             SizedBox(height: 60.0),
             InputField(
               controller: _nameController,
-              focusNode: _nameFocusNode,
               title: '이름',
               validator: (val) {
                 if (val.length < 1) return '이름은 필수값입니다.';
@@ -208,6 +201,9 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
               ),
             ),
             style: TextStyle(fontSize: 18, color: Colors.white),
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
           ),
           Positioned(
             right: 16,
