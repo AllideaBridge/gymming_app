@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
 
 import '../../common/colors.dart';
+import '../gymbie/gymbie_register.dart';
 
 class LoginSelectSocial extends StatelessWidget {
   const LoginSelectSocial({super.key, required this.loginType});
@@ -82,15 +83,11 @@ class LoginSelectSocial extends StatelessWidget {
         ElevatedButton(
             onPressed: () {
               if (loginType == "user") {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => GymbieHome()),
-                    (route) => false);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GymbieRegister()));
               } else if (loginType == "trainer") {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => GymbieHome()),
-                    (route) => false);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GymproHome()));
               }
             },
             style: ElevatedButton.styleFrom(
