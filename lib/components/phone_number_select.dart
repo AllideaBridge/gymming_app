@@ -36,6 +36,10 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
   String _middleNumber = "";
   String _endNumber = "";
 
+  //textfield validate value
+  bool _middleNumberValidate = true;
+  bool _endNumberValidate = true;
+
   @override
   void initState() {
     super.initState();
@@ -93,6 +97,7 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
           ],
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextDropdown(
               placeholder: '010',
@@ -106,11 +111,11 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
               width: 8,
               height: 2,
               color: SECONDARY_COLOR,
+              margin: EdgeInsets.only(top: 25),
             ),
             SizedBox(width: 12),
             SizedBox(
               width: 97,
-              height: 52,
               child: TextField(
                 focusNode: _middleFocusNode,
                 controller: _middleNumberController,
@@ -120,29 +125,16 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                     widget.setter("$_firstNumber$_middleNumber$_endNumber");
                   });
                 },
+                onTapOutside: (event) {
+                  setState(() {
+                    _middleNumberValidate = (_middleNumber.length == 4);
+                  });
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 style: TextStyle(color: Colors.white, fontSize: 20),
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: "1234",
-                  hintStyle: TextStyle(color: TERITARY_COLOR, fontSize: 20),
-                  counterText: '',
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: SECONDARY_COLOR,
-                      width: 2.0,
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: PRIMARY_COLOR,
-                      width: 2.0,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 11,
-                    horizontal: 8,
-                  ),
-                ),
+                decoration:
+                    buildPhoneNumberInputDecoration(validateMiddleNumberText),
                 maxLength: 4,
               ),
             ),
@@ -151,11 +143,11 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
               width: 8,
               height: 2,
               color: SECONDARY_COLOR,
+              margin: EdgeInsets.only(top: 25),
             ),
             SizedBox(width: 12),
             SizedBox(
               width: 97,
-              height: 52,
               child: TextField(
                 focusNode: _endFocusNode,
                 controller: _endNumberController,
@@ -165,29 +157,16 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                     widget.setter("$_firstNumber$_middleNumber$_endNumber");
                   });
                 },
+                onTapOutside: (event) {
+                  setState(() {
+                    _endNumberValidate = (_endNumber.length == 4);
+                  });
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 style: TextStyle(color: Colors.white, fontSize: 20),
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: "5678",
-                  hintStyle: TextStyle(fontSize: 20, color: TERITARY_COLOR),
-                  counterText: '',
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: SECONDARY_COLOR,
-                      width: 2.0,
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: PRIMARY_COLOR,
-                      width: 2.0,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 11,
-                    horizontal: 8,
-                  ),
-                ),
+                decoration:
+                    buildPhoneNumberInputDecoration(validateEndNumberText),
                 maxLength: 4,
               ),
             ),
@@ -196,4 +175,41 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
       ],
     );
   }
+
+  InputDecoration buildPhoneNumberInputDecoration(Function validateFunction) {
+    return InputDecoration(
+      hintText: "1234",
+      hintStyle: TextStyle(color: TERITARY_COLOR, fontSize: 20),
+      counterText: '',
+      errorText: validateFunction(),
+      errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.red[700]!,
+          width: 2.0,
+        ),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: SECONDARY_COLOR,
+          width: 2.0,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: PRIMARY_COLOR,
+          width: 2.0,
+        ),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 11,
+        horizontal: 8,
+      ),
+    );
+  }
+
+  String? validateMiddleNumberText() =>
+      _middleNumberValidate ? null : '올바른 형식으로 입력하세요';
+
+  String? validateEndNumberText() =>
+      _endNumberValidate ? null : '올바른 형식으로 입력하세요';
 }

@@ -93,6 +93,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextDropdown(
               placeholder: '출생년도',
