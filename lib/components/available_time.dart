@@ -182,6 +182,9 @@ class _AvailableTimeState extends State<AvailableTime> {
         });
       },
       focusNode: focusNode,
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       textAlign: TextAlign.center,
       keyboardType: TextInputType.number,
       inputFormatters: [

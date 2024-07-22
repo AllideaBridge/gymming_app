@@ -21,6 +21,12 @@ class GymproRegisterState extends State<GymproRegister> {
     'gender': 'M',
     'history': '',
   };
+  late Map<String, dynamic> _model_step2 = <String, dynamic>{
+    'lessonName': '',
+    'lessonCost': '',
+    'lessonTime': null,
+    'lessonPossibleTime': null,
+  };
   final Map<String, bool> _enableBtn = {
     'step1': false,
     'step2': false,
@@ -34,8 +40,13 @@ class GymproRegisterState extends State<GymproRegister> {
       _model_step1 = model;
       _enableBtn['step1'] = _validateStep1();
     });
-    print(_model_step1);
-    print(_enableBtn);
+  }
+
+  void onChangedStep2(Map<String, dynamic> model) {
+    setState(() {
+      _model_step2 = model;
+      _enableBtn['step2'] = _validateStep2();
+    });
   }
 
   void _nextStep() {
@@ -65,6 +76,10 @@ class GymproRegisterState extends State<GymproRegister> {
     return true;
   }
 
+  bool _validateStep2() {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +103,10 @@ class GymproRegisterState extends State<GymproRegister> {
                   onChanged: onChangedStep1,
                 ),
               ),
-              SingleChildScrollView(child: GymproInfoStep2()),
+              SingleChildScrollView(
+                  child: GymproInfoStep2(
+                onChanged: onChangedStep2,
+              )),
               SingleChildScrollView(child: GymproInfoStep3()),
             ]),
           ),
