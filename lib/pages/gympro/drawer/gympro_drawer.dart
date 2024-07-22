@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/gympro_gymbie_add.dart';
+import 'package:gymming_app/pages/gympro/gympro_register.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/layouts/tab_layout.dart';
@@ -171,6 +172,21 @@ class TrainerDrawer extends StatelessWidget {
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
+              );
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
+              '트레이너 가입 하기',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push<dynamic>(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (BuildContext context) => GymproRegister(),
+                ),
               );
             },
           ),

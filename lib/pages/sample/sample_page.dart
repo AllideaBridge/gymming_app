@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/available_time.dart';
+import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
 class SamplePage extends StatefulWidget {
@@ -10,6 +11,8 @@ class SamplePage extends StatefulWidget {
 }
 
 class _SamplePageState extends State<SamplePage> {
+  final TextEditingController _controller = TextEditingController();
+  bool _isValid = false;
   List<Map<String, dynamic>> availableTimeList = [];
 
   @override
@@ -19,6 +22,18 @@ class _SamplePageState extends State<SamplePage> {
       {'title': '평일', 'start': '', 'end': '', 'isChecked': true},
       {'title': '주말', 'start': '', 'end': '', 'isChecked': true},
     ];
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void handleValidationChanged(bool isValid) {
+    setState(() {
+      _isValid = isValid;
+    });
   }
 
   @override
@@ -32,6 +47,14 @@ class _SamplePageState extends State<SamplePage> {
             // 이미지 테스트를 위한 코드입니다.
             ProfileImage(size: 200.0),
             // 테스트할 컴포넌트를 아래 작성합니다.
+            InputField(
+              controller: _controller,
+              title: '이름',
+              validator: (val) {
+                if (val.length < 1) return '이름은 필수값입니다.';
+              },
+              onValidationChanged: handleValidationChanged,
+            ),
             AvailableTime(
               availableTime: availableTimeList,
             ),
@@ -51,7 +74,7 @@ class _SamplePageState extends State<SamplePage> {
                   ];
                 });
               },
-              child: Text('Sample Button'),
+              child: _isValid ? Text('valid true') : Text('valid false'),
             ),
           ]),
         ),

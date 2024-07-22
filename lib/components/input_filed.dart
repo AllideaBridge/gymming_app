@@ -33,8 +33,8 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNode = FocusNode();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -49,8 +49,8 @@ class _InputFieldState extends State<InputField> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
     widget.controller.removeListener(_validateForm);
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -124,6 +124,9 @@ class _InputFieldState extends State<InputField> {
           horizontal: 8,
         ),
       ),
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
     );
   }
 }
