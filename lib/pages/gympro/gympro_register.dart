@@ -7,19 +7,36 @@ import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step2.da
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step3.dart';
 
 class GymproRegister extends StatefulWidget {
+  const GymproRegister({super.key});
+
   @override
   State<StatefulWidget> createState() => GymproRegisterState();
 }
 
 class GymproRegisterState extends State<GymproRegister> {
-  final Map<String, dynamic> _model_step1 = {
+  late Map<String, dynamic> _model_step1 = <String, dynamic>{
     'name': '',
     'phoneNumber': '',
-    'birth': DateTime.now(),
+    'birth': null,
     'gender': 'M',
     'history': '',
   };
+  final Map<String, bool> _enableBtn = {
+    'step1': false,
+    'step2': false,
+    'step3': false,
+  };
+
   int _currentStep = 0;
+
+  void onChangedStep1(Map<String, dynamic> model) {
+    setState(() {
+      _model_step1 = model;
+      _enableBtn['step1'] = _validateStep1();
+    });
+    print(_model_step1);
+    print(_enableBtn);
+  }
 
   void _nextStep() {
     setState(() {
@@ -35,6 +52,17 @@ class GymproRegisterState extends State<GymproRegister> {
         _currentStep--;
       }
     });
+  }
+
+  bool _validateStep1() {
+    if (_model_step1['name'] == '') {
+      return false;
+    } else if (_model_step1['phoneNumber'].length >= 11) {
+      return false;
+    } else if (_model_step1['birth'] == null) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -54,15 +82,15 @@ class GymproRegisterState extends State<GymproRegister> {
             },
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: IndexedStack(index: _currentStep, children: [
-                GymproInfoStep1(
-                  onPressedNext: () {},
+            child: IndexedStack(index: _currentStep, children: [
+              SingleChildScrollView(
+                child: GymproInfoStep1(
+                  onChanged: onChangedStep1,
                 ),
-                GymproInfoStep2(),
-                GymproInfoStep3(),
-              ]),
-            ),
+              ),
+              SingleChildScrollView(child: GymproInfoStep2()),
+              SingleChildScrollView(child: GymproInfoStep3()),
+            ]),
           ),
           _buildButton(),
         ]),
@@ -72,6 +100,7 @@ class GymproRegisterState extends State<GymproRegister> {
 
   Widget _buildButton() {
     List<Widget> button;
+
     if (_currentStep == 0) {
       button = [
         SecondaryButton(
@@ -86,7 +115,8 @@ class GymproRegisterState extends State<GymproRegister> {
           },
         ),
         SizedBox(width: 12.0),
-        PrimaryButton(title: "다음", onPressed: _nextStep),
+        PrimaryButton(
+            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step1']!),
       ];
     } else if (_currentStep == 2) {
       button = [
@@ -95,7 +125,7 @@ class GymproRegisterState extends State<GymproRegister> {
         PrimaryButton(
           title: "가입 완료",
           onPressed: () {
-            print('가입 완료');
+            print('가입 완료: $_model_step1');
             // Navigator.pushAndRemoveUntil(
             //   context,
             //   MaterialPageRoute(builder: (context) => GymproRegisterCompleted()),

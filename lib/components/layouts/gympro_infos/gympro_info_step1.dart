@@ -6,9 +6,10 @@ import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
 class GymproInfoStep1 extends StatefulWidget {
-  final Function onPressedNext;
+  final Function onChanged;
+  final Map<String, dynamic>? originModel;
 
-  const GymproInfoStep1({super.key, required this.onPressedNext});
+  const GymproInfoStep1({super.key, required this.onChanged, this.originModel});
 
   @override
   State<StatefulWidget> createState() => GymproInfoStep1State();
@@ -18,17 +19,12 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _historyController = TextEditingController();
   final FocusNode _historyFocusNode = FocusNode();
-  final Map<String, dynamic> _model = {
+  late Map<String, dynamic> _model = {
     'name': '',
     'phoneNumber': '',
-    'birth': DateTime.now(),
+    'birth': null,
     'gender': 'M',
     'history': '',
-  };
-  final Map<String, bool> _validate = {
-    'name': false,
-    'phoneNumber': false,
-    'birth': false,
   };
   int _historyLength = 0;
 
@@ -36,11 +32,20 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   void initState() {
     super.initState();
 
+    if (widget.originModel != null) {
+      setState(() {
+        _model = widget.originModel!;
+        _nameController.text = _model['name'];
+        _historyController.text = _model['history'];
+      });
+    }
+
     _historyController.addListener(() {
       setState(() {
         _model['history'] = _historyController.text;
         _historyLength = _historyController.text.length;
       });
+      widget.onChanged(_model);
     });
   }
 
@@ -55,28 +60,28 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   void onChangedName(bool isValid) {
     setState(() {
       _model['name'] = _nameController.text;
-      _validate['name'] = isValid;
     });
+    widget.onChanged(_model);
   }
 
   void onChangedBirthday(DateTime birthDay) {
     setState(() {
       _model['birth'] = birthDay;
-      _validate['birth'] = true;
     });
+    widget.onChanged(_model);
   }
 
   void onChangedPhoneNumber(String phoneNumber) {
     if (phoneNumber.length == 11) {
       setState(() {
         _model['phoneNumber'] = phoneNumber;
-        _validate['phoneNumber'] = true;
       });
+      widget.onChanged(_model);
     } else {
       setState(() {
         _model['phoneNumber'] = '';
-        _validate['phoneNumber'] = false;
       });
+      widget.onChanged(_model);
     }
   }
 
@@ -107,12 +112,13 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
             PhoneNumberSelect(
               title: '전화번호',
               setter: onChangedPhoneNumber,
-              // middleFocusNode: _phoneMiddleFocusNode,
-              // endFocusNode: _phoneEndFocusNode,
+              originalNumber:
+                  _model['phoneNumber'] == '' ? null : _model['phoneNumber'],
             ),
             SizedBox(height: 60.0),
             BirthdaySelect(
               setter: onChangedBirthday,
+              originalBirthday: _model['birth'],
             ),
             SizedBox(height: 60.0),
             _buildGenderSelect(),
@@ -146,6 +152,7 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
             setState(() {
               _model['gender'] = 'M';
             });
+            widget.onChanged(_model);
           },
           child: Text(
             '남',
@@ -168,6 +175,7 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
             setState(() {
               _model['gender'] = 'F';
             });
+            widget.onChanged(_model);
           },
           child: Text(
             '여',
