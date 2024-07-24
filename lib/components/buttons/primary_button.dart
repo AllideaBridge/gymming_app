@@ -23,7 +23,11 @@ class PrimaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           minimumSize: Size(160, 56)),
       onPressed: () {
-        onPressed();
+        if (enabled) {
+          onPressed();
+        } else {
+          null;
+        }
       },
       child: Text(
         title,

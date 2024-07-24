@@ -16,13 +16,14 @@ class GymproInfoStep2 extends StatefulWidget {
 class GymproInfoStep2State extends State<GymproInfoStep2> {
   final TextEditingController _lessonNameController = TextEditingController();
   final TextEditingController _lessonCostController = TextEditingController();
+  List<Map<String, dynamic>> _availableTimeList = [];
 
   late Map<String, dynamic> _model = {
     'lessonName': '',
     'lessonCost': '',
     'lessonTime': null,
     'lessonTimeType': null,
-    'lessonPossibleTime': null,
+    'availableTimeList': [],
   };
 
   @override
@@ -45,14 +46,14 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
     super.dispose();
   }
 
-  void onChangedLessonName() {
+  void onChangedLessonName(bool isValid) {
     setState(() {
       _model['lessonName'] = _lessonNameController.text;
     });
     widget.onChanged(_model);
   }
 
-  void onChangedLessonCost() {
+  void onChangedLessonCost(bool isValid) {
     setState(() {
       _model['lessonCost'] = _lessonCostController.text;
     });
@@ -67,8 +68,34 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
   }
 
   void onChangedLessonTimeType(String timeType) {
+    if (timeType == '매일') {
+      _availableTimeList = [
+        {'title': '매일', 'start': '', 'end': '', 'isChecked': true},
+      ];
+    } else if (timeType == '평일/주말') {
+      _availableTimeList = [
+        {'title': '평일', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '주말', 'start': '', 'end': '', 'isChecked': true},
+      ];
+    } else if (timeType == '모두 입력') {
+      _availableTimeList = [
+        {'title': '월', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '화', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '수', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '목', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '금', 'start': '', 'end': '', 'isChecked': true},
+      ];
+    }
     setState(() {
       _model['lessonTimeType'] = timeType;
+      _model['availableTimeList'] = _availableTimeList;
+    });
+    widget.onChanged(_model);
+  }
+
+  void onChangedAvailableTimeList() {
+    setState(() {
+      _model['availableTimeList'] = _availableTimeList;
     });
     widget.onChanged(_model);
   }
@@ -101,6 +128,7 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
               },
               onValidationChanged: onChangedLessonCost,
               isRequired: true,
+              type: TextInputType.number,
               placeHolder: '원(￦) 단위로 입력하세요.',
             ),
             SizedBox(height: 60.0),
@@ -119,32 +147,13 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
               setter: onChangedLessonTimeType,
             ),
             SizedBox(height: 32.0),
-            _buildAvailableTime(),
+            AvailableTime(
+              availableTime: _availableTimeList,
+              onChanged: onChangedAvailableTimeList,
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Widget _buildAvailableTime() {
-    if (_model['lessonTimeType'] == '매일') {
-      return AvailableTime(availableTime: [
-        {'title': '매일', 'start': '', 'end': '', 'isChecked': true},
-      ]);
-    } else if (_model['lessonTimeType'] == '평일/주말') {
-      return AvailableTime(availableTime: [
-        {'title': '평일', 'start': '', 'end': '', 'isChecked': true},
-        {'title': '주말', 'start': '', 'end': '', 'isChecked': true},
-      ]);
-    } else if (_model['lessonTimeType'] == '모두 입력') {
-      return AvailableTime(availableTime: [
-        {'title': '월', 'start': '', 'end': '', 'isChecked': true},
-        {'title': '화', 'start': '', 'end': '', 'isChecked': true},
-        {'title': '수', 'start': '', 'end': '', 'isChecked': true},
-        {'title': '목', 'start': '', 'end': '', 'isChecked': true},
-        {'title': '금', 'start': '', 'end': '', 'isChecked': true},
-      ]);
-    }
-    return SizedBox();
   }
 }

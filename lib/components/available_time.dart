@@ -6,24 +6,26 @@ import '../common/colors.dart';
 
 class AvailableTime extends StatefulWidget {
   final List<Map<String, dynamic>> availableTime;
+  final Function onChanged;
 
-  const AvailableTime({super.key, required this.availableTime});
+  const AvailableTime(
+      {super.key, required this.availableTime, required this.onChanged});
 
   @override
   State<AvailableTime> createState() => _AvailableTimeState();
 }
 
 class _AvailableTimeState extends State<AvailableTime> {
-  late List<FocusNode> _startFocusNodes;
-  late List<FocusNode> _endFocusNodes;
+  late List<TextEditingController> _startControllers;
+  late List<TextEditingController> _endControllers;
   late List<Map<String, dynamic>> _availableTimeList;
 
   void _initializeData() {
     _availableTimeList = List.from(widget.availableTime);
-    _startFocusNodes =
-        List.generate(_availableTimeList.length, (_) => FocusNode());
-    _endFocusNodes =
-        List.generate(_availableTimeList.length, (_) => FocusNode());
+    _startControllers = List.generate(
+        _availableTimeList.length, (_) => TextEditingController());
+    _endControllers = List.generate(
+        _availableTimeList.length, (_) => TextEditingController());
   }
 
   @override
@@ -34,10 +36,10 @@ class _AvailableTimeState extends State<AvailableTime> {
 
   @override
   void dispose() {
-    for (FocusNode node in _startFocusNodes) {
+    for (TextEditingController node in _startControllers) {
       node.dispose();
     }
-    for (FocusNode node in _endFocusNodes) {
+    for (TextEditingController node in _endControllers) {
       node.dispose();
     }
     super.dispose();
@@ -152,12 +154,12 @@ class _AvailableTimeState extends State<AvailableTime> {
         SizedBox(
           width: 120.0,
           height: 52.0,
-          child: buildTextField(index, 'start', _startFocusNodes[index]),
+          child: buildTextField(index, 'start', _startControllers[index]),
         ),
         SizedBox(
           width: 120.0,
           height: 52.0,
-          child: buildTextField(index, 'end', _endFocusNodes[index]),
+          child: buildTextField(index, 'end', _endControllers[index]),
         ),
         SizedBox(
           width: 36.0,
@@ -167,6 +169,7 @@ class _AvailableTimeState extends State<AvailableTime> {
               setState(() {
                 _availableTimeList[index]['isChecked'] = value;
               });
+              widget.onChanged();
             },
           ),
         ),
@@ -174,14 +177,15 @@ class _AvailableTimeState extends State<AvailableTime> {
     );
   }
 
-  Widget buildTextField(index, type, focusNode) {
+  Widget buildTextField(index, type, controller) {
     return TextField(
       onChanged: (value) {
         setState(() {
           _availableTimeList[index][type] = value;
         });
+        widget.onChanged();
       },
-      focusNode: focusNode,
+      controller: controller,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
