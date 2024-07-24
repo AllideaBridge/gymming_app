@@ -31,6 +31,7 @@ class _GymbieRegisterState extends State<GymbieRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       body: SafeArea(
         child: Container(
