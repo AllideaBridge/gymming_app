@@ -29,7 +29,9 @@ class LoginSelectSocial extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  LoginHeader(),
+                  LoginHeader(
+                    subtitle: "맞춤형 PT 일정을\n계획해보세요.",
+                  ),
                   Column(
                     children: [
                       buildKakaoLogin(context),

@@ -6,7 +6,7 @@ import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
 import '../../common/colors.dart';
-import 'gymbie_home/gymbie_home.dart';
+import '../login/signin_succeed.dart';
 
 class GymbieRegister extends StatefulWidget {
   @override
@@ -36,93 +36,99 @@ class _GymbieRegisterState extends State<GymbieRegister> {
       resizeToAvoidBottomInset: false,
       extendBody: true,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              CommonHeader(title: '회원으로 가입'),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          ProfileImage(size: 130),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          InputField(
-                              controller: _nameController,
-                              title: "이름",
-                              isRequired: true,
-                              onValidationChanged: (value) {
-                                setState(() {
-                                  _isNameValidate = value;
-                                });
-                                validateUserSignUp();
-                              }),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          PhoneNumberSelect(
-                              title: "전화번호",
-                              setter: (String value) {
-                                setState(() {
-                                  _isPhoneNumberValidate = value.length == 11;
-                                  _phoneNumber = value;
-                                });
-                                validateUserSignUp();
-                              }),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          BirthdaySelect(setter: (selectedDate) {
-                            setState(() {
-                              _birthday = selectedDate;
-                              _isBirthdayValidate = true;
-                            });
-                            validateUserSignUp();
-                          }),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          _buildGenderSelect()
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
-                child: ElevatedButton(
-                    onPressed: () {
-                      signInUser();
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => GymbieHome()),
-                        (Route<dynamic> route) => false,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR
-                          .withOpacity(_isUserSignUpValidate ? 1.0 : 0.5),
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6)),
+        child: Column(
+          children: [
+            CommonHeader(title: '회원으로 가입'),
+            Expanded(
+                child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        ProfileImage(size: 130),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        InputField(
+                            controller: _nameController,
+                            title: "이름",
+                            isRequired: true,
+                            onValidationChanged: (value) {
+                              setState(() {
+                                _isNameValidate = value;
+                              });
+                              validateUserSignUp();
+                            }),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        PhoneNumberSelect(
+                            title: "전화번호",
+                            setter: (String value) {
+                              setState(() {
+                                _isPhoneNumberValidate = value.length == 11;
+                                _phoneNumber = value;
+                              });
+                              validateUserSignUp();
+                            }),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        BirthdaySelect(setter: (selectedDate) {
+                          setState(() {
+                            _birthday = selectedDate;
+                            _isBirthdayValidate = true;
+                          });
+                          validateUserSignUp();
+                        }),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        _buildGenderSelect()
+                      ],
                     ),
-                    child: Text('가입 완료',
-                        style: TextStyle(
-                          color: INDICATOR_COLOR,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ))),
+                  ],
+                ),
               ),
-            ],
-          ),
+            )),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
+              child: ElevatedButton(
+                  onPressed: () {
+                    signInUser();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SignInSucceed(
+                                type: "user",
+                                imgUrl: 'assets/images/user_example.png',
+                                //todo add image url
+                                name: _nameController.text,
+                                birth: _birthday,
+                                gender: _gender,
+                                phoneNumber: _phoneNumber,
+                              )),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PRIMARY_COLOR
+                        .withOpacity(_isUserSignUpValidate ? 1.0 : 0.5),
+                    minimumSize: const Size.fromHeight(52),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                  ),
+                  child: Text('가입 완료',
+                      style: TextStyle(
+                        color: INDICATOR_COLOR,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ))),
+            ),
+          ],
         ),
       ),
     );
