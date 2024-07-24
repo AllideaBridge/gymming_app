@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
+import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
 
@@ -29,7 +29,9 @@ class LoginSelectSocial extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  LoginHeader(),
+                  LoginHeader(
+                    subtitle: "맞춤형 PT 일정을\n계획해보세요.",
+                  ),
                   Column(
                     children: [
                       buildKakaoLogin(context),
@@ -87,7 +89,7 @@ class LoginSelectSocial extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => GymbieRegister()));
               } else if (loginType == "trainer") {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GymproHome()));
+                    MaterialPageRoute(builder: (context) => GymproRegister()));
               }
             },
             style: ElevatedButton.styleFrom(

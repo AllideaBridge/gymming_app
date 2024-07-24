@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoginHeader extends StatelessWidget {
+  const LoginHeader({super.key, required this.subtitle});
+
+  final String subtitle;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,7 +23,7 @@ class LoginHeader extends StatelessWidget {
           height: 2,
         ),
         Text(
-          "맞춤형 PT 일정을\n계획해보세요.",
+          subtitle,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w500,

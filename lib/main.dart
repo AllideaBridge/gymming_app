@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/state_date_time.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
+import 'package:gymming_app/pages/login/login_select_type.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +30,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
             scaffoldBackgroundColor: Colors.black, fontFamily: 'Pretendard'),
-        home: const GymbieHome(),
-        // gymbie_home: const TrainerTimeTable(),
+        home: LoginSelectType(),
       ),
     );
   }

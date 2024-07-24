@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
 import 'package:gymming_app/pages/login/login_select_social.dart';
@@ -26,9 +27,13 @@ class LoginSelectType extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  LoginHeader(),
+                  LoginHeader(
+                    subtitle: "맞춤형 PT 일정을\n계획해보세요.",
+                  ),
                   Column(
                     children: [
+                      //todo 임시 홈화면 이동
+                      buildTestGymbiHome(context),
                       buildTypeSelect(context),
                       SizedBox(
                         height: 20,
@@ -40,6 +45,27 @@ class LoginSelectType extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Padding buildTestGymbiHome(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              //다시 첫 화면으로 돌아간다.
+              MaterialPageRoute(builder: (context) => GymbieHome()),
+              (Route<dynamic> route) => false,
+            );
+          },
+          child: Text("테스트: 회원 홈화면")),
     );
   }
 
