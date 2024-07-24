@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gymming_app/components/available_time.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
@@ -54,9 +53,6 @@ class _SamplePageState extends State<SamplePage> {
                 if (val.length < 1) return '이름은 필수값입니다.';
               },
               onValidationChanged: handleValidationChanged,
-            ),
-            AvailableTime(
-              availableTime: availableTimeList,
             ),
             // 부모 위젯에서의 동작을 테스트하기 위한 버튼입니다.
             ElevatedButton(

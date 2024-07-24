@@ -25,7 +25,8 @@ class GymproRegisterState extends State<GymproRegister> {
     'lessonName': '',
     'lessonCost': '',
     'lessonTime': null,
-    'lessonPossibleTime': null,
+    'lessonTimeType': null,
+    'availableTimeList': [],
   };
   final Map<String, bool> _enableBtn = {
     'step1': false,
@@ -43,9 +44,11 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   void onChangedStep2(Map<String, dynamic> model) {
-    setState(() {
-      _model_step2 = model;
-      _enableBtn['step2'] = _validateStep2();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _model_step2 = model;
+        _enableBtn['step2'] = _validateStep2();
+      });
     });
   }
 
@@ -68,7 +71,7 @@ class GymproRegisterState extends State<GymproRegister> {
   bool _validateStep1() {
     if (_model_step1['name'] == '') {
       return false;
-    } else if (_model_step1['phoneNumber'].length >= 11) {
+    } else if (_model_step1['phoneNumber'].length < 11) {
       return false;
     } else if (_model_step1['birth'] == null) {
       return false;
@@ -77,6 +80,31 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   bool _validateStep2() {
+    if (_model_step2['lessonName'] == '') {
+      return false;
+    } else if (_model_step2['lessonCost'] == '') {
+      return false;
+    } else if (_model_step2['lessonTime'] == null) {
+      return false;
+    } else if (_model_step2['lessonTimeType'] == null) {
+      return false;
+    } else if (_model_step2['availableTimeList'] == []) {
+      return false;
+    } else if (!_validateAvailableTime()) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateAvailableTime() {
+    for (Map<String, dynamic> item in _model_step2['availableTimeList']) {
+      print(item);
+      if (item['isChecked']) {
+        if (item['start'].length < 5 || item['end'].length < 5) {
+          return false;
+        }
+      }
+    }
     return true;
   }
 
@@ -156,7 +184,8 @@ class GymproRegisterState extends State<GymproRegister> {
       button = [
         SecondaryButton(title: '이전', onPressed: _previousStep),
         SizedBox(width: 12.0),
-        PrimaryButton(title: "다음", onPressed: _nextStep),
+        PrimaryButton(
+            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
       ];
     }
 
