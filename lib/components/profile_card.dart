@@ -46,6 +46,7 @@ class ProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
       ),
     );
@@ -79,7 +80,7 @@ class ProfileCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  DateFormat('yyyy.MM.DD').format(birth),
+                  DateFormat('yyyy.MM.dd').format(birth),
                   style: TextStyle(
                     fontSize: 16.0,
                     color: BRIGHT_SECONDARY_COLOR,
@@ -92,7 +93,7 @@ class ProfileCard extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                 ),
                 Text(
-                  gender,
+                  gender == 'M' ? '남' : '여',
                   style: TextStyle(
                     fontSize: 16.0,
                     color: BRIGHT_SECONDARY_COLOR,

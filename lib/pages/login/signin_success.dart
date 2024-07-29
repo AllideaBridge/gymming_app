@@ -5,15 +5,17 @@ import '../../common/colors.dart';
 import '../../components/profile_card.dart';
 import 'component/login_header.dart';
 
-class SignInSucceed extends StatelessWidget {
+class SignInSuccess extends StatelessWidget {
   final String type;
   final String imgUrl;
   final String name;
   final DateTime birth;
   final String gender;
   final String phoneNumber;
+  final String? additionalTitle;
+  final List<Widget>? additionalSub;
 
-  const SignInSucceed({
+  const SignInSuccess({
     super.key,
     required this.type,
     required this.imgUrl,
@@ -21,6 +23,8 @@ class SignInSucceed extends StatelessWidget {
     required this.birth,
     required this.gender,
     required this.phoneNumber,
+    this.additionalTitle,
+    this.additionalSub,
   });
 
   @override
@@ -43,11 +47,14 @@ class SignInSucceed extends StatelessWidget {
                   Column(
                     children: [
                       ProfileCard(
-                          imgUrl: imgUrl,
-                          name: name,
-                          birth: birth,
-                          gender: gender,
-                          phoneNumber: phoneNumber),
+                        imgUrl: imgUrl,
+                        name: name,
+                        birth: birth,
+                        gender: gender,
+                        phoneNumber: phoneNumber,
+                        additionalTitle: additionalTitle,
+                        additionalSub: additionalSub,
+                      ),
                       SizedBox(
                         height: 40.0,
                       ),

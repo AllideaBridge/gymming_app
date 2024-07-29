@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/components/buttons/primary_button.dart';
 import 'package:gymming_app/components/buttons/secondary_button.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step1.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step2.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step3.dart';
+import 'package:gymming_app/pages/login/signin_success.dart';
+import 'package:intl/intl.dart';
 
 class GymproRegister extends StatefulWidget {
   const GymproRegister({super.key});
@@ -202,13 +205,6 @@ class GymproRegisterState extends State<GymproRegister> {
         PrimaryButton(
             title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
       ];
-    } else if (_currentStep == 2) {
-      button = [
-        SecondaryButton(title: '이전', onPressed: _previousStep),
-        SizedBox(width: 12.0),
-        PrimaryButton(
-            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step3']!),
-      ];
     } else {
       button = [
         SecondaryButton(title: '이전', onPressed: _previousStep),
@@ -216,13 +212,25 @@ class GymproRegisterState extends State<GymproRegister> {
         PrimaryButton(
           title: "가입 완료",
           onPressed: () {
-            print('가입 완료: $_model_step1');
-            // Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => GymproRegisterCompleted()),
-            //       (Route<dynamic> route) => false,
-            // );
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SignInSuccess(
+                  type: "user",
+                  //TODO add image url
+                  imgUrl: 'assets/images/user_example.png',
+                  name: _model_step1['name'],
+                  birth: _model_step1['birth'],
+                  gender: _model_step1['gender'],
+                  phoneNumber: _model_step1['phoneNumber'],
+                  additionalTitle: _model_step2['lessonName'],
+                  additionalSub: _buildAdditionalSub(),
+                ),
+              ),
+              (Route<dynamic> route) => false,
+            );
           },
+          enabled: _enableBtn['step3']!,
         ),
       ];
     }
@@ -233,5 +241,48 @@ class GymproRegisterState extends State<GymproRegister> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: button,
         ));
+  }
+
+  List<Widget> _buildAdditionalSub() {
+    var formatter = NumberFormat('#,###');
+    String lessonCost = formatter.format(int.parse(_model_step2['lessonCost']));
+    Widget sub1 = Row(
+      children: [
+        Text(
+          '회당 $lessonCost원',
+          style: TextStyle(color: BRIGHT_SECONDARY_COLOR, fontSize: 16.0),
+        ),
+        Container(
+          width: 2.0,
+          height: 16.0,
+          color: BRIGHT_SECONDARY_COLOR,
+          margin: EdgeInsets.symmetric(horizontal: 8.0),
+        ),
+        Text(
+          '${_model_step2['lessonTime']}',
+          style: TextStyle(color: BRIGHT_SECONDARY_COLOR, fontSize: 16.0),
+        ),
+      ],
+    );
+    Widget sub2 = Row(
+      children: [
+        Text(
+          '${_model_step3['centerAddress']}',
+          style: TextStyle(color: BRIGHT_SECONDARY_COLOR, fontSize: 16.0),
+        ),
+        Container(
+          width: 2.0,
+          height: 16.0,
+          color: BRIGHT_SECONDARY_COLOR,
+          margin: EdgeInsets.symmetric(horizontal: 8.0),
+        ),
+        Text(
+          '${_model_step3['centerName']}',
+          style: TextStyle(color: BRIGHT_SECONDARY_COLOR, fontSize: 16.0),
+        ),
+      ],
+    );
+
+    return [sub1, sub2];
   }
 }
