@@ -56,6 +56,9 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                             controller: _nameController,
                             title: "이름",
                             isRequired: true,
+                            validator: (val) {
+                              if (val.length < 1) return '이름은 필수값입니다.';
+                            },
                             onValidationChanged: (value) {
                               setState(() {
                                 _isNameValidate = value;
