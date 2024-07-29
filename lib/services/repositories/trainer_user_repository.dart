@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:gymming_app/services/models/trainer_list.dart';
 import 'package:gymming_app/services/models/trainer_user.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +26,7 @@ class TrainerUserRepository {
     // if (response.statusCode == 200) {
     //   try {
     //     final List<dynamic> body = json.decode(response.body)["result"];
-    //     return TrainingUser.parseTrainingUserList(body);
+    //     return TrainerUser.parseTrainerUserList(body);
     //   } catch (e) {
     //     throw Exception("Failed to load data : ${e.toString()}");
     //   }
@@ -51,5 +54,22 @@ class TrainerUserRepository {
     //       "api response error occurs: error code = ${response.statusCode}");
     // }
     return TrainerUserDetail.getDummyTrainerUserDetail();
+  }
+
+  Future<List<TrainerList>> getTrainersListOfUser(int userId) async {
+    Uri uri = Uri.parse('$baseUrl/user/$userId/trainers');
+    initClient();
+    final response = await client.get(uri);
+    if (response.statusCode == 200) {
+      try {
+        final body = json.decode(response.body);
+        return TrainerList.parseTrainerListList(body);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 }
