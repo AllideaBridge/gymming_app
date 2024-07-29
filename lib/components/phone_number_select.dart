@@ -50,6 +50,22 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
       _middleNumberController.text = widget.originalNumber!.split("-")[1];
       _endNumberController.text = widget.originalNumber!.split("-")[2];
     }
+
+    //add lose focus event
+    _middleFocusNode.addListener(() {
+      if (!_middleFocusNode.hasFocus) {
+        setState(() {
+          _middleNumberValidate = (_middleNumber.length == 4);
+        });
+      }
+    });
+    _endFocusNode.addListener(() {
+      if (!_endFocusNode.hasFocus) {
+        setState(() {
+          _endNumberValidate = (_endNumber.length == 4);
+        });
+      }
+    });
   }
 
   @override
@@ -126,9 +142,6 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                   });
                 },
                 onTapOutside: (event) {
-                  setState(() {
-                    _middleNumberValidate = (_middleNumber.length == 4);
-                  });
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -158,9 +171,6 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                   });
                 },
                 onTapOutside: (event) {
-                  setState(() {
-                    _endNumberValidate = (_endNumber.length == 4);
-                  });
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
                 style: TextStyle(color: Colors.white, fontSize: 20),
