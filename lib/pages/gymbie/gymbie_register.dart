@@ -6,7 +6,7 @@ import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
 
 import '../../common/colors.dart';
-import '../login/signin_succeed.dart';
+import '../login/signin_success.dart';
 
 class GymbieRegister extends StatefulWidget {
   @override
@@ -109,7 +109,7 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SignInSucceed(
+                          builder: (context) => SignInSuccess(
                                 type: "user",
                                 imgUrl: 'assets/images/user_example.png',
                                 //todo add image url
