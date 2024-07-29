@@ -21,25 +21,22 @@ class GymbieScheduleTrainerList extends StatelessWidget {
           child: Column(
             children: [
               CommonHeader(title: '일정 추가'),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: FutureBuilder(
-                    future:
-                        TrainerUserRepository().getTrainersListOfUser(userId),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<TrainerList>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}',
-                            style: TextStyle(color: Colors.white));
-                      } else {
-                        final trainerList = snapshot.data!;
-                        return buildList(trainerList);
-                      }
-                    },
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: FutureBuilder(
+                  future: TrainerUserRepository().getTrainersListOfUser(userId),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<TrainerList>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}',
+                          style: TextStyle(color: Colors.white));
+                    } else {
+                      final trainerList = snapshot.data!;
+                      return buildList(trainerList);
+                    }
+                  },
                 ),
               )
             ],
@@ -49,56 +46,97 @@ class GymbieScheduleTrainerList extends StatelessWidget {
 
   Widget buildList(List<TrainerList> trainerList) {
     return ListView.builder(
+        shrinkWrap: true,
         itemCount: trainerList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
-            child: Card(
-              child: buildTrainerTile(trainerList[index]),
-            ),
+            onTap: () {
+              if (trainerList[index].lessonRemainCount != 0) {
+                //실제 로직
+              }
+            },
+            child: buildTrainerTile(trainerList[index]),
           );
         });
   }
 
   Widget buildTrainerTile(TrainerList trainer) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: BORDER_COLOR))),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(trainer.trainerProfileImgUrl,
-                width: 88, height: 88, fit: BoxFit.cover),
-            const SizedBox(
-              width: 16,
-            ),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Text(trainer.trainerName,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(
-                  width: 8,
+    return Opacity(
+      opacity: trainer.lessonRemainCount == 0 ? 0.5 : 1,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+          color: BORDER_COLOR,
+          width: 1.0,
+        ))),
+        child: Card(
+          color: Colors.black,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(44),
+                child: Image.asset(
+                  trainer.trainerProfileImgUrl,
+                  width: 88,
+                  height: 88,
+                  fit: BoxFit.cover,
                 ),
-                Text(trainer.centerLocation,
-                    style:
-                        const TextStyle(fontSize: 14, color: SECONDARY_COLOR))
-              ]),
-              const SizedBox(
-                height: 6,
               ),
-              Text('${trainer.centerLocation} | ${trainer.centerName}',
-                  style: const TextStyle(fontSize: 14, color: Colors.white)),
-              const SizedBox(
-                height: 6,
+              SizedBox(
+                width: 16,
               ),
-              Text(trainer.lessonCurrentCount.toString())
-            ])
-          ],
-        ));
+              Flexible(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        Text(trainer.trainerName,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(trainer.centerLocation,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: SECONDARY_COLOR,
+                            ))
+                      ]),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      Text("레슨명 안들어옴",
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      Text('${trainer.centerLocation} | ${trainer.centerName}',
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              overflow: TextOverflow.ellipsis)),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      Text('남은 수업 횟수: ${trainer.lessonRemainCount.toString()}',
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              overflow: TextOverflow.ellipsis))
+                    ]),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

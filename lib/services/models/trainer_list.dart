@@ -25,6 +25,8 @@ class TrainerList {
 
   int get lessonTotalCount => _lessonTotalCount;
 
+  int get lessonRemainCount => _lessonTotalCount - _lessonCurrentCount;
+
   String get trainerProfileImgUrl => _trainerProfileImgUrl;
 
   String get trainerName => _trainerName;
@@ -35,16 +37,18 @@ class TrainerList {
     return TrainerList(
         json["trainer_id"],
         json["trainer_name"],
-        json["trainer_profile_img_url"],
+        // json["trainer_profile_img_url"],
+        'assets/images/user_example.png',
+        //todo null 값이 들어오는 지 확인
         json["lesson_total_count"],
         json["lesson_current_count"],
         json["center_name"],
         json["center_location"]);
   }
 
-  static List<TrainerList> parseTrainerListList(Map<String, dynamic> body) {
+  static List<TrainerList> parseTrainerListList(List<dynamic> body) {
     final List<TrainerList> result = [];
-    for (Map<String, dynamic> item in body["result"]) {
+    for (Map<String, dynamic> item in body) {
       result.add(TrainerList.fromJson(item));
     }
     return result;

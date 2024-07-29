@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/drawer/gymbie_drawer.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_home_calendar.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_list.dart';
-import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_schedule_trainer_list.dart';
+
+import 'component/gymbie_schedule_list.dart';
 
 class GymbieHome extends StatelessWidget {
+  final int userId = 1; //todo userId 추가
+
   const GymbieHome({Key? key}) : super(key: key);
 
   @override
@@ -14,15 +17,6 @@ class GymbieHome extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(color: Colors.white),
         title: const Text("Timetable"),
-        actions: [
-          TextButton(
-            style: ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.white)),
-            child: Text('둘러보기'),
-            onPressed: () {},
-          ),
-          Image.asset('assets/images/arrow.png')
-        ],
         backgroundColor: Colors.black,
       ),
       drawer: GymbieDrawer(),
@@ -32,7 +26,10 @@ class GymbieHome extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => GymproHome()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      GymbieScheduleTrainerList(userId: userId)));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
