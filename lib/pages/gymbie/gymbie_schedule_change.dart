@@ -131,7 +131,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ScheduleChangeComplete(
+              builder: (context) => GymbieScheduleResolve(
                     type: CHANGE,
                     originDay: widget.scheduleDetail.startTime,
                     selectedDay: _selectedDay,

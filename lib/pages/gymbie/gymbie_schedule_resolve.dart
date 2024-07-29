@@ -5,8 +5,8 @@ import '../../common/constants.dart';
 import '../../services/utils/date_util.dart';
 import 'gymbie_home/gymbie_home.dart';
 
-class ScheduleChangeComplete extends StatelessWidget {
-  const ScheduleChangeComplete(
+class GymbieScheduleResolve extends StatelessWidget {
+  const GymbieScheduleResolve(
       {super.key,
       required this.type,
       required this.originDay,

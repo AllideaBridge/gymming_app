@@ -129,7 +129,7 @@ class GymbieScheduleCancel extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ScheduleChangeComplete(
+              builder: (context) => GymbieScheduleResolve(
                     type: CANCEL,
                     originDay: scheduleDetail.startTime,
                   )),
