@@ -98,6 +98,10 @@ class _GymbieRegisterState extends State<GymbieRegister> {
               padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
               child: ElevatedButton(
                   onPressed: () {
+                    if (!_isUserSignUpValidate) {
+                      return;
+                    }
+
                     signInUser();
                     Navigator.pushAndRemoveUntil(
                       context,
