@@ -28,6 +28,12 @@ class GymproRegisterState extends State<GymproRegister> {
     'lessonTimeType': null,
     'availableTimeList': [],
   };
+  late Map<String, dynamic> _model_step3 = <String, dynamic>{
+    'centerName': '',
+    'centerAddress': '',
+    'centerContact': '',
+    'centerType': '',
+  };
   final Map<String, bool> _enableBtn = {
     'step1': false,
     'step2': false,
@@ -52,9 +58,18 @@ class GymproRegisterState extends State<GymproRegister> {
     });
   }
 
+  void onChangedStep3(Map<String, dynamic> model) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _model_step3 = model;
+        _enableBtn['step3'] = _validateStep3();
+      });
+    });
+  }
+
   void _nextStep() {
     setState(() {
-      if (_currentStep < 2) {
+      if (_currentStep < 3) {
         _currentStep++;
       }
     });
@@ -96,9 +111,22 @@ class GymproRegisterState extends State<GymproRegister> {
     return true;
   }
 
+  bool _validateStep3() {
+    print(_model_step3);
+    if (_model_step3['centerName'] == '') {
+      return false;
+    } else if (_model_step3['centerAddress'] == '') {
+      return false;
+    } else if (_model_step3['centerContact'] == '') {
+      return false;
+    } else if (_model_step3['centerType'] == '') {
+      return false;
+    }
+    return true;
+  }
+
   bool _validateAvailableTime() {
     for (Map<String, dynamic> item in _model_step2['availableTimeList']) {
-      print(item);
       if (item['isChecked']) {
         if (item['start'].length < 5 || item['end'].length < 5) {
           return false;
@@ -135,7 +163,10 @@ class GymproRegisterState extends State<GymproRegister> {
                   child: GymproInfoStep2(
                 onChanged: onChangedStep2,
               )),
-              SingleChildScrollView(child: GymproInfoStep3()),
+              SingleChildScrollView(
+                  child: GymproInfoStep3(
+                onChanged: onChangedStep3,
+              )),
             ]),
           ),
           _buildButton(),
@@ -164,7 +195,21 @@ class GymproRegisterState extends State<GymproRegister> {
         PrimaryButton(
             title: "다음", onPressed: _nextStep, enabled: _enableBtn['step1']!),
       ];
+    } else if (_currentStep == 1) {
+      button = [
+        SecondaryButton(title: '이전', onPressed: _previousStep),
+        SizedBox(width: 12.0),
+        PrimaryButton(
+            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
+      ];
     } else if (_currentStep == 2) {
+      button = [
+        SecondaryButton(title: '이전', onPressed: _previousStep),
+        SizedBox(width: 12.0),
+        PrimaryButton(
+            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step3']!),
+      ];
+    } else {
       button = [
         SecondaryButton(title: '이전', onPressed: _previousStep),
         SizedBox(width: 12.0),
@@ -179,13 +224,6 @@ class GymproRegisterState extends State<GymproRegister> {
             // );
           },
         ),
-      ];
-    } else {
-      button = [
-        SecondaryButton(title: '이전', onPressed: _previousStep),
-        SizedBox(width: 12.0),
-        PrimaryButton(
-            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
       ];
     }
 
