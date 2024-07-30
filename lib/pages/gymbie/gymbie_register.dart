@@ -4,6 +4,7 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
+import 'package:gymming_app/services/utils/validate_util.dart';
 
 import '../../common/colors.dart';
 import '../login/signin_success.dart';
@@ -72,7 +73,8 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                             title: "전화번호",
                             setter: (String value) {
                               setState(() {
-                                _isPhoneNumberValidate = value.length == 11;
+                                _isPhoneNumberValidate =
+                                    ValidateUtil.isPhoneNumberValid(value);
                                 _phoneNumber = value;
                               });
                               validateUserSignUp();
