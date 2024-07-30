@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/text_dropdown.dart';
+import 'package:gymming_app/services/utils/validate_util.dart';
 
 class GymproInfoStep3 extends StatefulWidget {
   final Function onChanged;
@@ -60,9 +61,15 @@ class GymproInfoStep3State extends State<GymproInfoStep3> {
   }
 
   void onChangedCenterContact(String contactNumber) {
-    setState(() {
-      _model['centerContact'] = contactNumber;
-    });
+    if (ValidateUtil.isPhoneNumberValid(contactNumber)) {
+      setState(() {
+        _model['centerContact'] = contactNumber;
+      });
+    } else {
+      setState(() {
+        _model['centerContact'] = '';
+      });
+    }
     widget.onChanged(_model);
   }
 

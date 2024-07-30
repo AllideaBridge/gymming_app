@@ -13,10 +13,6 @@ class PhoneNumberSelect extends StatefulWidget {
 
   final String title;
 
-  /*  문자열 결과를 받는 메소드
-  XXXXXXXXXXX 형태로 결과 전송됨
-  중간 번호 값이 비어있더라도 전송되기 때문에 최종적으로 문자열 길이 확인 필요
-  */
   final Function setter;
 
   final String? originalNumber;
@@ -77,7 +73,7 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
 
   void getFirstNumbers(String result) {
     _firstNumber = result;
-    widget.setter("$_firstNumber$_middleNumber$_endNumber");
+    widget.setter("$_firstNumber-$_middleNumber-$_endNumber");
   }
 
   @override
@@ -138,7 +134,7 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                 onChanged: (String value) {
                   setState(() {
                     _middleNumber = value;
-                    widget.setter("$_firstNumber$_middleNumber$_endNumber");
+                    widget.setter("$_firstNumber-$_middleNumber-$_endNumber");
                   });
                 },
                 onTapOutside: (event) {
@@ -167,7 +163,7 @@ class _PhoneNumberSelectState extends State<PhoneNumberSelect> {
                 onChanged: (String value) {
                   setState(() {
                     _endNumber = value;
-                    widget.setter("$_firstNumber$_middleNumber$_endNumber");
+                    widget.setter("$_firstNumber-$_middleNumber-$_endNumber");
                   });
                 },
                 onTapOutside: (event) {

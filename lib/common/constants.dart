@@ -50,6 +50,4 @@ const MONTHS = [
   "12"
 ];
 
-const FIRST_NUMBERS = [
-  "010",
-];
+const FIRST_NUMBERS = ["010", "02"];

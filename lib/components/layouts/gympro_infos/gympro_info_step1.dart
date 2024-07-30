@@ -4,6 +4,7 @@ import 'package:gymming_app/components/birthday_select.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/phone_number_select.dart';
 import 'package:gymming_app/components/profile_image.dart';
+import 'package:gymming_app/services/utils/validate_util.dart';
 
 class GymproInfoStep1 extends StatefulWidget {
   final Function onChanged;
@@ -72,7 +73,7 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   }
 
   void onChangedPhoneNumber(String phoneNumber) {
-    if (phoneNumber.length == 11) {
+    if (ValidateUtil.isPhoneNumberValid(phoneNumber)) {
       setState(() {
         _model['phoneNumber'] = phoneNumber;
       });
