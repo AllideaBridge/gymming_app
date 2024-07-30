@@ -6,6 +6,7 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step1.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step2.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step3.dart';
+import 'package:gymming_app/pages/login/login_select_type.dart';
 import 'package:gymming_app/pages/login/signin_success.dart';
 import 'package:intl/intl.dart';
 
@@ -186,12 +187,11 @@ class GymproRegisterState extends State<GymproRegister> {
         SecondaryButton(
           title: '취소',
           onPressed: () {
-            print('취소');
-            // Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => GymproRegisterCompleted()),
-            //       (Route<dynamic> route) => false,
-            // );
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LoginSelectType()),
+              (Route<dynamic> route) => false,
+            );
           },
         ),
         SizedBox(width: 12.0),
@@ -216,7 +216,7 @@ class GymproRegisterState extends State<GymproRegister> {
               context,
               MaterialPageRoute(
                 builder: (context) => SignInSuccess(
-                  type: "user",
+                  type: "trainer",
                   //TODO add image url
                   imgUrl: 'assets/images/user_example.png',
                   name: _model_step1['name'],

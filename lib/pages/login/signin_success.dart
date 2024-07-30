@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/components/modals/basic_modal.dart';
 import 'package:gymming_app/pages/login/login_select_type.dart';
 
 import '../../common/colors.dart';
@@ -62,13 +63,21 @@ class SignInSuccess extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: 20),
                         child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                //다시 첫 화면으로 돌아간다.
-                                MaterialPageRoute(
-                                    builder: (context) => LoginSelectType()),
-                                (Route<dynamic> route) => false,
-                              );
+                              showDialog(
+                                  context: context,
+                                  barrierColor: Colors.black.withOpacity(0.7),
+                                  builder: (context) => BasicModal(
+                                      title: '회원가입 완료',
+                                      content: _buildModalContent(),
+                                      onConfirm: () {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginSelectType()),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      }));
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: PRIMARY_COLOR,
@@ -90,5 +99,74 @@ class SignInSuccess extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildModalContent() {
+    if (type == 'trainer') {
+      return Text.rich(
+        TextSpan(
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          children: <TextSpan>[
+            TextSpan(
+              text: '환영합니다, ',
+              style: TextStyle(color: PRIMARY_COLOR, fontSize: 16),
+            ),
+            TextSpan(
+              text: '$name 트레이너님 🤗\n\n',
+            ),
+            TextSpan(
+              text: 'Gymming',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: '은 일정 변경 자동 승인 정책을 지원합니다.\n\n',
+            ),
+            TextSpan(
+              text: '기본값인 ',
+            ),
+            TextSpan(
+              text: '7일',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: '로 설정되어 있지만 이 설정은 언제든지 변경할 수 있습니다.\n\n',
+            ),
+            TextSpan(
+              text: '좌측 상단 메뉴의 ',
+            ),
+            TextSpan(
+              text: '[정책 변경]',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: '에서 더 자세한 내용을 확인하세요 🙏',
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Text.rich(
+        TextSpan(
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          children: <TextSpan>[
+            TextSpan(
+              text: '환영합니다, ',
+              style: TextStyle(color: PRIMARY_COLOR, fontSize: 16),
+            ),
+            TextSpan(
+              text: '$name님 🤗\n\n',
+            ),
+            TextSpan(
+              text: 'Gymming',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text:
+                  '트레이너와 회원이 함께 하는 플랫폼입니다.\n\n함께 할 트레이너에게 연결을 요청하세요.\n\n$name님의 새로운 여정에 항상 함께하겠습니다 🥳',
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
