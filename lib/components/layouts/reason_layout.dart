@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/components/common_header.dart';
-import 'package:gymming_app/pages/gymbie/gymbie_schedule_request.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
@@ -293,7 +293,7 @@ class ReasonState extends State<Reason> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ScheduleChangeCompleteWithReason(
+            builder: (context) => GymbieScheduleResolveTicket(
                   type: widget.type,
                   originDay: widget.scheduleDetail!.startTime,
                   selectedDay: widget.selectedDay!,

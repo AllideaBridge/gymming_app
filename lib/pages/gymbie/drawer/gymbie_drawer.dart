@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/pages/sample/sample_page.dart';
 
 import '../../../common/colors.dart';
@@ -139,6 +140,17 @@ class GymbieDrawer extends StatelessWidget {
                             leftComponent: GymproPendingRequestList(),
                             rightComponent: GymproFinishedRequestList(),
                           )));
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
+              '트레이너 페이지로 이동',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => GymproHome()));
             },
           ),
           ListTile(

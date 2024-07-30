@@ -5,14 +5,14 @@ import '../../common/colors.dart';
 import '../../common/constants.dart';
 import '../../services/utils/date_util.dart';
 
-class ScheduleChangeCompleteWithReason extends StatelessWidget {
+class GymbieScheduleResolveTicket extends StatelessWidget {
   final String type;
   final DateTime originDay;
   final DateTime selectedDay;
   final String selectedTime;
   final String reason;
 
-  const ScheduleChangeCompleteWithReason(
+  const GymbieScheduleResolveTicket(
       {super.key,
       required this.type,
       required this.originDay,
