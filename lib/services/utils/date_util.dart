@@ -66,6 +66,6 @@ class DateUtil {
       DateFormat('HH:mm').parse(time).hour,
       DateFormat('HH:mm').parse(time).minute,
     );
-    return dateTime.toString();
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime).toString();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_schedule_create.dart';
 import 'package:gymming_app/services/models/trainer_list.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 
@@ -52,7 +53,12 @@ class GymbieScheduleTrainerList extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               if (trainerList[index].lessonRemainCount != 0) {
-                //실제 로직
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GymbieScheduleCreate(
+                            userId: userId,
+                            selectedTrainer: trainerList[index])));
               }
             },
             child: buildTrainerTile(trainerList[index]),

@@ -49,12 +49,16 @@ class ScheduleRepository {
       trainer_id: String,
       start_time: String(YYYY-MM-DDTHH:MM:SS)
    */
-  static Future<bool> createSchedule(int userId, int trainerId) async {
+  static Future<bool> createSchedule(
+      int userId, int trainerId, String startTime) async {
     final response = await http.post(Uri.parse(baseUrl),
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: json.encode({
           'user_id': userId,
           'trainer_id': trainerId,
-          'start_time': DateTime.now().toString()
+          'schedule_start_time': startTime
         }));
 
     if (response.statusCode == 200) {
