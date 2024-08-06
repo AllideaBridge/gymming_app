@@ -90,7 +90,8 @@ class GymbieScheduleList extends StatelessWidget {
             height: 428,
             child: ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                child: ScheduleClicked(scheduleDetail: schedule)),
+                child: GymbieScheduleModal(
+                    scheduleDetail: schedule, userId: userId)),
           );
         });
   }
