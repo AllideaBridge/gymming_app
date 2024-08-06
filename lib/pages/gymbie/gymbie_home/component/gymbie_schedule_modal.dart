@@ -11,10 +11,12 @@ import '../../../../components/state_date_time.dart';
 import '../../../gymbie/gymbie_schedule_cancel.dart';
 import '../../gymbie_schedule_change.dart';
 
-class ScheduleClicked extends StatelessWidget {
+class GymbieScheduleModal extends StatelessWidget {
   final ScheduleUser scheduleDetail;
+  final int userId;
 
-  const ScheduleClicked({super.key, required this.scheduleDetail});
+  const GymbieScheduleModal(
+      {super.key, required this.scheduleDetail, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +75,7 @@ class ScheduleClicked extends StatelessWidget {
                                           Provider.of<StateDateTime>(context)
                                               .selectedDateTime,
                                       scheduleDetail: scheduleDetail,
+                                      userId: userId,
                                     )));
                       })
                 ],

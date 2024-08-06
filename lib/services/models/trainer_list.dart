@@ -25,8 +25,6 @@ class TrainerList {
 
   int get lessonTotalCount => _lessonTotalCount;
 
-  int get lessonRemainCount => _lessonTotalCount - _lessonCurrentCount;
-
   String get trainerProfileImgUrl => _trainerProfileImgUrl;
 
   String get trainerName => _trainerName;

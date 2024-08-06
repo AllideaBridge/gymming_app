@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_schedule_create.dart';
 import 'package:gymming_app/services/models/trainer_list.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 
@@ -51,8 +52,13 @@ class GymbieScheduleTrainerList extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              if (trainerList[index].lessonRemainCount != 0) {
-                //실제 로직
+              if (trainerList[index].lessonCurrentCount != 0) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GymbieScheduleCreate(
+                            userId: userId,
+                            selectedTrainer: trainerList[index])));
               }
             },
             child: buildTrainerTile(trainerList[index]),
@@ -62,7 +68,7 @@ class GymbieScheduleTrainerList extends StatelessWidget {
 
   Widget buildTrainerTile(TrainerList trainer) {
     return Opacity(
-      opacity: trainer.lessonRemainCount == 0 ? 0.5 : 1,
+      opacity: trainer.lessonCurrentCount == 0 ? 0.5 : 1,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
@@ -126,7 +132,7 @@ class GymbieScheduleTrainerList extends StatelessWidget {
                       const SizedBox(
                         height: 2,
                       ),
-                      Text('남은 수업 횟수: ${trainer.lessonRemainCount.toString()}',
+                      Text('남은 수업 횟수: ${trainer.lessonCurrentCount.toString()}',
                           style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,

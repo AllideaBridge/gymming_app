@@ -6,6 +6,7 @@ import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
+import 'package:intl/intl.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -15,10 +16,14 @@ import '../../services/models/schedule_user.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
-      {super.key, required this.originDay, required this.scheduleDetail});
+      {super.key,
+      required this.originDay,
+      required this.scheduleDetail,
+      required this.userId});
 
   final DateTime originDay;
   final ScheduleUser scheduleDetail;
+  final int userId;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
@@ -30,9 +35,13 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   List<AvailableTimes> _availableTimesList = [];
 
   void _changeSelectedDay(DateTime selectedDay) async {
-    var result =
+    List<AvailableTimes> trainerList =
         await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
             widget.scheduleDetail.trainerId, selectedDay);
+    List<ScheduleUser> userSchedules =
+        await ScheduleRepository.getScheduleByDay(widget.userId, selectedDay);
+    List<AvailableTimes> result =
+        getAvailableTimeListWithUser(trainerList, userSchedules);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
@@ -152,5 +161,39 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                     type: CHANGE,
                   )));
     }
+  }
+
+  List<AvailableTimes> getAvailableTimeListWithUser(
+      List<AvailableTimes> trainerList, List<ScheduleUser> userSchedules) {
+    List<AvailableTimes> availableTimeList = [];
+    List<String> userUnavailableTimes = [];
+    for (ScheduleUser scheduleUser in userSchedules) {
+      DateTime startTime = scheduleUser.startTime;
+      int lessonMinutes = scheduleUser.lessonMinutes;
+      DateTime endTime = startTime.add(Duration(minutes: lessonMinutes));
+
+      while (startTime.isBefore(endTime)) {
+        userUnavailableTimes.add(DateFormat("HH:mm").format(startTime));
+        startTime = startTime.add(Duration(minutes: 30));
+      }
+    }
+
+    for (int i = 0; i < trainerList.length; i++) {
+      if (!trainerList[i].isPossible) {
+        availableTimeList.add(AvailableTimes(
+            time: trainerList[i].time, isPossible: trainerList[i].isPossible));
+        continue;
+      }
+
+      if (userUnavailableTimes.contains(trainerList[i].time)) {
+        availableTimeList
+            .add(AvailableTimes(time: trainerList[i].time, isPossible: false));
+      } else {
+        availableTimeList
+            .add(AvailableTimes(time: trainerList[i].time, isPossible: true));
+      }
+    }
+
+    return availableTimeList;
   }
 }

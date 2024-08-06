@@ -69,6 +69,11 @@ class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
             shape: BoxShape.circle,
           )),
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+        var today = DateTime.now();
+        if (selectedDay
+            .isBefore(DateTime(today.year, today.month, today.day))) {
+          return;
+        }
         setState(() {
           this.selectedDay = selectedDay;
         });

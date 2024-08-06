@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/common_header.dart';
@@ -105,7 +106,10 @@ class _GymproDisableTimeState extends State<GymproDisableTime> {
   }
 
   void clickConfirm(context) {
-    ScheduleRepository.createSchedule(0, widget.trainerId);
+    //todo 스케쥴 생성 변경 필요
+    var dateTime = DateUtil.convertDatabaseFormatFromDayAndTime(
+        _selectedDay, _selectedTime);
+    ScheduleRepository.createSchedule(0, widget.trainerId, dateTime);
     return;
   }
 }

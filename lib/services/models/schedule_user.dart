@@ -7,6 +7,7 @@ class ScheduleUser {
   final String _centerName;
   final String _centerLocation;
   final int _lessonChangeRange;
+  final int _lessonMinutes;
 
   ScheduleUser(
       this._scheduleId,
@@ -16,7 +17,8 @@ class ScheduleUser {
       this._trainerName,
       this._centerName,
       this._centerLocation,
-      this._lessonChangeRange);
+      this._lessonChangeRange,
+      this._lessonMinutes);
 
   int get scheduleId => _scheduleId;
 
@@ -34,6 +36,8 @@ class ScheduleUser {
 
   int get lessonChangeRange => _lessonChangeRange;
 
+  int get lessonMinutes => _lessonMinutes;
+
   factory ScheduleUser.fromJson(Map<String, dynamic> json) {
     return ScheduleUser(
         json["schedule_id"],
@@ -43,7 +47,8 @@ class ScheduleUser {
         json["trainer_name"],
         json["center_name"],
         json["center_location"],
-        json["lesson_change_range"]); //아직 lesson_change_range 는 들어오지 않는다.
+        json["lesson_change_range"],
+        json["lesson_minutes"]); //아직 lesson_change_range 는 들어오지 않는다.
   }
 
   static List<ScheduleUser> parseScheduleDetailList(List<dynamic> body) {
