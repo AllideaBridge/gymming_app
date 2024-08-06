@@ -144,8 +144,9 @@ class ScheduleRepository {
     회원의 하루 중 스케쥴 조회
     URL: schedules/users/<user_id>?day=date&type=day
    */
-  Future<List<ScheduleUser>> getScheduleByDay(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
+  static Future<List<ScheduleUser>> getScheduleByDay(
+      int userId, DateTime datetime) async {
+    Uri url = Uri.parse('$baseUrl/user/$userId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay
     });

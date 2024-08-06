@@ -4,20 +4,21 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_i
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_modal.dart';
 import 'package:gymming_app/services//utils/date_util.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../../../common/colors.dart';
 import '../../../../services/models/schedule_user.dart';
 
 class GymbieScheduleList extends StatelessWidget {
-  final scheduleRepository = ScheduleRepository(client: http.Client());
-  late Future<List<ScheduleUser>> schedules;
+  final int userId;
+
+  const GymbieScheduleList({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
-    schedules = scheduleRepository.getScheduleByDay(selectedDateTime);
+    Future<List<ScheduleUser>> schedules =
+        ScheduleRepository.getScheduleByDay(userId, selectedDateTime);
 
     return FutureBuilder(
         future: schedules,

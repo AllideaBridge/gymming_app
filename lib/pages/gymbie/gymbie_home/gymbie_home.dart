@@ -21,7 +21,12 @@ class GymbieHome extends StatelessWidget {
       ),
       drawer: GymbieDrawer(),
       body: Column(
-        children: [GymbieHomeCalendar(), GymbieScheduleList()],
+        children: [
+          GymbieHomeCalendar(),
+          GymbieScheduleList(
+            userId: userId,
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

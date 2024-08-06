@@ -3,10 +3,12 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/schedule_select_calendar.dart';
 import 'package:gymming_app/services/models/trainer_list.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
+import 'package:intl/intl.dart';
 
 import '../../common/colors.dart';
 import '../../components/time_select_table.dart';
 import '../../services/models/available_times.dart';
+import '../../services/models/schedule_user.dart';
 import '../../services/repositories/schedule_repository.dart';
 import 'gymbie_home/gymbie_home.dart';
 
@@ -27,14 +29,17 @@ class _GymbieScheduleCreateState extends State<GymbieScheduleCreate> {
   List<AvailableTimes> _availableTimesList = [];
 
   void _changeSelectedDay(DateTime selectedDay) async {
-    var result =
+    List<AvailableTimes> trainerList =
         await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
             widget.selectedTrainer.trainerId, selectedDay);
+    List<ScheduleUser> userSchedules =
+        await ScheduleRepository.getScheduleByDay(widget.userId, selectedDay);
+    List<AvailableTimes> result =
+        getAvailableTimeListWithUser(trainerList, userSchedules);
     setState(() {
       _selectedDay = selectedDay;
       _selectedTime = '';
       _availableTimesList = result;
-      print(_availableTimesList);
     });
   }
 
@@ -113,5 +118,39 @@ class _GymbieScheduleCreateState extends State<GymbieScheduleCreate> {
         ),
       ),
     );
+  }
+
+  List<AvailableTimes> getAvailableTimeListWithUser(
+      List<AvailableTimes> trainerList, List<ScheduleUser> userSchedules) {
+    List<AvailableTimes> availableTimeList = [];
+    List<String> userUnavailableTimes = [];
+    for (ScheduleUser scheduleUser in userSchedules) {
+      DateTime startTime = scheduleUser.startTime;
+      int lessonMinutes = scheduleUser.lessonMinutes;
+      DateTime endTime = startTime.add(Duration(minutes: lessonMinutes));
+
+      while (startTime.isBefore(endTime)) {
+        userUnavailableTimes.add(DateFormat("HH:mm").format(startTime));
+        startTime = startTime.add(Duration(minutes: 30));
+      }
+    }
+
+    for (int i = 0; i < trainerList.length; i++) {
+      if (!trainerList[i].isPossible) {
+        availableTimeList.add(AvailableTimes(
+            time: trainerList[i].time, isPossible: trainerList[i].isPossible));
+        continue;
+      }
+
+      if (userUnavailableTimes.contains(trainerList[i].time)) {
+        availableTimeList
+            .add(AvailableTimes(time: trainerList[i].time, isPossible: false));
+      } else {
+        availableTimeList
+            .add(AvailableTimes(time: trainerList[i].time, isPossible: true));
+      }
+    }
+
+    return availableTimeList;
   }
 }
