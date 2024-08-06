@@ -59,6 +59,6 @@ class ScheduleItem extends StatelessWidget {
   }
 
   String startTimeToString(DateTime startTime) {
-    return DateFormat('hh:mm').format(startTime);
+    return DateFormat('HH:mm').format(startTime);
   }
 }
