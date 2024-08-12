@@ -19,21 +19,23 @@ class TimeSelectTable extends StatefulWidget {
 }
 
 class _TimeSelectTableState extends State<TimeSelectTable> {
-  var times = [];
+  List<AvailableTimes> times = [];
 
   String selectedTime = '';
   String endTime = '';
 
-  void onPressedTimeButton(String newTime) {
+  void onPressedTimeButton(String newTime, int selectedTimeIndex) {
     // 30분 후의 시간도 available한지 확인해야 한다.
-    // newTime 의 형식은 00:00 형태
-    String selectedHour = newTime.split(":")[0];
-    String selectedMinute = newTime.split(":")[1];
-    // 30분 추가된 시간의 문자열 구하기
-    if (selectedMinute == "30") {
-      endTime = "${int.parse(selectedHour) + 1}:00";
-    } else {
-      endTime = "$selectedHour:30";
+    // 맨 마지막 타임을 고를 수 없으므로 return
+    if (selectedTimeIndex == times.length - 1) {
+      return;
+    }
+    // 끝나는 타임은 선택된 칩의 다음 인덱스
+    endTime = times[selectedTimeIndex + 1].time;
+
+    // 끝나는 타임이 선택 불가능한 경우
+    if (!times[selectedTimeIndex + 1].isPossible) {
+      return;
     }
 
     setState(() {
@@ -66,7 +68,7 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
               times[index].isPossible,
               times[index].time == selectedTime || times[index].time == endTime,
               times[index].time, (String newTime) {
-            onPressedTimeButton(newTime);
+            onPressedTimeButton(newTime, index);
           });
         },
         itemCount: times.length);
