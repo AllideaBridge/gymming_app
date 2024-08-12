@@ -22,8 +22,20 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
   var times = [];
 
   String selectedTime = '';
+  String endTime = '';
 
   void onPressedTimeButton(String newTime) {
+    // 30분 후의 시간도 available한지 확인해야 한다.
+    // newTime 의 형식은 00:00 형태
+    String selectedHour = newTime.split(":")[0];
+    String selectedMinute = newTime.split(":")[1];
+    // 30분 추가된 시간의 문자열 구하기
+    if (selectedMinute == "30") {
+      endTime = "${int.parse(selectedHour) + 1}:00";
+    } else {
+      endTime = "$selectedHour:30";
+    }
+
     setState(() {
       selectedTime = newTime;
     });
@@ -35,6 +47,7 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedDay != oldWidget.selectedDay) {
       selectedTime = '';
+      endTime = '';
       times = widget.availableTimesList;
     }
   }
@@ -51,7 +64,7 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
         itemBuilder: (BuildContext context, int index) {
           return buildElevatedButton(
               times[index].isPossible,
-              times[index].time == selectedTime,
+              times[index].time == selectedTime || times[index].time == endTime,
               times[index].time, (String newTime) {
             onPressedTimeButton(newTime);
           });
