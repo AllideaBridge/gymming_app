@@ -49,37 +49,41 @@ class GymbieScheduleModal extends StatelessWidget {
             titleColor: SECONDARY_COLOR,
             contentColor: Colors.white,
           ),
-          SizedBox(
-              height: 56,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SecondaryButton(
-                      title: "취소하기",
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => GymbieScheduleCancel(
-                                    scheduleDetail: scheduleDetail)));
-                      }),
-                  SizedBox(width: 12),
-                  PrimaryButton(
-                      title: "변경하기",
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => GymbieScheduleChange(
-                                      originDay:
-                                          Provider.of<StateDateTime>(context)
+          scheduleDetail.startTime.isAfter(DateTime.now())
+              ? SizedBox(
+                  height: 56,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SecondaryButton(
+                          title: "취소하기",
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GymbieScheduleCancel(
+                                        scheduleDetail: scheduleDetail)));
+                          }),
+                      SizedBox(width: 12),
+                      PrimaryButton(
+                          title: "변경하기",
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GymbieScheduleChange(
+                                          originDay: Provider.of<StateDateTime>(
+                                                  context)
                                               .selectedDateTime,
-                                      scheduleDetail: scheduleDetail,
-                                      userId: userId,
-                                    )));
-                      })
-                ],
-              ))
+                                          scheduleDetail: scheduleDetail,
+                                          userId: userId,
+                                        )));
+                          })
+                    ],
+                  ))
+              : SizedBox(
+                  height: 56,
+                )
         ],
       ),
     );

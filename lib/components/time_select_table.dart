@@ -19,11 +19,25 @@ class TimeSelectTable extends StatefulWidget {
 }
 
 class _TimeSelectTableState extends State<TimeSelectTable> {
-  var times = [];
+  List<AvailableTimes> times = [];
 
   String selectedTime = '';
+  String endTime = '';
 
-  void onPressedTimeButton(String newTime) {
+  void onPressedTimeButton(String newTime, int selectedTimeIndex) {
+    // 30분 후의 시간도 available한지 확인해야 한다.
+    // 맨 마지막 타임을 고를 수 없으므로 return
+    if (selectedTimeIndex == times.length - 1) {
+      return;
+    }
+    // 끝나는 타임은 선택된 칩의 다음 인덱스
+    endTime = times[selectedTimeIndex + 1].time;
+
+    // 끝나는 타임이 선택 불가능한 경우
+    if (!times[selectedTimeIndex + 1].isPossible) {
+      return;
+    }
+
     setState(() {
       selectedTime = newTime;
     });
@@ -35,6 +49,7 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedDay != oldWidget.selectedDay) {
       selectedTime = '';
+      endTime = '';
       times = widget.availableTimesList;
     }
   }
@@ -51,9 +66,9 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
         itemBuilder: (BuildContext context, int index) {
           return buildElevatedButton(
               times[index].isPossible,
-              times[index].time == selectedTime,
+              times[index].time == selectedTime || times[index].time == endTime,
               times[index].time, (String newTime) {
-            onPressedTimeButton(newTime);
+            onPressedTimeButton(newTime, index);
           });
         },
         itemCount: times.length);
