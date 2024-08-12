@@ -5,22 +5,22 @@ import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 import '../../../common/colors.dart';
 import '../../../services/models/trainer_user.dart';
 
-class UserManagementList extends StatefulWidget {
+class GymproMemberMgmt extends StatefulWidget {
   final bool isPresent;
 
   //todo trainerId 받아오기
   final int trainerId = 1;
 
-  const UserManagementList({
+  const GymproMemberMgmt({
     super.key,
     required this.isPresent,
   });
 
   @override
-  State<UserManagementList> createState() => _UserManagementListState();
+  State<GymproMemberMgmt> createState() => _GymproMemberMgmtState();
 }
 
-class _UserManagementListState extends State<UserManagementList> {
+class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
   final TrainerUserRepository trainingUserRepository = TrainerUserRepository();
   late Future<List<TrainerUser>> trainingUserList;
 

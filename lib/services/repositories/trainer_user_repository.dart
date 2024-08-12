@@ -15,6 +15,23 @@ class TrainerUserRepository {
     client = http.Client();
   }
 
+  Future<bool> connectTrainerUser(int trainerId, Object body) async {
+    Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users');
+    final response = await http.post(
+      url,
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<TrainerUser>> getTrainerUserList(
       int trainerId, bool isPresent) async {
     Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users')

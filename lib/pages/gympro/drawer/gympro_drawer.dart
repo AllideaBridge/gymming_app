@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
-import 'package:gymming_app/pages/gympro/gympro_gymbie_add.dart';
+import 'package:gymming_app/pages/gympro/gympro_member_connect/gympro_member_search.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
 
 import '../../../common/colors.dart';
@@ -112,9 +112,7 @@ class TrainerDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TraineeInput(
-                            isRegister: true,
-                          )));
+                      builder: (context) => GymproMemberSearch()));
             },
           ),
           ListTile(
@@ -131,9 +129,8 @@ class TrainerDrawer extends StatelessWidget {
                             title: "기존 회원 관리",
                             leftTabName: "현재 등록 회원",
                             rightTabName: "이전 등록 회원",
-                            leftComponent: UserManagementList(isPresent: true),
-                            rightComponent:
-                                UserManagementList(isPresent: false),
+                            leftComponent: GymproMemberMgmt(isPresent: true),
+                            rightComponent: GymproMemberMgmt(isPresent: false),
                           )));
             },
           ),

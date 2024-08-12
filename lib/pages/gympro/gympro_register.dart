@@ -8,6 +8,7 @@ import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step2.da
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step3.dart';
 import 'package:gymming_app/pages/login/login_select_type.dart';
 import 'package:gymming_app/pages/login/signin_success.dart';
+import 'package:gymming_app/services/utils/validate_util.dart';
 import 'package:intl/intl.dart';
 
 class GymproRegister extends StatefulWidget {
@@ -90,7 +91,7 @@ class GymproRegisterState extends State<GymproRegister> {
   bool _validateStep1() {
     if (_model_step1['name'] == '') {
       return false;
-    } else if (_model_step1['phoneNumber'].length < 11) {
+    } else if (ValidateUtil.isPhoneNumberValid(_model_step1['phoneNumber'])) {
       return false;
     } else if (_model_step1['birth'] == null) {
       return false;

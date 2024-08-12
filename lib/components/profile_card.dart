@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../common/colors.dart';
 
 class ProfileCard extends StatelessWidget {
-  final String imgUrl;
+  final String? imgUrl;
   final String name;
   final DateTime birth;
   final String gender;
@@ -57,12 +57,18 @@ class ProfileCard extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(50.0),
-          child: Image.asset(
-            imgUrl,
-            fit: BoxFit.cover,
-            width: 80.0,
-            height: 80.0,
-          ),
+          child: imgUrl != null
+              ? Image.asset(
+                  imgUrl!,
+                  fit: BoxFit.cover,
+                  width: 80.0,
+                  height: 80.0,
+                )
+              : Container(
+                  color: TERITARY_COLOR,
+                  width: 80.0,
+                  height: 80.0,
+                ),
         ),
         SizedBox(width: 16.0),
         Column(
