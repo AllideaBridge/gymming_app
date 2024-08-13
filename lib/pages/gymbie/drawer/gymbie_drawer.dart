@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_register.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/pages/sample/sample_page.dart';
 
@@ -63,10 +64,19 @@ class GymbieDrawer extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 18,
-                          color: SECONDARY_COLOR,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GymbieRegister()),
+                            );
+                          },
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 18,
+                            color: SECONDARY_COLOR,
+                          ),
                         )
                       ],
                     )
@@ -105,6 +115,25 @@ class GymbieDrawer extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
             title: Text(
+              '내가 보낸 요청',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Request(
+                            title: "요청",
+                            leftTabName: "응답 대기",
+                            rightTabName: "완료",
+                            leftComponent: GymproPendingRequestList(),
+                            rightComponent: GymproFinishedRequestList(),
+                          )));
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
+            title: Text(
               '알림 수신 관리',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
@@ -123,25 +152,7 @@ class GymbieDrawer extends StatelessWidget {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
-            title: Text(
-              '요청 목록으로 이동',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Request(
-                            title: "요청",
-                            leftTabName: "응답 대기",
-                            rightTabName: "완료",
-                            leftComponent: GymproPendingRequestList(),
-                            rightComponent: GymproFinishedRequestList(),
-                          )));
-            },
-          ),
+          // TODO 아래 두 메뉴 제거
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
             title: Text(
@@ -164,14 +175,6 @@ class GymbieDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => SamplePage()));
             },
           ),
-          ListTile(
-            title: Text('드로어를 닫는다', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              // 다른 작업
-              Navigator.pop(context); // 드로어를 닫습니다.
-            },
-          ),
-          // ... 다른 리스트 타일 항목들 ...
         ],
       ),
     );
