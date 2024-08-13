@@ -6,19 +6,29 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step1.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step2.dart';
 import 'package:gymming_app/components/layouts/gympro_infos/gympro_info_step3.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/pages/login/login_select_type.dart';
 import 'package:gymming_app/pages/login/signin_success.dart';
+import 'package:gymming_app/services/repositories/trainer_repository.dart';
 import 'package:gymming_app/services/utils/validate_util.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class GymproRegister extends StatefulWidget {
-  const GymproRegister({super.key});
+  final String type;
+  final int? trainerId;
+
+  const GymproRegister({super.key, this.type = 'register', this.trainerId});
 
   @override
   State<StatefulWidget> createState() => GymproRegisterState();
 }
 
 class GymproRegisterState extends State<GymproRegister> {
+  final TrainerRepository trainerRepository =
+      TrainerRepository(client: http.Client());
+  String headerTitle = '';
+
   late Map<String, dynamic> _model_step1 = <String, dynamic>{
     'name': '',
     'phoneNumber': '',
@@ -117,7 +127,6 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   bool _validateStep3() {
-    print(_model_step3);
     if (_model_step3['centerName'] == '') {
       return false;
     } else if (_model_step3['centerAddress'] == '') {
@@ -142,19 +151,57 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   @override
+  void initState() async {
+    super.initState();
+    headerTitle = widget.type == 'register' ? '트레이너로 가입' : '트레이너 정보 수정';
+
+    if (widget.type == 'edit') {
+      Map<String, dynamic> trainerDetail =
+          await trainerRepository.getTrainerDetailReal(widget.trainerId!);
+
+      _model_step1['name'] = trainerDetail['trainer_name'];
+      _model_step1['phoneNumber'] = trainerDetail['trainer_phone_number'];
+      _model_step1['birth'] = trainerDetail['trainer_birthday'];
+      _model_step1['gender'] = trainerDetail['trainer_gender'];
+      _model_step1['history'] = trainerDetail['description'];
+      _enableBtn['step1'] = true;
+
+      _model_step2['lessonName'] = trainerDetail['lesson_name'];
+      _model_step2['lessonCost'] = trainerDetail['lesson_price'];
+      _model_step2['lessonTime'] = trainerDetail['lesson_minutes'];
+      _model_step2['lessonTimeType'] = '매일';
+      _model_step2['availableTimeList'] = trainerDetail['trainer_availability'];
+      _enableBtn['step2'] = true;
+
+      _model_step3['centerName'] = trainerDetail['center_name'];
+      _model_step3['centerAddress'] = trainerDetail['center_location'];
+      _model_step3['centerContact'] = trainerDetail['center_number'];
+      _model_step3['centerType'] = trainerDetail['center_type'];
+      _enableBtn['step3'] = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(children: [
           CommonHeader(
-            title: '트레이너로 가입',
+            title: headerTitle,
             onPressed: () {
-              print('돌아가기');
-              // Navigator.pushAndRemoveUntil(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => GymproRegisterCompleted()),
-              //       (Route<dynamic> route) => false,
-              // );
+              if (widget.type == 'register') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginSelectType()),
+                  (Route<dynamic> route) => false,
+                );
+              } else if (widget.type == 'edit') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => GymproHome()),
+                  (Route<dynamic> route) => false,
+                );
+              }
             },
           ),
           Expanded(
@@ -162,15 +209,18 @@ class GymproRegisterState extends State<GymproRegister> {
               SingleChildScrollView(
                 child: GymproInfoStep1(
                   onChanged: onChangedStep1,
+                  originModel: _model_step1,
                 ),
               ),
               SingleChildScrollView(
                   child: GymproInfoStep2(
                 onChanged: onChangedStep2,
+                originModel: _model_step2,
               )),
               SingleChildScrollView(
                   child: GymproInfoStep3(
                 onChanged: onChangedStep3,
+                originModel: _model_step3,
               )),
             ]),
           ),
@@ -188,11 +238,19 @@ class GymproRegisterState extends State<GymproRegister> {
         SecondaryButton(
           title: '취소',
           onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => LoginSelectType()),
-              (Route<dynamic> route) => false,
-            );
+            if (widget.type == 'register') {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginSelectType()),
+                (Route<dynamic> route) => false,
+              );
+            } else if (widget.type == 'edit') {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => GymproHome()),
+                (Route<dynamic> route) => false,
+              );
+            }
           },
         ),
         SizedBox(width: 12.0),
@@ -213,23 +271,33 @@ class GymproRegisterState extends State<GymproRegister> {
         PrimaryButton(
           title: "가입 완료",
           onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SignInSuccess(
-                  type: "trainer",
-                  //TODO add image url
-                  imgUrl: 'assets/images/user_example.png',
-                  name: _model_step1['name'],
-                  birth: _model_step1['birth'],
-                  gender: _model_step1['gender'],
-                  phoneNumber: _model_step1['phoneNumber'],
-                  additionalTitle: _model_step2['lessonName'],
-                  additionalSub: _buildAdditionalSub(),
+            if (widget.type == 'register') {
+              // TODO API 연결
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignInSuccess(
+                    type: "trainer",
+                    //TODO add image url
+                    imgUrl: 'assets/images/user_example.png',
+                    name: _model_step1['name'],
+                    birth: _model_step1['birth'],
+                    gender: _model_step1['gender'],
+                    phoneNumber: _model_step1['phoneNumber'],
+                    additionalTitle: _model_step2['lessonName'],
+                    additionalSub: _buildAdditionalSub(),
+                  ),
                 ),
-              ),
-              (Route<dynamic> route) => false,
-            );
+                (Route<dynamic> route) => false,
+              );
+            } else if (widget.type == 'edit') {
+              // TODO API 연결
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => GymproHome()),
+                (Route<dynamic> route) => false,
+              );
+            }
           },
           enabled: _enableBtn['step3']!,
         ),

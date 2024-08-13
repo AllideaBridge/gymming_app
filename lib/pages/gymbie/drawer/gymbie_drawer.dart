@@ -69,7 +69,12 @@ class GymbieDrawer extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GymbieRegister()),
+                                  builder: (context) =>
+                                      // TODO userId 받아와서 넘기기
+                                      GymbieRegister(
+                                        type: 'edit',
+                                        userId: 1,
+                                      )),
                             );
                           },
                           child: Icon(
