@@ -31,9 +31,9 @@ class _GymbieRegisterState extends State<GymbieRegister> {
 
   bool _isUserSignUpValidate = false;
   bool _isNameValidate = false;
-  String _phoneNumber = '';
+  String? _phoneNumber;
   bool _isPhoneNumberValidate = false;
-  late DateTime _birthday;
+  DateTime? _birthday;
   bool _isBirthdayValidate = false;
   String _gender = "M";
   XFile? _profileImage;
@@ -59,22 +59,28 @@ class _GymbieRegisterState extends State<GymbieRegister> {
   }
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
 
     if (widget.type == 'edit') {
-      Map<String, dynamic> userDetail =
-          await userRepository.getUserDetail(widget.userId!);
+      _fetchData();
+    }
 
+    headerTitle = widget.type == 'register' ? '회원으로 가입' : '회원정보 수정';
+  }
+
+  void _fetchData() async {
+    Map<String, dynamic> userDetail =
+        await userRepository.getUserDetail(widget.userId!);
+    XFile profileImg = await urlToXFile(userDetail['user_profile_img_url']);
+    setState(() {
       _nameController.text = userDetail['user_name'];
       _phoneNumber = userDetail['user_phone_number'];
       _birthday = userDetail['user_birthday'];
       _gender = userDetail['user_gender'];
 
-      _profileImage = await urlToXFile(userDetail['user_profile_img_url']);
-    }
-
-    headerTitle = widget.type == 'register' ? '회원으로 가입' : '회원정보 수정';
+      _profileImage = profileImg;
+    });
   }
 
   @override
@@ -170,9 +176,9 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                                   imgUrl: 'assets/images/user_example.png',
                                   //todo add image url
                                   name: _nameController.text,
-                                  birth: _birthday,
+                                  birth: _birthday!,
                                   gender: _gender,
-                                  phoneNumber: _phoneNumber,
+                                  phoneNumber: _phoneNumber!,
                                 )),
                         (Route<dynamic> route) => false,
                       );
@@ -265,9 +271,9 @@ class _GymbieRegisterState extends State<GymbieRegister> {
   void onClickConfirmButton() async {
     Map<String, Object> params = <String, Object>{};
     params['user_name'] = _nameController.text;
-    params['phone_number'] = _phoneNumber;
+    params['phone_number'] = _phoneNumber!;
     params["gender"] = _gender;
-    params["birth"] = _birthday;
+    params["birth"] = _birthday!;
     if (widget.type == 'register') {
       // TODO API 연결
       print('새로운 회원 등록');

@@ -151,14 +151,20 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     headerTitle = widget.type == 'register' ? '트레이너로 가입' : '트레이너 정보 수정';
 
     if (widget.type == 'edit') {
-      Map<String, dynamic> trainerDetail =
-          await trainerRepository.getTrainerDetailReal(widget.trainerId!);
+      _fetchData();
+    }
+  }
 
+  Future<void> _fetchData() async {
+    Map<String, dynamic> trainerDetail =
+        await trainerRepository.getTrainerDetailReal(widget.trainerId!);
+
+    setState(() {
       _model_step1['name'] = trainerDetail['trainer_name'];
       _model_step1['phoneNumber'] = trainerDetail['trainer_phone_number'];
       _model_step1['birth'] = trainerDetail['trainer_birthday'];
@@ -178,7 +184,7 @@ class GymproRegisterState extends State<GymproRegister> {
       _model_step3['centerContact'] = trainerDetail['center_number'];
       _model_step3['centerType'] = trainerDetail['center_type'];
       _enableBtn['step3'] = true;
-    }
+    });
   }
 
   @override
