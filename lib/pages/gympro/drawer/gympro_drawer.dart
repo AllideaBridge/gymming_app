@@ -63,10 +63,23 @@ class TrainerDrawer extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 18,
-                          color: SECONDARY_COLOR,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  // TODO trainerId 받아와서 넘기기
+                                  builder: (context) => GymproRegister(
+                                        type: 'edit',
+                                        trainerId: 1,
+                                      )),
+                            );
+                          },
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 18,
+                            color: SECONDARY_COLOR,
+                          ),
                         )
                       ],
                     )

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/explore/component/profile_text.dart';
 import 'package:gymming_app/services/repositories/trainer_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../services/models/trainer_detail.dart';
 import 'component/profile_img.dart';
 
 class ExploreDetail extends StatelessWidget {
-  final TrainerDetail trainerDetail = TrainerRepository().getTrainerDetail();
+  final TrainerDetail trainerDetail =
+      TrainerRepository(client: http.Client()).getTrainerDetail();
 
   @override
   Widget build(BuildContext context) {

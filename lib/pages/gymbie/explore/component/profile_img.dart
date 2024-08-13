@@ -14,7 +14,7 @@ class ProfileImg extends StatefulWidget {
 
 class _ProfileImgState extends State<ProfileImg> {
   int _current = 0;
-  final CarouselController _controller = CarouselController();
+  final CarouselControllerImpl _controller = CarouselControllerImpl();
 
   @override
   Widget build(BuildContext context) {
