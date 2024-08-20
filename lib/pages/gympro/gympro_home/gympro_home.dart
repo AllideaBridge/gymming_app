@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/pages/gympro/drawer/gympro_drawer.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/gympro_disable_time.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -62,7 +64,6 @@ class _GymproHomeState extends State<GymproHome> {
           return const CircularProgressIndicator();
         },
       ),
-      //TODO: 나중에 제거
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -107,6 +108,9 @@ class _GymproHomeState extends State<GymproHome> {
           fontWeight: FontWeight.bold,
         ),
       ),
+      onTap: (CalendarTapDetails details) {
+        showScheduleBottomSheet(context, details);
+      },
       onViewChanged: (ViewChangedDetails details) {
         List<DateTime> dates = details.visibleDates;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -117,5 +121,48 @@ class _GymproHomeState extends State<GymproHome> {
         });
       },
     );
+  }
+
+  void showScheduleBottomSheet(
+      BuildContext context, CalendarTapDetails details) {
+    if (details.targetElement == CalendarElement.appointment) {
+      final Appointment appointmentDetails = details.appointments![0];
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Wrap(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  child: Container(
+                    color: BORDER_COLOR,
+                    padding: EdgeInsets.fromLTRB(20, 32, 20, 40),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconLabel(
+                          iconData: Icons.alarm,
+                          title: "일시",
+                          content: DateUtil.getKoreanDayAndHour(
+                              appointmentDetails.startTime),
+                          titleColor: SECONDARY_COLOR,
+                          contentColor: Colors.white,
+                        ),
+                        SizedBox(height: 40.0),
+                        IconLabel(
+                          iconData: Icons.person,
+                          title: "회원",
+                          content: appointmentDetails.subject,
+                          titleColor: SECONDARY_COLOR,
+                          contentColor: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          });
+    }
   }
 }
