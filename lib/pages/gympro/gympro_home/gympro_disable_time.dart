@@ -18,7 +18,7 @@ class GymproDisableTime extends StatefulWidget {
 }
 
 class _GymproDisableTimeState extends State<GymproDisableTime> {
-  DateTime _selectedDay = DateTime.now();
+  DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
 

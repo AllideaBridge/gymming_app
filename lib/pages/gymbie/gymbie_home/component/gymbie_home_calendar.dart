@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../common/colors.dart';
+import '../../../../services/utils/date_util.dart';
 
 class GymbieHomeCalendar extends StatefulWidget {
   const GymbieHomeCalendar({Key? key}) : super(key: key);
@@ -22,7 +23,8 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
   @override
   void initState() {
     super.initState();
-    futureSchedules = scheduleRepository.getScheduleByMonth(DateTime.now());
+    futureSchedules =
+        scheduleRepository.getScheduleByMonth(DateUtil.getKorTimeNow());
   }
 
   @override
@@ -34,7 +36,10 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
             final schedules = snapshot.data!;
             return buildCalendar(schedules);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}", style: TextStyle(color: Colors.white),);
+            return Text(
+              "${snapshot.error}",
+              style: TextStyle(color: Colors.white),
+            );
           }
 
           return const CircularProgressIndicator();

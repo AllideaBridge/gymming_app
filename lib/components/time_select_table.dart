@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../common/colors.dart';
 
@@ -26,15 +27,28 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
 
   void onPressedTimeButton(String newTime, int selectedTimeIndex) {
     // 30분 후의 시간도 available한지 확인해야 한다.
-    // 맨 마지막 타임을 고를 수 없으므로 return
+    // 맨 마지막 타임을 고를 수 없으므로 불가
     if (selectedTimeIndex == times.length - 1) {
       return;
     }
     // 끝나는 타임은 선택된 칩의 다음 인덱스
     endTime = times[selectedTimeIndex + 1].time;
 
-    // 끝나는 타임이 선택 불가능한 경우
+    // 끝나는 타임이 선택 불가능한 경우 불가
     if (!times[selectedTimeIndex + 1].isPossible) {
+      return;
+    }
+
+    // 선택한 시간이 지금보다 과거인 경우 불가
+    int selectedHour = int.parse(newTime.split(":")[0]);
+    int selectedMinute = int.parse(newTime.split(":")[1]);
+    DateTime selectedDateTime = DateTime(
+        widget.selectedDay.year,
+        widget.selectedDay.month,
+        widget.selectedDay.day,
+        selectedHour,
+        selectedMinute);
+    if (selectedDateTime.isBefore(DateUtil.getKorTimeNow())) {
       return;
     }
 
