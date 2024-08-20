@@ -114,7 +114,7 @@ class GymbieScheduleCancel extends StatelessWidget {
   }
 
   void showAfterClickCancel(context) async {
-    DateTime now = DateTime.now();
+    DateTime now = DateUtil.getKorTimeNow();
     int days = scheduleDetail.startTime
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;

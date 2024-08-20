@@ -34,7 +34,7 @@ class _GymproMemberDetailCalendarState
   void initState() {
     super.initState();
     futureSchedules = scheduleRepository.getTrainerUserScheduleByMonth(
-        widget.trainerId, widget.userId, DateTime.now());
+        widget.trainerId, widget.userId, DateUtil.getKorTimeNow());
   }
 
   @override
@@ -84,7 +84,7 @@ class _GymproMemberDetailCalendarState
       if (containsDateTime(schedules, day)) {
         return ['lessonDay'];
       }
-      if (isSameDay(day, DateTime.now())) {
+      if (isSameDay(day, DateUtil.getKorTimeNow())) {
         return ['today'];
       }
       return [];

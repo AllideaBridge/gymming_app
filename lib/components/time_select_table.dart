@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../common/colors.dart';
 
@@ -47,7 +48,7 @@ class _TimeSelectTableState extends State<TimeSelectTable> {
         widget.selectedDay.day,
         selectedHour,
         selectedMinute);
-    if (selectedDateTime.isBefore(DateTime.now())) {
+    if (selectedDateTime.isBefore(DateUtil.getKorTimeNow())) {
       return;
     }
 

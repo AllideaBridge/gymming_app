@@ -49,7 +49,7 @@ class GymbieScheduleModal extends StatelessWidget {
             titleColor: SECONDARY_COLOR,
             contentColor: Colors.white,
           ),
-          scheduleDetail.startTime.isAfter(DateTime.now())
+          scheduleDetail.startTime.isAfter(DateUtil.getKorTimeNow())
               ? SizedBox(
                   height: 56,
                   child: Row(

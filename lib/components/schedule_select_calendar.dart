@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../common/colors.dart';
+import '../services/utils/date_util.dart';
 
 class ScheduleSelectCalendar extends StatefulWidget {
   const ScheduleSelectCalendar(
@@ -16,7 +17,7 @@ class ScheduleSelectCalendar extends StatefulWidget {
 }
 
 class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
-  DateTime selectedDay = DateTime.now();
+  DateTime selectedDay = DateUtil.getKorTimeNow();
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
             shape: BoxShape.circle,
           )),
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-        var today = DateTime.now();
+        var today = DateUtil.getKorTimeNow();
         if (selectedDay
             .isBefore(DateTime(today.year, today.month, today.day))) {
           return;
@@ -111,7 +112,7 @@ class _ScheduleSelectCalendarState extends State<ScheduleSelectCalendar> {
     if ((widget.originDay != null) && isSameDay(day, widget.originDay)) {
       return ['originDay'];
     }
-    if (isSameDay(day, DateTime.now())) {
+    if (isSameDay(day, DateUtil.getKorTimeNow())) {
       return ['today'];
     }
     return [];

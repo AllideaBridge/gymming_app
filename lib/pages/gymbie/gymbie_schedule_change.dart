@@ -30,7 +30,7 @@ class GymbieScheduleChange extends StatefulWidget {
 }
 
 class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
-  DateTime _selectedDay = DateTime.now();
+  DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
 
@@ -124,7 +124,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   }
 
   void clickChangeButton(context) async {
-    DateTime now = DateTime.now();
+    DateTime now = DateUtil.getKorTimeNow();
     int days = widget.originDay
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;

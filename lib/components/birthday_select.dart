@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/text_dropdown.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../common/colors.dart';
 import '../common/constants.dart';
@@ -21,8 +22,8 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
   int? _selectedDay;
   final List<String> _yearList = [];
   List<String> _dayList = [];
-  final int startYear = DateTime.now().year - 50;
-  final int endYear = DateTime.now().year;
+  final int startYear = DateUtil.getKorTimeNow().year - 50;
+  final int endYear = DateUtil.getKorTimeNow().year;
 
   void getYear(String result) {
     _selectedYear = int.parse(result);
@@ -135,7 +136,7 @@ class _BirthdaySelectState extends State<BirthdaySelect> {
 
   List<String> getDays(int? selectedYear, int? selectedMonth) {
     selectedMonth ??= 1;
-    selectedYear ??= DateTime.now().year;
+    selectedYear ??= DateUtil.getKorTimeNow().year;
     int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
     days++;
     List<String> result = [];

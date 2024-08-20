@@ -24,7 +24,7 @@ class GymbieScheduleCreate extends StatefulWidget {
 }
 
 class _GymbieScheduleCreateState extends State<GymbieScheduleCreate> {
-  DateTime _selectedDay = DateTime.now();
+  DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
 
@@ -60,7 +60,7 @@ class _GymbieScheduleCreateState extends State<GymbieScheduleCreate> {
             children: [
               CommonHeader(title: '일정 추가'),
               ScheduleSelectCalendar(
-                  originDay: DateTime.now(),
+                  originDay: DateUtil.getKorTimeNow(),
                   changeSelectedDay: _changeSelectedDay),
               const SizedBox(
                 height: 10,

@@ -1,9 +1,16 @@
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 const LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const NOT_LEAP_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 class DateUtil {
+  static final korTimeZone = tz.getLocation('Asia/Seoul');
+
+  static DateTime getKorTimeNow() {
+    return tz.TZDateTime.now(korTimeZone);
+  }
+
   static List<int> lastDayOfMonths(int year) {
     return year % 4 == 0 ? LEAP_YEAR : NOT_LEAP_YEAR;
   }
