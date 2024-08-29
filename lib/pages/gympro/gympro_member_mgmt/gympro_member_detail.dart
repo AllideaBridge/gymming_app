@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_gymbie_remove.dart';
+import 'package:gymming_app/pages/gympro/gympro_member_connect/gympro_member_connect.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 
@@ -173,6 +174,27 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
               PopupMenuItem(
                 padding: EdgeInsets.fromLTRB(16, 0, 50, 0),
                 child: Text(
+                  '추가 등록',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {
+                  // TODO 추가 등록 화면 구현
+                  print('추가 등록');
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => GymproMemberConnect(
+                  //           userId: 1,
+                  //           userDetail: trainerUserDetail,
+                  //         )));
+                },
+              ),
+              PopupMenuItem(
+                padding: EdgeInsets.fromLTRB(16, 0, 50, 0),
+                child: Text(
                   '내용 편집',
                   style: TextStyle(
                     fontSize: 20,
@@ -180,13 +202,13 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                   ),
                 ),
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => TraineeInput(
-                  //               isRegister: false,
-                  //               traineeDetail: trainerUserDetail,
-                  //             )));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GymproMemberConnect(
+                                userId: 1,
+                                userDetail: trainerUserDetail,
+                              )));
                 },
               ),
               PopupMenuItem(
