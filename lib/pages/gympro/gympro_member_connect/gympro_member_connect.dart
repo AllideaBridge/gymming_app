@@ -5,14 +5,16 @@ import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/modals/basic_modal.dart';
 import 'package:gymming_app/components/profile_card.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
+import 'package:gymming_app/services/models/trainer_user_detail.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 import 'package:gymming_app/services/repositories/user_repository.dart';
 import 'package:http/http.dart' as http;
 
 class GymproMemberConnect extends StatefulWidget {
   final int userId;
+  final TrainerUserDetail? userDetail;
 
-  const GymproMemberConnect({super.key, required this.userId});
+  const GymproMemberConnect({super.key, required this.userId, this.userDetail});
 
   @override
   State<StatefulWidget> createState() => GymproMemberConnectState();
@@ -31,12 +33,26 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
 
   final List<String> _buttonLabels = ["일", "월", "화", "수", "목", "금", "토", "불규칙"];
   late List<bool> _selectedButtons;
+  late bool isEdit = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedButtons = List<bool>.filled(_buttonLabels.length, false);
+
+    if (widget.userDetail == null) {
+      _selectedButtons = List<bool>.filled(_buttonLabels.length, false);
+      isEdit = false;
+    } else {
+      _infoController.text = widget.userDetail!.specialNotes;
+      _selectedButtons =
+          _convertDaysStringToBoolList(widget.userDetail!.exerciseDays);
+
+      _model['info'] = _infoController.text;
+      isEdit = true;
+    }
     _model['workDay'] = _selectedButtons;
+
+    _validate();
   }
 
   @override
@@ -76,14 +92,12 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
   }
 
   void _validate() {
-    if (_model['count'] != '' &&
-        _model['workDay'].any((data) => data == true)) {
-      setState(() {
-        _enableBtn = true;
-      });
-    } else {
-      _enableBtn = false;
-    }
+    bool isValidWorkDay = _model['workDay'].any((data) => data == true);
+    bool isValidCount = _model['count'] != '';
+
+    setState(() {
+      _enableBtn = isValidWorkDay && (isEdit || isValidCount);
+    });
   }
 
   void _showModal() {
@@ -114,6 +128,24 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
             ));
   }
 
+  void _updateUser() async {
+    String selectedLabel = _buttonLabels
+        .asMap()
+        .entries
+        .where((entry) => _model['workDay'][entry.key])
+        .map((entry) => entry.value)
+        .join(',');
+
+    Map<String, dynamic> body = {
+      'exercise_days': selectedLabel,
+      'special_notice': _model['info'],
+    };
+    print(body);
+    // await TrainerUserRepository().updateTrainerUser(1, 1, body);
+
+    Navigator.pop(context);
+  }
+
   void _connectMember() async {
     String selectedLabel = _buttonLabels
         .asMap()
@@ -125,8 +157,8 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
     Map<String, dynamic> body = {
       'user_name': userDetail['user_name'],
       'phone_number': userDetail['user_phone_number'],
-      'lesson_total_count': _model['count'],
-      'lesson_current_count': _model['count'],
+      'lesson_total_count': int.parse(_model['count']),
+      'lesson_current_count': int.parse(_model['count']),
       'exercise_days': selectedLabel,
       'special_notice': _model['info'],
     };
@@ -140,7 +172,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         child: Column(
           children: [
             CommonHeader(
-                title: '새로운 회원 등록',
+                title: isEdit ? '회원 정보 수정' : '새로운 회원 등록',
                 onPressed: () {
                   Navigator.pop(context);
                 }),
@@ -186,16 +218,17 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
                 }
               },
             ),
-            SizedBox(height: 60.0),
-            InputField(
-              controller: _countController,
-              title: '등록 횟수',
-              validator: (val) {
-                if (val.length < 1) return '등록 횟수는 필수값입니다.';
-              },
-              onValidationChanged: onChangedCount,
-              isRequired: true,
-            ),
+            if (!isEdit) SizedBox(height: 60.0),
+            if (!isEdit)
+              InputField(
+                controller: _countController,
+                title: '등록 횟수',
+                validator: (val) {
+                  if (val.length < 1) return '등록 횟수는 필수값입니다.';
+                },
+                onValidationChanged: onChangedCount,
+                isRequired: true,
+              ),
             SizedBox(height: 60.0),
             _buildTitle(),
             SizedBox(height: 16.0),
@@ -279,13 +312,13 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         ),
         onPressed: () {
           if (_enableBtn) {
-            _showModal();
+            isEdit ? _updateUser() : _showModal();
           } else {
             null;
           }
         },
         child: Text(
-          "새로운 회원 등록",
+          isEdit ? "수정 완료" : "새로운 회원 등록",
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -294,5 +327,20 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         ),
       ),
     );
+  }
+
+  List<bool> _convertDaysStringToBoolList(String daysString) {
+    List<bool> result = List.filled(_buttonLabels.length, false);
+
+    List<String> daysList =
+        daysString.split(',').map((day) => day.trim()).toList();
+
+    for (String day in daysList) {
+      int index = _buttonLabels.indexOf(day);
+      if (index != -1) {
+        result[index] = true;
+      }
+    }
+    return result;
   }
 }

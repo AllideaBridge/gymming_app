@@ -89,4 +89,21 @@ class TrainerUserRepository {
           "api response error occurs: error code = ${response.statusCode}");
     }
   }
+
+  Future<bool> updateTrainerUser(int trainerId, int userId, Object body) async {
+    Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users/$userId');
+    final response = await http.put(
+      url,
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

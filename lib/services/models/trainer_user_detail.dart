@@ -8,7 +8,6 @@ class TrainerUserDetail {
   final String _gender;
   final String _phoneNumber;
   final String _profileImgUrl;
-  final String _loginPlatform;
   final bool _deleteFlag;
   final DateTime _birthday;
   final int _lessonTotalCount;
@@ -24,7 +23,6 @@ class TrainerUserDetail {
       this._gender,
       this._phoneNumber,
       this._profileImgUrl,
-      this._loginPlatform,
       this._deleteFlag,
       this._birthday,
       this._lessonTotalCount,
@@ -43,8 +41,6 @@ class TrainerUserDetail {
   int get lessonTotalCount => _lessonTotalCount;
 
   DateTime get birthday => _birthday;
-
-  String get loginPlatform => _loginPlatform;
 
   String get profileImgUrl => _profileImgUrl;
 
@@ -71,7 +67,6 @@ class TrainerUserDetail {
         json["gender"],
         json["phone_number"],
         json["profile_img_url"],
-        json["login_platform"],
         json["delete_flag"],
         DateTime.parse(json["birthday"]),
         json["lesson_total_count"],
@@ -90,12 +85,11 @@ class TrainerUserDetail {
         'M',
         '010-1234-5678',
         "assets/images/trainerExample.png",
-        SOCIAL_KAKAO,
         false,
         DateTime(1997, 11, 10),
         10,
         3,
-        '월, 수, 금',
+        '월,수,금',
         '없음',
         DateTime.parse('2024-05-15T13:00:00'),
         DateTime.parse('2024-02-15T13:00:00'));
