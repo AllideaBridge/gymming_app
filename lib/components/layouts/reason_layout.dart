@@ -16,6 +16,7 @@ class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
   final ScheduleUser? scheduleDetail;
   final DateTime? selectedDay;
+  final DateTime? originalDay;
   final String? selectedTime;
   final int? requestId;
   final String type;
@@ -27,7 +28,8 @@ class Reason extends StatefulWidget {
       this.selectedDay,
       this.selectedTime,
       this.requestId,
-      required this.type});
+      required this.type,
+      this.originalDay});
 
   @override
   ReasonState createState() => ReasonState();
@@ -262,6 +264,7 @@ class ReasonState extends State<Reason> {
 
   Future<bool> sendCreateChangeTicket() async {
     final body = {
+      'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': 'USER',
       'change_type': widget.type == CANCEL ? 'CANCEL' : 'MODIFY',
       'change_reason': clicked == 0
@@ -271,6 +274,7 @@ class ReasonState extends State<Reason> {
           ? DateUtil.convertDatabaseFormatFromDayAndTime(
               widget.selectedDay!, widget.selectedTime!)
           : null,
+      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay!)
     };
     var response = await ChangeTicketRepository(client: http.Client())
         .createChangeTicket(body);

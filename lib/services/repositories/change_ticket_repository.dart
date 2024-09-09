@@ -10,12 +10,12 @@ class ChangeTicketRepository {
   final http.Client client;
 
   // TODO 로컬 URL에서 변경 필요
-  final String baseUrl = "http://10.0.2.2:5000/change-tickets";
+  final String baseUrl = "http://10.0.2.2:5000/change-ticket";
 
   Future<List<ChangeTicket>> getChangeTicketList(
       int trainerId, String status, int page) async {
     var url = Uri.parse('$baseUrl/trainer/$trainerId')
-        .replace(queryParameters: {'status': status, 'page': page});
+        .replace(queryParameters: {'status': status, 'page': page.toString()});
 
     final response = await http.get(url);
 
