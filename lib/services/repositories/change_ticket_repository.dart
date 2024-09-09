@@ -12,9 +12,27 @@ class ChangeTicketRepository {
   // TODO 로컬 URL에서 변경 필요
   final String baseUrl = "http://10.0.2.2:5000/change-ticket";
 
-  Future<List<ChangeTicket>> getChangeTicketList(
+  Future<List<ChangeTicket>> getTrainerChangeTicketList(
       int trainerId, String status, int page) async {
     var url = Uri.parse('$baseUrl/trainer/$trainerId')
+        .replace(queryParameters: {'status': status, 'page': page.toString()});
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      try {
+        return ChangeTicket.parseChangeTicketList(json.decode(response.body));
+      } catch (e) {
+        throw Exception("Failed to load data");
+      }
+    } else {
+      throw Exception("Failed to load data");
+    }
+  }
+
+  Future<List<ChangeTicket>> getUserChangeTicketList(
+      int userId, String status, int page) async {
+    var url = Uri.parse('$baseUrl/user/$userId')
         .replace(queryParameters: {'status': status, 'page': page.toString()});
 
     final response = await http.get(url);

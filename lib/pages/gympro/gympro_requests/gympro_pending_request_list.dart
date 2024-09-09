@@ -15,7 +15,7 @@ class GymproPendingRequestList extends StatelessWidget {
       // TODO Status 값(WAITING) 상수화
       // TODO 무한 스크롤 page 늘어나는 기능 구현
       future: ChangeTicketRepository(client: http.Client())
-          .getChangeTicketList(1, 'WAITING', 1),
+          .getTrainerChangeTicketList(1, 'WAITING', 1),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -75,7 +75,7 @@ class GymproPendingRequestList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  changeTicketList[index].userName,
+                                  changeTicketList[index].userName!,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,

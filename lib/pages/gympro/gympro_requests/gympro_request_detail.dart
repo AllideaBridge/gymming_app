@@ -87,7 +87,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                             Row(
                               children: [
                                 Text(
-                                  widget.changeTicket.userName,
+                                  widget.changeTicket.userName!,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,

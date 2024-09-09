@@ -17,7 +17,7 @@ class GymproFinishedRequestList extends StatelessWidget {
       // TODO Status 값(RESOLVED) 상수화
       // TODO 무한 스크롤 page 늘어나는 기능 구현
       future: ChangeTicketRepository(client: http.Client())
-          .getChangeTicketList(1, 'RESOLVED', 1),
+          .getTrainerChangeTicketList(1, 'RESOLVED', 1),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -78,7 +78,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  changeTicketList[index].userName,
+                                  changeTicketList[index].userName!,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,

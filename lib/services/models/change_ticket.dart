@@ -1,6 +1,7 @@
 class ChangeTicket {
   final int _requestId;
-  final String _userName;
+  final String? _userName;
+  final String? _trainerName;
   final String _requestType;
   final DateTime _asIsDate;
   final DateTime? _toBeDate;
@@ -11,21 +12,23 @@ class ChangeTicket {
   final String? _trainerMessage;
 
   ChangeTicket(
-    this._requestId,
-    this._userName,
-    this._requestType,
-    this._asIsDate,
-    this._toBeDate,
-    this._createdAt,
-    this._requestStatus,
-    this._userProfileImage,
-    this._userMessage,
-    this._trainerMessage,
-  );
+      this._requestId,
+      this._userName,
+      this._trainerName,
+      this._requestType,
+      this._asIsDate,
+      this._toBeDate,
+      this._createdAt,
+      this._requestStatus,
+      this._userProfileImage,
+      this._userMessage,
+      this._trainerMessage);
 
   int get requestId => _requestId;
 
-  String get userName => _userName;
+  String? get userName => _userName;
+
+  String? get trainerName => _trainerName;
 
   String get requestType => _requestType;
 
@@ -47,6 +50,7 @@ class ChangeTicket {
     return ChangeTicket(
         json["request_id"],
         json["user_name"],
+        json["trainer_name"],
         json["request_type"],
         DateTime.parse(json["as_is_date"]),
         json["to_be_date"] == '' ? null : DateTime.parse(json["to_be_date"]),

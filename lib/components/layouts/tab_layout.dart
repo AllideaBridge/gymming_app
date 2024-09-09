@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../common/colors.dart';
 import '../common_header.dart';
 
-class Request extends StatelessWidget {
-  const Request(
+class TabLayout extends StatelessWidget {
+  const TabLayout(
       {super.key,
       required this.title,
       required this.leftTabName,
