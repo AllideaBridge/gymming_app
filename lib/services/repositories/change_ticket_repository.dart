@@ -57,7 +57,10 @@ class ChangeTicketRepository {
       },
     );
 
-    if (response.statusCode == 201) {
+    print(response.body);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -65,6 +68,7 @@ class ChangeTicketRepository {
   }
 
   Future<bool> modifyChangeTicket(int changeTicketId, Object body) async {
+    print(body);
     final response = await http.put(
       Uri.parse('$baseUrl/$changeTicketId'),
       body: json.encode(body),
@@ -72,6 +76,9 @@ class ChangeTicketRepository {
         'Content-Type': 'application/json',
       },
     );
+
+    //400 예외가 나오는 경우 메세지
+    // "Schedule is not changeable.Lesson change range overflow. schedule_id : *"
 
     if (response.statusCode == 201) {
       return true;

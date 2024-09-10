@@ -101,7 +101,7 @@ class GymproRegisterState extends State<GymproRegister> {
   bool _validateStep1() {
     if (_model_step1['name'] == '') {
       return false;
-    } else if (ValidateUtil.isPhoneNumberValid(_model_step1['phoneNumber'])) {
+    } else if (!ValidateUtil.isPhoneNumberValid(_model_step1['phoneNumber'])) {
       return false;
     } else if (_model_step1['birth'] == null) {
       return false;

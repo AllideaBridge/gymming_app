@@ -52,12 +52,6 @@ class GymproPendingRequestList extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
-                    child: Image.asset(
-                      changeTicketList[index].userProfileImage,
-                      fit: BoxFit.cover,
-                      width: 32.0,
-                      height: 32.0,
-                    ),
                   ),
                   SizedBox(
                     width: 12,
@@ -106,7 +100,8 @@ class GymproPendingRequestList extends StatelessWidget {
                                 Icon(Icons.arrow_forward_rounded,
                                     size: 12, color: Colors.white),
                                 SizedBox(width: 8.0),
-                                changeTicketList[index].requestType == 'MODIFY'
+                                changeTicketList[index].changeTicketType ==
+                                        'MODIFY'
                                     ? Text(
                                         DateUtil.convertKoreanWithoutWeek(
                                             changeTicketList[index].toBeDate),

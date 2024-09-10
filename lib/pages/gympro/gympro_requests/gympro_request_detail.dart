@@ -15,6 +15,7 @@ import '../../../../common/colors.dart';
 import '../../../../common/constants.dart';
 import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
+import '../../../services/utils/date_util.dart';
 import '../../../services/utils/toast_util.dart';
 
 class GymproRequestDetail extends StatefulWidget {
@@ -37,8 +38,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
     fToast = FToast();
     fToast.init(context);
     // TODO status 상수화
-    _isCompleted = widget.changeTicket.requestStatus != "WAITING";
-    _isAccepted = widget.changeTicket.requestStatus == "APPROVED";
+    _isCompleted = widget.changeTicket.changeTicketStatus != "WAITING";
+    _isAccepted = widget.changeTicket.changeTicketStatus == "APPROVED";
   }
 
   _showToast(msg) {
@@ -72,7 +73,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(50.0),
                           child: Image.asset(
-                            widget.changeTicket.userProfileImage,
+                            //todo user 상세조회하여 가져오기
+                            'assets/images/user_example.png',
                             fit: BoxFit.cover,
                             width: 48.0,
                             height: 48.0,
@@ -198,9 +200,11 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                                       REJECT_TITLE,
                                                       REJECT_SUBTITLE,
                                                       REJECT_REASONS),
-                                                  requestId: widget
-                                                      .changeTicket.requestId,
+                                                  requestId: widget.changeTicket
+                                                      .changeTicketId,
                                                   type: REJECT,
+                                                  selectedDay: widget
+                                                      .changeTicket.toBeDate,
                                                 )));
                                   }),
                               SizedBox(width: 12),
@@ -226,10 +230,14 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
   void sendApproveChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
+      'change_type': 'MODIFY',
       'status': 'APPROVED',
-      'start_time': widget.changeTicket.toBeDate,
+      'change_reason': widget.changeTicket.userMessage,
+      'reject_reason': '-',
+      'start_time':
+          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate),
     };
     await ChangeTicketRepository(client: http.Client())
-        .modifyChangeTicket(widget.changeTicket.requestId, body);
+        .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
   }
 }

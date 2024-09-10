@@ -15,11 +15,10 @@ import 'reason_content.dart';
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
   final ScheduleUser? scheduleDetail;
-  final DateTime? selectedDay;
   final DateTime? originalDay;
+  final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;
-  final String type;
 
   const Reason(
       {super.key,
@@ -30,6 +29,8 @@ class Reason extends StatefulWidget {
       this.requestId,
       required this.type,
       this.originalDay});
+
+  final String type;
 
   @override
   ReasonState createState() => ReasonState();
@@ -236,7 +237,6 @@ class ReasonState extends State<Reason> {
                     onPressed: widget.type != REJECT
                         ? () async {
                             bool response = await sendCreateChangeTicket();
-
                             if (response) {
                               moveToCompletePage(context);
                             }
@@ -244,6 +244,7 @@ class ReasonState extends State<Reason> {
                         : () {
                             sendRejectChangeTicket();
                             _showToast('운동 일정 변경을 거절하셨습니다.');
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                     child: Text(
@@ -284,10 +285,15 @@ class ReasonState extends State<Reason> {
   void sendRejectChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
-      'change_type': 'REJECTED',
+      'change_type': 'MODIFY',
+      'status': 'REJECTED',
       'change_reason': clicked == 0
           ? textController.text
           : widget.reasonContent.reasons[clicked],
+      'reject_reason': clicked == 0
+          ? textController.text
+          : widget.reasonContent.reasons[clicked],
+      'start_time': DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
     };
     await ChangeTicketRepository(client: http.Client())
         .modifyChangeTicket(widget.requestId!, body);
