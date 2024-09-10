@@ -51,3 +51,5 @@ const MONTHS = [
 ];
 
 const FIRST_NUMBERS = ["010", "02"];
+
+const SERVER_URL = "http://10.0.2.2:5000";

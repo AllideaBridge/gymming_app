@@ -11,13 +11,17 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 import '../../common/colors.dart';
+import '../../services/models/user_auth.dart';
+import '../../services/models/user_detail.dart';
 import '../login/signin_success.dart';
 
 class GymbieRegister extends StatefulWidget {
   final String type;
   final int? userId;
+  final UserAuth? userAuth;
 
-  const GymbieRegister({super.key, this.type = 'register', this.userId});
+  const GymbieRegister(
+      {super.key, this.type = 'register', this.userId, required this.userAuth});
 
   @override
   State<GymbieRegister> createState() => _GymbieRegisterState();
@@ -71,7 +75,7 @@ class _GymbieRegisterState extends State<GymbieRegister> {
 
   void _fetchData() async {
     Map<String, dynamic> userDetail =
-        await userRepository.getUserDetail(widget.userId!);
+    await userRepository.getUserDetail(widget.userId!);
     XFile profileImg = await urlToXFile(userDetail['user_profile_img_url']);
     setState(() {
       _nameController.text = userDetail['user_name'];
@@ -94,71 +98,71 @@ class _GymbieRegisterState extends State<GymbieRegister> {
             CommonHeader(title: headerTitle),
             Expanded(
                 child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ProfileImage(
-                          size: 130,
-                          originImgUrl: _profileImage,
+                        Column(
+                          children: [
+                            ProfileImage(
+                              size: 130,
+                              originImgUrl: _profileImage,
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                            InputField(
+                                controller: _nameController,
+                                title: "이름",
+                                isRequired: true,
+                                validator: (val) {
+                                  if (val.length < 1) return '이름은 필수값입니다.';
+                                },
+                                onValidationChanged: (value) {
+                                  setState(() {
+                                    _isNameValidate = value;
+                                  });
+                                  validateUserSignUp();
+                                }),
+                            SizedBox(
+                              height: 60,
+                            ),
+                            PhoneNumberSelect(
+                              title: "전화번호",
+                              setter: (String value) {
+                                setState(() {
+                                  _isPhoneNumberValidate =
+                                      ValidateUtil.isPhoneNumberValid(value);
+                                  _phoneNumber = value;
+                                });
+                                validateUserSignUp();
+                              },
+                              originalNumber: _phoneNumber,
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                            BirthdaySelect(
+                              setter: (selectedDate) {
+                                setState(() {
+                                  _birthday = selectedDate;
+                                  _isBirthdayValidate = true;
+                                });
+                                validateUserSignUp();
+                              },
+                              originalBirthday: _birthday,
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                            _buildGenderSelect()
+                          ],
                         ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        InputField(
-                            controller: _nameController,
-                            title: "이름",
-                            isRequired: true,
-                            validator: (val) {
-                              if (val.length < 1) return '이름은 필수값입니다.';
-                            },
-                            onValidationChanged: (value) {
-                              setState(() {
-                                _isNameValidate = value;
-                              });
-                              validateUserSignUp();
-                            }),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        PhoneNumberSelect(
-                          title: "전화번호",
-                          setter: (String value) {
-                            setState(() {
-                              _isPhoneNumberValidate =
-                                  ValidateUtil.isPhoneNumberValid(value);
-                              _phoneNumber = value;
-                            });
-                            validateUserSignUp();
-                          },
-                          originalNumber: _phoneNumber,
-                        ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        BirthdaySelect(
-                          setter: (selectedDate) {
-                            setState(() {
-                              _birthday = selectedDate;
-                              _isBirthdayValidate = true;
-                            });
-                            validateUserSignUp();
-                          },
-                          originalBirthday: _birthday,
-                        ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        _buildGenderSelect()
                       ],
                     ),
-                  ],
-                ),
-              ),
-            )),
+                  ),
+                )),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
               child: ElevatedButton(
@@ -171,7 +175,8 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SignInSuccess(
+                            builder: (context) =>
+                                SignInSuccess(
                                   type: "user",
                                   imgUrl: 'assets/images/user_example.png',
                                   //todo add image url
@@ -180,13 +185,13 @@ class _GymbieRegisterState extends State<GymbieRegister> {
                                   gender: _gender,
                                   phoneNumber: _phoneNumber!,
                                 )),
-                        (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                       );
                     } else if (widget.type == 'edit') {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => GymbieHome()),
-                        (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                       );
                     }
                   },
@@ -223,52 +228,53 @@ class _GymbieRegisterState extends State<GymbieRegister> {
       children: [
         Expanded(
             child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: isSelectedMale ? PRIMARY_COLOR : BTN_COLOR,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              minimumSize: Size(160, 56)),
-          onPressed: () {
-            setState(() {
-              _gender = 'M';
-            });
-          },
-          child: Text(
-            '남',
-            style: TextStyle(
-              color: isSelectedMale ? INDICATOR_COLOR : Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        )),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: isSelectedMale ? PRIMARY_COLOR : BTN_COLOR,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  minimumSize: Size(160, 56)),
+              onPressed: () {
+                setState(() {
+                  _gender = 'M';
+                });
+              },
+              child: Text(
+                '남',
+                style: TextStyle(
+                  color: isSelectedMale ? INDICATOR_COLOR : Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )),
         SizedBox(width: 8.0),
         Expanded(
             child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: isSelectedMale ? BTN_COLOR : PRIMARY_COLOR,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              minimumSize: Size(160, 56)),
-          onPressed: () {
-            setState(() {
-              _gender = 'F';
-            });
-          },
-          child: Text(
-            '여',
-            style: TextStyle(
-              color: isSelectedMale ? Colors.white : INDICATOR_COLOR,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        )),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: isSelectedMale ? BTN_COLOR : PRIMARY_COLOR,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  minimumSize: Size(160, 56)),
+              onPressed: () {
+                setState(() {
+                  _gender = 'F';
+                });
+              },
+              child: Text(
+                '여',
+                style: TextStyle(
+                  color: isSelectedMale ? Colors.white : INDICATOR_COLOR,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )),
       ],
     );
   }
 
   void onClickConfirmButton() async {
+    // UserDetail userInfo= UserDetail()
     Map<String, Object> params = <String, Object>{};
     params['user_name'] = _nameController.text;
     params['phone_number'] = _phoneNumber!;
@@ -277,6 +283,7 @@ class _GymbieRegisterState extends State<GymbieRegister> {
     if (widget.type == 'register') {
       // TODO API 연결
       print('새로운 회원 등록');
+      // userRepository.updateUser(userInfo)
     } else if (widget.type == 'edit') {
       // TODO API 연결
       print('회원 정보 수정');
