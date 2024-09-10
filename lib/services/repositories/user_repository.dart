@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:gymming_app/services/auth/api_service.dart';
 import 'package:http/http.dart' as http;
 
-class UserRepository {
+import '../models/user_detail.dart';
+
+class UserRepository extends ApiService {
   UserRepository({required this.client});
 
   final http.Client client;
@@ -45,5 +51,33 @@ class UserRepository {
       "user_delete_flag": false,
       "user_birthday": "1993-07-10"
     };
+  }
+
+  Future<UserDetail> updateUser(UserDetail userInfo) async {
+    try {
+      final response = await makeAuthenticatedRequest(
+          'PUT', Uri.parse('$baseUrl/${userInfo.userId}'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            "user_name": userInfo.userName,
+            "user_phone_number": userInfo.userPhoneNumber,
+            "user_birthday": userInfo.userBirthday,
+            "user_gender": userInfo.userGender
+          }));
+
+      if (response.statusCode == HttpStatus.ok) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        UserDetail userDetail = UserDetail.fromJson(responseData);
+        return userDetail;
+      } else {
+        throw Exception('Failed to update user info');
+      }
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 }

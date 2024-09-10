@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
+import 'package:gymming_app/services/auth/token_manager_service.dart';
+import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
+import '../../services/auth/kakao_auth_service.dart';
+import '../../services/models/user_auth.dart';
+import '../../services/repositories/auth_repository.dart';
 import '../gymbie/gymbie_register.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+
+import 'component/kakao_login_button.dart';
 
 class LoginSelectSocial extends StatelessWidget {
   const LoginSelectSocial({super.key, required this.loginType});
@@ -49,6 +58,9 @@ class LoginSelectSocial extends StatelessWidget {
   }
 
   Column buildKakaoLogin(BuildContext context) {
+    final kakaoAuthService = KakaoAuthService();
+    final authRepository = AuthRepository(client: http.Client());
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -82,14 +94,29 @@ class LoginSelectSocial extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
+        // KakaoLoginButton()
         ElevatedButton(
-            onPressed: () {
-              if (loginType == "user") {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GymbieRegister()));
-              } else if (loginType == "trainer") {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GymproRegister()));
+            onPressed: () async {
+              OAuthToken? oAuthToken = await kakaoAuthService.signInWithKakao();
+              if (oAuthToken != null) {
+                if (loginType == "user") {
+                  UserAuth userAuth =
+                      await authRepository.signUpUser(oAuthToken.accessToken);
+                  await TokenManagerService.instance.saveAccessToken(userAuth.accessToken);
+                  await TokenManagerService.instance.saveRefreshToken(userAuth.refreshToken);
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GymbieRegister(
+                                userAuth: userAuth,
+                              )));
+                } else if (loginType == "trainer") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GymproRegister()));
+                }
               }
             },
             style: ElevatedButton.styleFrom(
