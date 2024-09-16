@@ -65,6 +65,10 @@ class DateUtil {
     return DateFormat("yyyy-MM-dd").format(day);
   }
 
+  static String convertDatabaseFormatDateTime(DateTime dateTime) {
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime).toString();
+  }
+
   static String convertDatabaseFormatFromDayAndTime(DateTime day, String time) {
     var dateTime = DateTime(
       day.year,

@@ -17,7 +17,7 @@ class GymproFinishedRequestList extends StatelessWidget {
       // TODO Status 값(RESOLVED) 상수화
       // TODO 무한 스크롤 page 늘어나는 기능 구현
       future: ChangeTicketRepository(client: http.Client())
-          .getChangeTicketList(1, 'RESOLVED', 1),
+          .getTrainerChangeTicketList(1, 'APPROVED,REJECTED,CANCELED', 1),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -54,12 +54,6 @@ class GymproFinishedRequestList extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
-                    child: Image.asset(
-                      changeTicketList[index].userProfileImage,
-                      fit: BoxFit.cover,
-                      width: 32.0,
-                      height: 32.0,
-                    ),
                   ),
                   SizedBox(
                     width: 12,
@@ -78,7 +72,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  changeTicketList[index].userName,
+                                  changeTicketList[index].userName!,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -109,7 +103,8 @@ class GymproFinishedRequestList extends StatelessWidget {
                                 Icon(Icons.arrow_forward_rounded,
                                     size: 12, color: Colors.white),
                                 SizedBox(width: 8.0),
-                                changeTicketList[index].requestType == 'MODIFY'
+                                changeTicketList[index].changeTicketType ==
+                                        'MODIFY'
                                     ? Text(
                                         DateUtil.convertKoreanWithoutWeek(
                                             changeTicketList[index].toBeDate),
@@ -125,7 +120,7 @@ class GymproFinishedRequestList extends StatelessWidget {
                             ),
                           ],
                         ),
-                        changeTicketList[index].requestStatus == 'APPROVED'
+                        changeTicketList[index].changeTicketStatus == 'APPROVED'
                             ? PrimaryChip(title: '승인')
                             : GreyChip(title: '거절')
                       ],

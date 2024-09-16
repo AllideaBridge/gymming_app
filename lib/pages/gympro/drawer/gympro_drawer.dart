@@ -6,6 +6,8 @@ import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import '../../../common/colors.dart';
 import '../../../components/layouts/tab_layout.dart';
 import '../../../pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
+import '../gympro_requests/gympro_finished_request_list.dart';
+import '../gympro_requests/gympro_pending_request_list.dart';
 
 class TrainerDrawer extends StatelessWidget {
   const TrainerDrawer({super.key});
@@ -138,7 +140,7 @@ class TrainerDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Request(
+                      builder: (context) => TabLayout(
                             title: "기존 회원 관리",
                             leftTabName: "현재 등록 회원",
                             rightTabName: "이전 등록 회원",
@@ -150,23 +152,21 @@ class TrainerDrawer extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
             title: Text(
-              '알림 수신 관리',
+              '요청 목록',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
-            title: Text(
-              '광고 미노출 환경 구매',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
-            title: Text(
-              '앱 공지사항',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TabLayout(
+                            title: "요청",
+                            leftTabName: "응답 대기",
+                            rightTabName: "완료",
+                            leftComponent: GymproPendingRequestList(),
+                            rightComponent: GymproFinishedRequestList(),
+                          )));
+            },
           ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),

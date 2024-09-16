@@ -1,33 +1,34 @@
 class ChangeTicket {
-  final int _requestId;
-  final String _userName;
-  final String _requestType;
+  final int _changeTicketId;
+  final String? _userName;
+  final String? _trainerName;
+  final String _changeTicketType;
   final DateTime _asIsDate;
   final DateTime? _toBeDate;
   final DateTime _createdAt;
-  final String _requestStatus;
-  final String _userProfileImage;
+  final String _changeTicketStatus;
   final String _userMessage;
   final String? _trainerMessage;
 
   ChangeTicket(
-    this._requestId,
-    this._userName,
-    this._requestType,
-    this._asIsDate,
-    this._toBeDate,
-    this._createdAt,
-    this._requestStatus,
-    this._userProfileImage,
-    this._userMessage,
-    this._trainerMessage,
-  );
+      this._changeTicketId,
+      this._userName,
+      this._trainerName,
+      this._changeTicketType,
+      this._asIsDate,
+      this._toBeDate,
+      this._createdAt,
+      this._changeTicketStatus,
+      this._userMessage,
+      this._trainerMessage);
 
-  int get requestId => _requestId;
+  int get changeTicketId => _changeTicketId;
 
-  String get userName => _userName;
+  String? get userName => _userName;
 
-  String get requestType => _requestType;
+  String? get trainerName => _trainerName;
+
+  String get changeTicketType => _changeTicketType;
 
   DateTime get asIsDate => _asIsDate;
 
@@ -35,9 +36,7 @@ class ChangeTicket {
 
   DateTime get createdAt => _createdAt;
 
-  String get requestStatus => _requestStatus;
-
-  String get userProfileImage => _userProfileImage;
+  String get changeTicketStatus => _changeTicketStatus;
 
   String get userMessage => _userMessage;
 
@@ -45,14 +44,14 @@ class ChangeTicket {
 
   factory ChangeTicket.fromJson(Map<String, dynamic> json) {
     return ChangeTicket(
-        json["request_id"],
+        json["id"],
         json["user_name"],
-        json["request_type"],
+        json["trainer_name"],
+        json["change_ticket_type"],
         DateTime.parse(json["as_is_date"]),
         json["to_be_date"] == '' ? null : DateTime.parse(json["to_be_date"]),
         DateTime.parse(json["created_at"]),
-        json["request_status"],
-        json["user_profile_image"],
+        json["change_ticket_status"],
         json["user_message"],
         json["trainer_message"] == '' ? null : json["trainer_message"]);
   }

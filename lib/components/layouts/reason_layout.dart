@@ -15,10 +15,10 @@ import 'reason_content.dart';
 class Reason extends StatefulWidget {
   final ReasonContent reasonContent;
   final ScheduleUser? scheduleDetail;
+  final DateTime? originalDay;
   final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;
-  final String type;
 
   const Reason(
       {super.key,
@@ -27,7 +27,10 @@ class Reason extends StatefulWidget {
       this.selectedDay,
       this.selectedTime,
       this.requestId,
-      required this.type});
+      required this.type,
+      this.originalDay});
+
+  final String type;
 
   @override
   ReasonState createState() => ReasonState();
@@ -234,7 +237,6 @@ class ReasonState extends State<Reason> {
                     onPressed: widget.type != REJECT
                         ? () async {
                             bool response = await sendCreateChangeTicket();
-
                             if (response) {
                               moveToCompletePage(context);
                             }
@@ -242,6 +244,7 @@ class ReasonState extends State<Reason> {
                         : () {
                             sendRejectChangeTicket();
                             _showToast('운동 일정 변경을 거절하셨습니다.');
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                     child: Text(
@@ -262,6 +265,7 @@ class ReasonState extends State<Reason> {
 
   Future<bool> sendCreateChangeTicket() async {
     final body = {
+      'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': 'USER',
       'change_type': widget.type == CANCEL ? 'CANCEL' : 'MODIFY',
       'change_reason': clicked == 0
@@ -271,6 +275,7 @@ class ReasonState extends State<Reason> {
           ? DateUtil.convertDatabaseFormatFromDayAndTime(
               widget.selectedDay!, widget.selectedTime!)
           : null,
+      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay!)
     };
     var response = await ChangeTicketRepository(client: http.Client())
         .createChangeTicket(body);
@@ -280,10 +285,15 @@ class ReasonState extends State<Reason> {
   void sendRejectChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
-      'change_type': 'REJECTED',
+      'change_type': 'MODIFY',
+      'status': 'REJECTED',
       'change_reason': clicked == 0
           ? textController.text
           : widget.reasonContent.reasons[clicked],
+      'reject_reason': clicked == 0
+          ? textController.text
+          : widget.reasonContent.reasons[clicked],
+      'start_time': DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
     };
     await ChangeTicketRepository(client: http.Client())
         .modifyChangeTicket(widget.requestId!, body);

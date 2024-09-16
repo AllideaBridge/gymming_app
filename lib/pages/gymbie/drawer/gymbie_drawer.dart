@@ -127,7 +127,7 @@ class GymbieDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Request(
+                      builder: (context) => TabLayout(
                             title: "요청",
                             leftTabName: "응답 대기",
                             rightTabName: "완료",
