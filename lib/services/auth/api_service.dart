@@ -4,21 +4,24 @@ import 'dart:io';
 import 'package:gymming_app/services/auth/token_manager_service.dart';
 import 'package:http/http.dart' as http;
 
+import '../../common/exceptions.dart';
+
 class ApiService {
   final TokenManagerService _tokenManager = TokenManagerService.instance;
 
-  Future<http.Response> makeAuthenticatedRequest(String method,
-      Uri url, {
-        Map<String, String>? headers,
-        Object? body,
-        int retryCount = 0,
-      }) async {
+  Future<http.Response> makeAuthenticatedRequest(
+    String method,
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    int retryCount = 0,
+  }) async {
     // 액세스 토큰의 유효성 확인 및 갱신
     if (!await _tokenManager.isAccessTokenValid()) {
       bool isRefreshed = await _tokenManager.refreshAccessToken();
       if (!isRefreshed) {
         print('토큰 갱신 실패. 재로그인이 필요합니다.');
-        throw Exception('토큰 갱신 실패');
+        throw TokenRefreshFailedException();
       }
     }
 

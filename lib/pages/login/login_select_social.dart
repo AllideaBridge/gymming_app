@@ -3,17 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
-import 'package:gymming_app/services/auth/token_manager_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../services/auth/kakao_auth_service.dart';
-import '../../services/models/user_auth.dart';
 import '../../services/repositories/auth_repository.dart';
 import '../gymbie/gymbie_register.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-import 'component/kakao_login_button.dart';
 
 class LoginSelectSocial extends StatelessWidget {
   const LoginSelectSocial({super.key, required this.loginType});
@@ -100,22 +97,21 @@ class LoginSelectSocial extends StatelessWidget {
               OAuthToken? oAuthToken = await kakaoAuthService.signInWithKakao();
               if (oAuthToken != null) {
                 if (loginType == "user") {
-                  UserAuth userAuth =
-                      await authRepository.signUpUser(oAuthToken.accessToken);
-                  await TokenManagerService.instance.saveAccessToken(userAuth.accessToken);
-                  await TokenManagerService.instance.saveRefreshToken(userAuth.refreshToken);
-
+                  // todo : 로그인 api 먼저 호출 후 홈 화면 또는 회원 가입 화면으로 분기
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GymbieRegister(
-                                userAuth: userAuth,
+                                kakaoToken: oAuthToken.accessToken,
                               )));
                 } else if (loginType == "trainer") {
+                  // todo : 로그인 api 먼저 호출 후 홈 화면 또는 회원 가입 화면으로 분기
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => GymproRegister()));
+                          builder: (context) => GymproRegister(
+                            kakaoToken: oAuthToken.accessToken,
+                          )));
                 }
               }
             },

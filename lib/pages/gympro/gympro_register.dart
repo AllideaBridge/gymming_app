@@ -13,12 +13,20 @@ import 'package:gymming_app/services/repositories/trainer_repository.dart';
 import 'package:gymming_app/services/utils/validate_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/auth/token_manager_service.dart';
+import '../../services/models/trainer_auth.dart';
+import '../../services/models/trainer_details.dart';
+import '../../services/repositories/auth_repository.dart';
+import '../../state/info_state.dart';
 
 class GymproRegister extends StatefulWidget {
   final String type;
   final int? trainerId;
+  final String? kakaoToken;
 
-  const GymproRegister({super.key, this.type = 'register', this.trainerId});
+  const GymproRegister({super.key, this.type = 'register', this.trainerId, this.kakaoToken});
 
   @override
   State<StatefulWidget> createState() => GymproRegisterState();
@@ -27,6 +35,7 @@ class GymproRegister extends StatefulWidget {
 class GymproRegisterState extends State<GymproRegister> {
   final TrainerRepository trainerRepository =
       TrainerRepository(client: http.Client());
+  final AuthRepository authRepository = AuthRepository(client: http.Client());
   String headerTitle = '';
 
   late Map<String, dynamic> _model_step1 = <String, dynamic>{
@@ -39,7 +48,8 @@ class GymproRegisterState extends State<GymproRegister> {
   late Map<String, dynamic> _model_step2 = <String, dynamic>{
     'lessonName': '',
     'lessonCost': '',
-    'lessonTime': null,
+    'lessonTime': 60,
+    'lessonChangeRange': '',
     'lessonTimeType': null,
     'availableTimeList': [],
   };
@@ -99,9 +109,11 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   bool _validateStep1() {
+    print(_model_step1);
+    print("_model_step1");
     if (_model_step1['name'] == '') {
       return false;
-    } else if (ValidateUtil.isPhoneNumberValid(_model_step1['phoneNumber'])) {
+    } else if (!ValidateUtil.isPhoneNumberValid(_model_step1['phoneNumber'])) {
       return false;
     } else if (_model_step1['birth'] == null) {
       return false;
@@ -110,11 +122,12 @@ class GymproRegisterState extends State<GymproRegister> {
   }
 
   bool _validateStep2() {
+    print(_model_step2);
     if (_model_step2['lessonName'] == '') {
       return false;
     } else if (_model_step2['lessonCost'] == '') {
       return false;
-    } else if (_model_step2['lessonTime'] == null) {
+    } else if (_model_step2['lessonChangeRange'] == '') {
       return false;
     } else if (_model_step2['lessonTimeType'] == null) {
       return false;
@@ -276,9 +289,24 @@ class GymproRegisterState extends State<GymproRegister> {
         SizedBox(width: 12.0),
         PrimaryButton(
           title: "가입 완료",
-          onPressed: () {
+          onPressed: () async {
             if (widget.type == 'register') {
               // TODO API 연결
+
+              TrainerDetails trainerDetails = TrainerDetails.empty();
+              trainerDetails.setStep1Data(_model_step1);
+              trainerDetails.setStep2Data(_model_step2);
+              trainerDetails.setStep3Data(_model_step3);
+              print("register ---- trainer");
+              print(trainerDetails.trainerAvailability);
+              Map<String, Object> params = trainerDetails.toJson();
+              params['kakao_token'] = widget.kakaoToken!;
+              TrainerAuth trainerAuth = await authRepository.signUpTrainer(params);
+              await TokenManagerService.instance.saveAccessToken(trainerAuth.accessToken);
+              await TokenManagerService.instance
+                  .saveRefreshToken(trainerAuth.refreshToken);
+              Provider.of<InfoState>(context, listen: false).setUserId(trainerAuth.trainerId);
+
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
