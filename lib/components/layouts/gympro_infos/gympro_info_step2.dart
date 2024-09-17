@@ -16,12 +16,13 @@ class GymproInfoStep2 extends StatefulWidget {
 class GymproInfoStep2State extends State<GymproInfoStep2> {
   final TextEditingController _lessonNameController = TextEditingController();
   final TextEditingController _lessonCostController = TextEditingController();
+  final TextEditingController _lessonChangeRangeController = TextEditingController();
   List<Map<String, dynamic>> _availableTimeList = [];
 
   late Map<String, dynamic> _model = {
     'lessonName': '',
     'lessonCost': '',
-    'lessonTime': null,
+    'lessonChangeRange': '',
     'lessonTimeType': null,
     'availableTimeList': [],
   };
@@ -60,9 +61,9 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
     widget.onChanged(_model);
   }
 
-  void onChangedLessonTime(String time) {
+  void onChangedLessonChangeRange(bool isValid) {
     setState(() {
-      _model['lessonTime'] = time;
+      _model['lessonChangeRange'] = _lessonChangeRangeController.text;
     });
     widget.onChanged(_model);
   }
@@ -84,6 +85,8 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
         {'title': '수', 'start': '', 'end': '', 'isChecked': true},
         {'title': '목', 'start': '', 'end': '', 'isChecked': true},
         {'title': '금', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '토', 'start': '', 'end': '', 'isChecked': true},
+        {'title': '일', 'start': '', 'end': '', 'isChecked': true},
       ];
     }
     setState(() {
@@ -132,12 +135,16 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
               placeHolder: '원(￦) 단위로 입력하세요.',
             ),
             SizedBox(height: 60.0),
-            TextDropdown(
-              title: '수업 시간',
+            InputField(
+              controller: _lessonChangeRangeController,
+              title: '수업 변경 기간',
+              validator: (val) {
+                if (val.length < 1) return '수업 변경 기간은 필수값입니다.';
+              } ,
+              onValidationChanged: onChangedLessonChangeRange,
               isRequired: true,
-              originValue: _model['lessonTime'] ?? '',
-              dropdownItems: ['30분', '1시간', '1시간 30분', '2시간', '2시간 30분', '3시간'],
-              setter: onChangedLessonTime,
+              type: TextInputType.number,
+              placeHolder: '며칠 전까지 변경 가능한지 입력하세요.'
             ),
             SizedBox(height: 60.0),
             TextDropdown(

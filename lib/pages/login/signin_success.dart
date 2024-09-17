@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/components/modals/basic_modal.dart';
-import 'package:gymming_app/pages/login/login_select_type.dart';
+import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 
 import '../../common/colors.dart';
 import '../../components/profile_card.dart';
@@ -74,7 +74,7 @@ class SignInSuccess extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  LoginSelectType()),
+                                                  GymbieHome()),
                                           (Route<dynamic> route) => false,
                                         );
                                       }));

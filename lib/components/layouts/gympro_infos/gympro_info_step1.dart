@@ -73,12 +73,15 @@ class GymproInfoStep1State extends State<GymproInfoStep1> {
   }
 
   void onChangedPhoneNumber(String phoneNumber) {
+    print(phoneNumber);
+    print("phoneNumber");
     if (ValidateUtil.isPhoneNumberValid(phoneNumber)) {
       setState(() {
         _model['phoneNumber'] = phoneNumber;
       });
       widget.onChanged(_model);
     } else {
+
       setState(() {
         _model['phoneNumber'] = '';
       });

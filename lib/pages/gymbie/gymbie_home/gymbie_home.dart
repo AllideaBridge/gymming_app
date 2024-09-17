@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/drawer/gymbie_drawer.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_home_calendar.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_trainer_list.dart';
+import 'package:provider/provider.dart';
 
+import '../../../state/info_state.dart';
 import 'component/gymbie_schedule_list.dart';
 
 class GymbieHome extends StatelessWidget {
-  final int userId = 1; //todo userId 추가
 
   const GymbieHome({Key? key}) : super(key: key);
 
@@ -24,7 +25,7 @@ class GymbieHome extends StatelessWidget {
         children: [
           GymbieHomeCalendar(),
           GymbieScheduleList(
-            userId: userId,
+            userId: Provider.of<InfoState>(context).userId!,
           )
         ],
       ),
@@ -34,7 +35,7 @@ class GymbieHome extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      GymbieScheduleTrainerList(userId: userId)));
+                      GymbieScheduleTrainerList(userId: Provider.of<InfoState>(context).userId!)));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),

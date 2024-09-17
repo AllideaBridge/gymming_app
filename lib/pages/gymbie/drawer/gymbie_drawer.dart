@@ -73,7 +73,7 @@ class GymbieDrawer extends StatelessWidget {
                                       // TODO userId 받아와서 넘기기
                                       GymbieRegister(
                                         type: 'edit',
-                                        userId: 1, userAuth: null,
+                                        userId: 1,
                                       )),
                             );
                           },
