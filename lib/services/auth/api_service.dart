@@ -21,6 +21,7 @@ class ApiService {
       bool isRefreshed = await _tokenManager.refreshAccessToken();
       if (!isRefreshed) {
         print('토큰 갱신 실패. 재로그인이 필요합니다.');
+        await TokenManagerService.instance.clearTokens();
         throw TokenRefreshFailedException();
       }
     }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_register.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/pages/sample/sample_page.dart';
+import 'package:gymming_app/services/auth/token_manager_service.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/layouts/tab_layout.dart';
 import '../../../pages/gympro/gympro_requests/gympro_finished_request_list.dart';
 import '../../../pages/gympro/gympro_requests/gympro_pending_request_list.dart';
+import '../../login/login_select_type.dart';
 
 class GymbieDrawer extends StatelessWidget {
   const GymbieDrawer({super.key});
@@ -90,6 +92,9 @@ class GymbieDrawer extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     print('log out!');
+                    TokenManagerService.instance.clearTokens();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginSelectType()));
                   },
                   child: Container(
                     padding:

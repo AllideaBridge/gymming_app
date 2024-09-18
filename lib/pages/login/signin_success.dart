@@ -4,6 +4,7 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 
 import '../../common/colors.dart';
 import '../../components/profile_card.dart';
+import '../gympro/gympro_home/gympro_home.dart';
 import 'component/login_header.dart';
 
 class SignInSuccess extends StatelessWidget {
@@ -70,6 +71,16 @@ class SignInSuccess extends StatelessWidget {
                                       title: '회원가입 완료',
                                       content: _buildModalContent(),
                                       onConfirm: () {
+                                        if (type == 'trainer') {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    GymproHome()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                          return;
+                                        }
                                         Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(

@@ -6,16 +6,15 @@ import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../../common/colors.dart';
 import '../../../services/models/lesson_list.dart';
+import '../../../state/info_state.dart';
 
 class GymproHome extends StatefulWidget {
   const GymproHome({Key? key}) : super(key: key);
-
-  //todo provider 에서 id 를 받아와야 함(혹은 로그인화면 이후)
-  final int trainerId = 1;
 
   @override
   State<GymproHome> createState() => _GymproHomeState();
@@ -69,8 +68,8 @@ class _GymproHomeState extends State<GymproHome> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      GymproDisableTime(trainerId: widget.trainerId)));
+                  builder: (context) => GymproDisableTime(
+                      trainerId: Provider.of<InfoState>(context).trainerId!)));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
@@ -116,7 +115,8 @@ class _GymproHomeState extends State<GymproHome> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             futureTrainerSchedules =
-                scheduleRepository.getTrainerScheduleByWeek(dates[0]);
+                scheduleRepository.getTrainerScheduleByWeek(dates[0],
+                    Provider.of<InfoState>(context, listen: false).trainerId!);
           });
         });
       },
