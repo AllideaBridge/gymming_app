@@ -193,9 +193,9 @@ class ScheduleRepository {
     트레이너의 일주일 스케줄 조회
     URL: schedules/trainer/<trainer_id>?date=date&type=week
    */
-  Future<List<LessonList>> getTrainerScheduleByWeek(DateTime datetime) async {
+  Future<List<LessonList>> getTrainerScheduleByWeek(DateTime datetime, int trainer_id) async {
     Uri url =
-        Uri.parse('$baseUrl/trainer/$dummyTrainerId').replace(queryParameters: {
+        Uri.parse('$baseUrl/trainer/$trainer_id').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeWeek,
     });

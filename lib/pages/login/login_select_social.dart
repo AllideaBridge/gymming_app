@@ -3,14 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
+import 'package:gymming_app/services/auth/token_manager_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
+import '../../common/exceptions.dart';
 import '../../services/auth/kakao_auth_service.dart';
+import '../../services/models/trainer_auth.dart';
+import '../../services/models/user_auth.dart';
 import '../../services/repositories/auth_repository.dart';
+import '../../state/info_state.dart';
+import '../gymbie/gymbie_home/gymbie_home.dart';
 import '../gymbie/gymbie_register.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
+import '../gympro/gympro_home/gympro_home.dart';
 
 class LoginSelectSocial extends StatelessWidget {
   const LoginSelectSocial({super.key, required this.loginType});
@@ -98,20 +106,46 @@ class LoginSelectSocial extends StatelessWidget {
               if (oAuthToken != null) {
                 if (loginType == "user") {
                   // todo : 로그인 api 먼저 호출 후 홈 화면 또는 회원 가입 화면으로 분기
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GymbieRegister(
-                                kakaoToken: oAuthToken.accessToken,
-                              )));
+                  try {
+                    UserAuth userAuth =
+                        await authRepository.signInUser(oAuthToken.accessToken);
+                    Provider.of<InfoState>(context, listen: false)
+                        .setUserId(userAuth.userId);
+                    TokenManagerService.instance
+                        .saveAccessToken(userAuth.accessToken);
+                    TokenManagerService.instance
+                        .saveRefreshToken(userAuth.refreshToken);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GymbieHome()));
+                  } on UserNotRegisteredException {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GymbieRegister(
+                                  kakaoToken: oAuthToken.accessToken,
+                                )));
+                  }
                 } else if (loginType == "trainer") {
                   // todo : 로그인 api 먼저 호출 후 홈 화면 또는 회원 가입 화면으로 분기
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GymproRegister(
-                            kakaoToken: oAuthToken.accessToken,
-                          )));
+                  try {
+                    TrainerAuth trainerAuth = await authRepository
+                        .signInTrainer(oAuthToken.accessToken);
+                    Provider.of<InfoState>(context, listen: false)
+                        .setUserId(trainerAuth.trainerId);
+                    TokenManagerService.instance
+                        .saveAccessToken(trainerAuth.accessToken);
+                    TokenManagerService.instance
+                        .saveRefreshToken(trainerAuth.refreshToken);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GymproHome()));
+                  } on TrainerNotRegisteredException {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GymproRegister(
+                                  kakaoToken: oAuthToken.accessToken,
+                                )));
+                  }
                 }
               }
             },

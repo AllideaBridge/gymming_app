@@ -6,6 +6,8 @@ import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import '../../../common/colors.dart';
 import '../../../components/layouts/tab_layout.dart';
 import '../../../pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
+import '../../../services/auth/token_manager_service.dart';
+import '../../login/login_select_type.dart';
 import '../gympro_requests/gympro_finished_request_list.dart';
 import '../gympro_requests/gympro_pending_request_list.dart';
 
@@ -90,6 +92,9 @@ class TrainerDrawer extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     print('log out!');
+                    TokenManagerService.instance.clearTokens();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginSelectType()));
                   },
                   child: Container(
                     padding:
