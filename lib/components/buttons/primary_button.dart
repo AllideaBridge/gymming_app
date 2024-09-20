@@ -21,7 +21,7 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor:
               enabled ? PRIMARY_COLOR : PRIMARY_COLOR.withOpacity(0.3),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          minimumSize: Size(160, 56)),
+          minimumSize: Size.fromHeight(52)),
       onPressed: () {
         if (enabled) {
           onPressed();

@@ -37,9 +37,10 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
-    // TODO status 상수화
-    _isCompleted = widget.changeTicket.changeTicketStatus != "WAITING";
-    _isAccepted = widget.changeTicket.changeTicketStatus == "APPROVED";
+    _isCompleted =
+        widget.changeTicket.changeTicketStatus != ChangeTicketStatus.WAITING;
+    _isAccepted =
+        widget.changeTicket.changeTicketStatus == ChangeTicketStatus.APPROVED;
   }
 
   _showToast(msg) {
@@ -105,7 +106,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                             ),
                             SizedBox(height: 4.0),
                             Text(
-                              '${widget.changeTicket.createdAt} 요청',
+                              '${DateUtil.convertDateTimeWithDot(widget.changeTicket.createdAt)} 요청',
                               style: TextStyle(
                                   fontSize: 14, color: SECONDARY_COLOR),
                             )
@@ -148,7 +149,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 전',
-                            content: widget.changeTicket.asIsDate.toString(),
+                            content: DateUtil.getKoreanDayAndHour(
+                                widget.changeTicket.asIsDate),
                             titleColor: SECONDARY_COLOR,
                             contentColor: SECONDARY_COLOR),
                         SizedBox(
@@ -157,7 +159,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 후',
-                            content: widget.changeTicket.toBeDate.toString(),
+                            content: DateUtil.getKoreanDayAndHour(
+                                widget.changeTicket.toBeDate!),
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                         SizedBox(
@@ -237,7 +240,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
       'change_reason': widget.changeTicket.userMessage,
       'reject_reason': '-',
       'start_time':
-          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate),
+          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
     };
     await ChangeTicketRepository(client: http.Client())
         .modifyChangeTicket(widget.changeTicket.changeTicketId, body);

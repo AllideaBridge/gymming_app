@@ -16,7 +16,7 @@ class SecondaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           backgroundColor: BTN_COLOR,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          minimumSize: Size(160, 56)),
+          minimumSize: const Size.fromHeight(52)),
       onPressed: () {
         onPressed();
       },

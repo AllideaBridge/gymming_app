@@ -30,7 +30,7 @@ class ChangeTicketListCard extends StatelessWidget {
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -74,7 +74,7 @@ class ChangeTicketListCard extends StatelessWidget {
                         changeTicket.changeTicketType == 'MODIFY'
                             ? Text(
                                 DateUtil.convertKoreanWithoutWeek(
-                                    changeTicket.toBeDate),
+                                    changeTicket.toBeDate!),
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white),
                               )
@@ -87,14 +87,24 @@ class ChangeTicketListCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                changeTicket.changeTicketStatus == 'APPROVED'
-                    ? PrimaryChip(title: '승인')
-                    : GreyChip(title: '거절')
+                getChangeTicketRightSide()
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  StatelessWidget getChangeTicketRightSide() {
+    if (changeTicket.changeTicketStatus == 'WAITING') {
+      return Icon(Icons.keyboard_arrow_right_rounded,
+          size: 24, color: BORDER_COLOR);
+    }
+
+    if (changeTicket.changeTicketStatus == 'APPROVED') {
+      return PrimaryChip(title: '승인');
+    }
+    return GreyChip(title: '거절');
   }
 }

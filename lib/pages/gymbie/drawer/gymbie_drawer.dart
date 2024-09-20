@@ -5,7 +5,9 @@ import 'package:gymming_app/pages/sample/sample_page.dart';
 import 'package:gymming_app/services/auth/token_manager_service.dart';
 
 import '../../../common/colors.dart';
+import '../../../components/layouts/tab_layout.dart';
 import '../../login/login_select_type.dart';
+import '../gymbie_change_ticket/gymbie_change_ticket_list.dart';
 
 class GymbieDrawer extends StatelessWidget {
   const GymbieDrawer({super.key});
@@ -127,18 +129,22 @@ class GymbieDrawer extends StatelessWidget {
               '내가 보낸 요청',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
-            // onTap: () {
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) => TabLayout(
-            //                 title: "요청",
-            //                 leftTabName: "응답 대기",
-            //                 rightTabName: "완료",
-            //                 leftComponent: GymproPendingRequestList(),
-            //                 rightComponent: GymproFinishedRequestList(),
-            //               )));
-            // },
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TabLayout(
+                            title: "요청",
+                            leftTabName: "응답 대기",
+                            rightTabName: "완료",
+                            leftComponent: GymbieChangeTicketList(
+                              changeTicketStatus: "WAITING",
+                            ),
+                            rightComponent: GymbieChangeTicketList(
+                                changeTicketStatus:
+                                    "APPROVED,REJECTED,CANCELED"),
+                          )));
+            },
           ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),
