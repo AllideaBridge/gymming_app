@@ -6,7 +6,6 @@ import 'package:gymming_app/components/chips/grey_chip.dart';
 import 'package:gymming_app/components/chips/primary_chip.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
-import 'package:gymming_app/pages/gympro/gympro_requests/gympro_pending_request_list.dart';
 import 'package:gymming_app/services/models/change_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +16,7 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/utils/date_util.dart';
 import '../../../services/utils/toast_util.dart';
+import 'gympro_change_ticket_list.dart';
 
 class GymproRequestDetail extends StatefulWidget {
   final ChangeTicket changeTicket;
@@ -185,7 +185,9 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                GymproPendingRequestList()));
+                                                GymproChangeTicketList(
+                                                    changeTicketStatus:
+                                                        "APPROVED,REJECTED,CANCELED")));
                                   })
                             ]
                           : [

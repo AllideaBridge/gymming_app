@@ -5,9 +5,6 @@ import 'package:gymming_app/pages/sample/sample_page.dart';
 import 'package:gymming_app/services/auth/token_manager_service.dart';
 
 import '../../../common/colors.dart';
-import '../../../components/layouts/tab_layout.dart';
-import '../../../pages/gympro/gympro_requests/gympro_finished_request_list.dart';
-import '../../../pages/gympro/gympro_requests/gympro_pending_request_list.dart';
 import '../../login/login_select_type.dart';
 
 class GymbieDrawer extends StatelessWidget {
@@ -93,8 +90,10 @@ class GymbieDrawer extends StatelessWidget {
                   onTap: () {
                     print('log out!');
                     TokenManagerService.instance.clearTokens();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginSelectType()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginSelectType()));
                   },
                   child: Container(
                     padding:
@@ -128,18 +127,18 @@ class GymbieDrawer extends StatelessWidget {
               '내가 보낸 요청',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TabLayout(
-                            title: "요청",
-                            leftTabName: "응답 대기",
-                            rightTabName: "완료",
-                            leftComponent: GymproPendingRequestList(),
-                            rightComponent: GymproFinishedRequestList(),
-                          )));
-            },
+            // onTap: () {
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => TabLayout(
+            //                 title: "요청",
+            //                 leftTabName: "응답 대기",
+            //                 rightTabName: "완료",
+            //                 leftComponent: GymproPendingRequestList(),
+            //                 rightComponent: GymproFinishedRequestList(),
+            //               )));
+            // },
           ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 1.5),

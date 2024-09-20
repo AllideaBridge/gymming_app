@@ -8,8 +8,7 @@ import '../../../components/layouts/tab_layout.dart';
 import '../../../pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
 import '../../../services/auth/token_manager_service.dart';
 import '../../login/login_select_type.dart';
-import '../gympro_requests/gympro_finished_request_list.dart';
-import '../gympro_requests/gympro_pending_request_list.dart';
+import '../gympro_change_ticket/gympro_change_ticket_list.dart';
 
 class TrainerDrawer extends StatelessWidget {
   const TrainerDrawer({super.key});
@@ -93,8 +92,10 @@ class TrainerDrawer extends StatelessWidget {
                   onTap: () {
                     print('log out!');
                     TokenManagerService.instance.clearTokens();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginSelectType()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginSelectType()));
                   },
                   child: Container(
                     padding:
@@ -168,8 +169,12 @@ class TrainerDrawer extends StatelessWidget {
                             title: "요청",
                             leftTabName: "응답 대기",
                             rightTabName: "완료",
-                            leftComponent: GymproPendingRequestList(),
-                            rightComponent: GymproFinishedRequestList(),
+                            leftComponent: GymproChangeTicketList(
+                              changeTicketStatus: "WAITING",
+                            ),
+                            rightComponent: GymproChangeTicketList(
+                              changeTicketStatus: "APPROVED,REJECTED,CANCELED",
+                            ),
                           )));
             },
           ),
