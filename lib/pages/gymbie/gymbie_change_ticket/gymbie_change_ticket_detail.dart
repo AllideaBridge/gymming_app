@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -101,7 +100,7 @@ class _GymbieChangeTicketDetailState extends State<GymbieChangeTicketDetail> {
             ? PrimaryButton(
                 title: '요청 취소',
                 onPressed: () async {
-                  await ChangeTicketRepository(client: http.Client())
+                  await ChangeTicketRepository()
                       .deleteChangeTicket(widget.changeTicket.changeTicketId);
                   _showToast('취소되었습니다.');
                   Navigator.pop(context);

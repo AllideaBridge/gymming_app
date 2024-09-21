@@ -8,7 +8,6 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/services/models/change_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../../common/colors.dart';
 import '../../../../common/constants.dart';
@@ -242,7 +241,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
       'start_time':
           DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
     };
-    await ChangeTicketRepository(client: http.Client())
+    await ChangeTicketRepository()
         .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
   }
 }
