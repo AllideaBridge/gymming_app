@@ -3,6 +3,8 @@ import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
+import '../../components/buttons/primary_button.dart';
+import '../../components/buttons/secondary_button.dart';
 import '../../services/utils/date_util.dart';
 
 class GymbieScheduleResolveTicket extends StatelessWidget {
@@ -65,12 +67,10 @@ class GymbieScheduleResolveTicket extends StatelessWidget {
                 ]),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: 169,
-                height: 56,
-                child: ElevatedButton(
+              Expanded(
+                child: SecondaryButton(
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
@@ -79,56 +79,22 @@ class GymbieScheduleResolveTicket extends StatelessWidget {
                           false, // 모든 라우트를 제거하므로 false를 반환합니다.
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(BTN_COLOR),
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    '변경 취소',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  title: '변경 취소',
                 ),
               ),
-              SizedBox(
-                width: 169,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => GymbieHome()),
-                      (Route<dynamic> route) =>
-                          false, // 모든 라우트를 제거하므로 false를 반환합니다.
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(BTN_COLOR),
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    '확인',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: PRIMARY_COLOR,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+              SizedBox(width: 12),
+              Expanded(
+                  child: PrimaryButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => GymbieHome()),
+                    (Route<dynamic> route) =>
+                        false, // 모든 라우트를 제거하므로 false를 반환합니다.
+                  );
+                },
+                title: '확인',
+              ))
             ],
           ),
         ]),
