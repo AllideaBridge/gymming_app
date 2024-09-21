@@ -15,13 +15,12 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ElevatedButton(
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
           backgroundColor:
               enabled ? PRIMARY_COLOR : PRIMARY_COLOR.withOpacity(0.3),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          minimumSize: Size.fromHeight(52)),
+          minimumSize: Size.fromHeight(56)),
       onPressed: () {
         if (enabled) {
           onPressed();
@@ -37,6 +36,6 @@ class PrimaryButton extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-    ));
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
 import '../../../common/constants.dart';
@@ -75,8 +77,9 @@ class _GymbieChangeTicketDetailState extends State<GymbieChangeTicketDetail> {
             IconLabel(
                 iconData: Icons.alarm,
                 title: '변경 후',
-                content:
-                    DateUtil.getKoreanDayAndHour(widget.changeTicket.toBeDate!),
+                content: widget.changeTicket.toBeDate != null
+                    ? DateUtil.getKoreanDayAndHour(widget.changeTicket.toBeDate)
+                    : '취소',
                 titleColor: Colors.white,
                 contentColor: Colors.white),
             SizedBox(
@@ -93,23 +96,21 @@ class _GymbieChangeTicketDetailState extends State<GymbieChangeTicketDetail> {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-        child: SizedBox(
-          height: 56,
-          child: widget.changeTicket.changeTicketStatus ==
-                  ChangeTicketStatus.WAITING
-              ? PrimaryButton(
-                  title: '요청 취소',
-                  onPressed: () {
-                    sendDeleteChangeTicket();
-                    _showToast('취소되었습니다.');
-                    Navigator.pop(context);
-                  })
-              : SecondaryButton(
-                  title: '목록으로 이동',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-        ),
+        child: widget.changeTicket.changeTicketStatus ==
+                ChangeTicketStatus.WAITING
+            ? PrimaryButton(
+                title: '요청 취소',
+                onPressed: () async {
+                  await ChangeTicketRepository(client: http.Client())
+                      .deleteChangeTicket(widget.changeTicket.changeTicketId);
+                  _showToast('취소되었습니다.');
+                  Navigator.pop(context);
+                })
+            : SecondaryButton(
+                title: '목록으로 이동',
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
       )
     ])));
   }
@@ -162,9 +163,5 @@ class _GymbieChangeTicketDetailState extends State<GymbieChangeTicketDetail> {
         ],
       ),
     );
-  }
-
-  void sendDeleteChangeTicket() async {
-    print('change ticket 유저가 자체 취소');
   }
 }

@@ -32,7 +32,7 @@ class ChangeTicket {
 
   DateTime get asIsDate => _asIsDate;
 
-  DateTime get toBeDate => _toBeDate!;
+  DateTime? get toBeDate => _toBeDate;
 
   DateTime get createdAt => _createdAt;
 
