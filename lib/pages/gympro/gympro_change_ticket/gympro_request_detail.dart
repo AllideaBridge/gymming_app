@@ -6,7 +6,6 @@ import 'package:gymming_app/components/chips/grey_chip.dart';
 import 'package:gymming_app/components/chips/primary_chip.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
-import 'package:gymming_app/pages/gympro/gympro_requests/gympro_pending_request_list.dart';
 import 'package:gymming_app/services/models/change_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +16,7 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/utils/date_util.dart';
 import '../../../services/utils/toast_util.dart';
+import 'gympro_change_ticket_list.dart';
 
 class GymproRequestDetail extends StatefulWidget {
   final ChangeTicket changeTicket;
@@ -37,9 +37,10 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
-    // TODO status 상수화
-    _isCompleted = widget.changeTicket.changeTicketStatus != "WAITING";
-    _isAccepted = widget.changeTicket.changeTicketStatus == "APPROVED";
+    _isCompleted =
+        widget.changeTicket.changeTicketStatus != ChangeTicketStatus.WAITING;
+    _isAccepted =
+        widget.changeTicket.changeTicketStatus == ChangeTicketStatus.APPROVED;
   }
 
   _showToast(msg) {
@@ -105,7 +106,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                             ),
                             SizedBox(height: 4.0),
                             Text(
-                              '${widget.changeTicket.createdAt} 요청',
+                              '${DateUtil.convertDateTimeWithDot(widget.changeTicket.createdAt)} 요청',
                               style: TextStyle(
                                   fontSize: 14, color: SECONDARY_COLOR),
                             )
@@ -148,7 +149,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 전',
-                            content: widget.changeTicket.asIsDate.toString(),
+                            content: DateUtil.getKoreanDayAndHour(
+                                widget.changeTicket.asIsDate),
                             titleColor: SECONDARY_COLOR,
                             contentColor: SECONDARY_COLOR),
                         SizedBox(
@@ -157,7 +159,8 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 후',
-                            content: widget.changeTicket.toBeDate.toString(),
+                            content: DateUtil.getKoreanDayAndHour(
+                                widget.changeTicket.toBeDate!),
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                         SizedBox(
@@ -185,7 +188,9 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                GymproPendingRequestList()));
+                                                GymproChangeTicketList(
+                                                    changeTicketStatus:
+                                                        "APPROVED,REJECTED,CANCELED")));
                                   })
                             ]
                           : [
@@ -235,7 +240,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
       'change_reason': widget.changeTicket.userMessage,
       'reject_reason': '-',
       'start_time':
-          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate),
+          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
     };
     await ChangeTicketRepository(client: http.Client())
         .modifyChangeTicket(widget.changeTicket.changeTicketId, body);

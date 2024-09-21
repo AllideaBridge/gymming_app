@@ -11,12 +11,11 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ElevatedButton(
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
           backgroundColor: BTN_COLOR,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          minimumSize: Size(160, 56)),
+          minimumSize: const Size.fromHeight(56)),
       onPressed: () {
         onPressed();
       },
@@ -28,6 +27,6 @@ class SecondaryButton extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-    ));
+    );
   }
 }

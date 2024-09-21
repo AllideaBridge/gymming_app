@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import '../auth/api_service.dart';
 import '../models/change_ticket.dart';
 
-class ChangeTicketRepository {
+class ChangeTicketRepository extends ApiService {
   ChangeTicketRepository({required this.client});
 
   final http.Client client;
@@ -84,6 +86,25 @@ class ChangeTicketRepository {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<bool> deleteChangeTicket(int changeTicketId) async {
+    try {
+      final response = await makeAuthenticatedRequest(
+          'DELETE', Uri.parse('$baseUrl/$changeTicketId'),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+
+      if (response.statusCode == HttpStatus.ok) {
+        return true;
+      } else {
+        throw Exception('Failed to delete change ticket');
+      }
+    } catch (error) {
+      print(error);
+      rethrow;
     }
   }
 }

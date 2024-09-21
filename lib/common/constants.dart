@@ -53,3 +53,11 @@ const MONTHS = [
 const FIRST_NUMBERS = ["010", "02"];
 
 const SERVER_URL = "http://10.0.2.2:5000";
+
+class ChangeTicketStatus {
+  static String WAITING = "WAITING";
+  static String APPROVED = "APPROVED";
+  static String REJECTED = "REJECTED";
+  static String CANCELED = "CANCELED";
+  static String RESOLVED = "APPROVED,REJECTED,CANCELED";
+}
