@@ -23,10 +23,10 @@ class _GymbieChangeTicketListState extends State<GymbieChangeTicketList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userId = Provider.of<InfoState>(context, listen: false).userId!;
-    _changeTicketList = _refreshData(userId);
+    _changeTicketList = ChangeTicketRepository()
+        .getUserChangeTicketList(userId, widget.changeTicketStatus, 1);
   }
 
   @override
@@ -59,7 +59,11 @@ class _GymbieChangeTicketListState extends State<GymbieChangeTicketList> {
                   MaterialPageRoute(
                       builder: (context) => GymbieChangeTicketDetail(
                           changeTicket: changeTicketList[index])));
-              _refreshData(userId);
+              setState(() {
+                _changeTicketList = ChangeTicketRepository()
+                    .getUserChangeTicketList(
+                        userId, widget.changeTicketStatus, 1);
+              });
             },
             child: ChangeTicketListCard(
               title: changeTicketList[index].trainerName!,
@@ -76,10 +80,5 @@ class _GymbieChangeTicketListState extends State<GymbieChangeTicketList> {
         },
       ),
     );
-  }
-
-  Future<List<ChangeTicket>> _refreshData(userId) {
-    return ChangeTicketRepository()
-        .getUserChangeTicketList(userId, widget.changeTicketStatus, 1);
   }
 }

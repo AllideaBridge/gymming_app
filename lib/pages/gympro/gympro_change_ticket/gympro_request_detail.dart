@@ -193,26 +193,31 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                   })
                             ]
                           : [
-                              SecondaryButton(
-                                  title: '거절',
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Reason(
-                                                  reasonContent: ReasonContent(
-                                                      REJECT_TITLE,
-                                                      REJECT_SUBTITLE,
-                                                      REJECT_REASONS),
-                                                  requestId: widget.changeTicket
-                                                      .changeTicketId,
-                                                  type: REJECT,
-                                                  selectedDay: widget
-                                                      .changeTicket.toBeDate,
-                                                )));
-                                  }),
+                              Expanded(
+                                  child: SecondaryButton(
+                                      title: '거절',
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Reason(
+                                                      reasonContent:
+                                                          ReasonContent(
+                                                              REJECT_TITLE,
+                                                              REJECT_SUBTITLE,
+                                                              REJECT_REASONS),
+                                                      requestId: widget
+                                                          .changeTicket
+                                                          .changeTicketId,
+                                                      type: REJECT,
+                                                      selectedDay: widget
+                                                          .changeTicket
+                                                          .toBeDate,
+                                                    )));
+                                      })),
                               SizedBox(width: 12),
-                              PrimaryButton(
+                              Expanded(
+                                  child: PrimaryButton(
                                 title: '승인',
                                 onPressed: () {
                                   sendApproveChangeTicket();
@@ -222,7 +227,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                     _isAccepted = true;
                                   });
                                 },
-                              )
+                              ))
                             ],
                     )))
           ],
