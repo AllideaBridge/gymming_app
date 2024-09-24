@@ -144,7 +144,7 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
             SizedBox(height: 60.0),
             InputField(
                 controller: _lessonChangeRangeController,
-                title: '자동 승인 기간',
+                title: '자동 승인 기간(일)',
                 validator: (val) {
                   if (val.length < 1) return '자동 승인 기간은 필수값입니다.';
                 },
