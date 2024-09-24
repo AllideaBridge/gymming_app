@@ -146,8 +146,7 @@ class GymbieScheduleCancel extends StatelessWidget {
                     reasonContent: ReasonContent(
                         CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
                     scheduleDetail: scheduleDetail,
-                    selectedDay: scheduleDetail.startTime,
-                    selectedTime: '${scheduleDetail.startTime.hour}:00',
+                    originalDay: scheduleDetail.startTime,
                     type: CANCEL,
                   )));
     }

@@ -5,22 +5,25 @@ import '../../common/colors.dart';
 import '../../common/constants.dart';
 import '../../components/buttons/primary_button.dart';
 import '../../components/buttons/secondary_button.dart';
+import '../../services/repositories/change_ticket_repository.dart';
 import '../../services/utils/date_util.dart';
 
 class GymbieScheduleResolveTicket extends StatelessWidget {
   final String type;
   final DateTime originDay;
-  final DateTime selectedDay;
-  final String selectedTime;
+  final DateTime? selectedDay;
+  final String? selectedTime;
   final String reason;
+  final int changeTicketId;
 
   const GymbieScheduleResolveTicket(
       {super.key,
       required this.type,
       required this.originDay,
-      required this.selectedDay,
-      required this.selectedTime,
-      required this.reason});
+      this.selectedDay,
+      this.selectedTime,
+      required this.reason,
+      required this.changeTicketId});
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +60,10 @@ class GymbieScheduleResolveTicket extends StatelessWidget {
                     visible: type == CHANGE,
                     child: SizedBox(height: 40),
                   ),
-                  Visibility(
-                    visible: type == CHANGE,
-                    child: buildTitleAndTime(
-                        '변경 후', selectedDay, selectedTime, Colors.white),
-                  ),
+                  selectedDay != null
+                      ? buildTitleAndTime(
+                          '변경 후', selectedDay, selectedTime, Colors.white)
+                      : Container(),
                   SizedBox(height: 40),
                   buildTitleAndReason('$type 사유', reason),
                 ]),
@@ -71,7 +73,9 @@ class GymbieScheduleResolveTicket extends StatelessWidget {
             children: [
               Expanded(
                 child: SecondaryButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await ChangeTicketRepository()
+                        .deleteChangeTicket(changeTicketId);
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => GymbieHome()),
@@ -79,7 +83,7 @@ class GymbieScheduleResolveTicket extends StatelessWidget {
                           false, // 모든 라우트를 제거하므로 false를 반환합니다.
                     );
                   },
-                  title: '변경 취소',
+                  title: type == CANCEL ? '취소 신청 철회' : '변경 취소',
                 ),
               ),
               SizedBox(width: 12),

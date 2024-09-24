@@ -210,9 +210,9 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                                           .changeTicket
                                                           .changeTicketId,
                                                       type: REJECT,
-                                                      selectedDay: widget
+                                                      originalDay: widget
                                                           .changeTicket
-                                                          .toBeDate,
+                                                          .toBeDate!,
                                                     )));
                                       })),
                               SizedBox(width: 12),

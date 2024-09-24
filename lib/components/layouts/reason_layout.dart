@@ -12,9 +12,16 @@ import '../../services/utils/toast_util.dart';
 import 'reason_content.dart';
 
 class Reason extends StatefulWidget {
+  //변경,취소 관련 문자열 및 사유
   final ReasonContent reasonContent;
+
+  //변경될 스케쥴 객체
   final ScheduleUser? scheduleDetail;
-  final DateTime? originalDay;
+
+  //기존에 선택한 시간
+  final DateTime originalDay;
+
+  //새롭게 선택한 시간(오직 변경인 경우에만 해당함)
   final DateTime? selectedDay;
   final String? selectedTime;
   final int? requestId;
@@ -27,7 +34,7 @@ class Reason extends StatefulWidget {
       this.selectedTime,
       this.requestId,
       required this.type,
-      this.originalDay});
+      required this.originalDay});
 
   final String type;
 
@@ -235,10 +242,8 @@ class ReasonState extends State<Reason> {
                     ),
                     onPressed: widget.type != REJECT
                         ? () async {
-                            bool response = await sendCreateChangeTicket();
-                            if (response) {
-                              moveToCompletePage(context);
-                            }
+                            int changeTicketId = await sendCreateChangeTicket();
+                            moveToCompletePage(context, changeTicketId);
                           }
                         : () {
                             sendRejectChangeTicket();
@@ -262,7 +267,8 @@ class ReasonState extends State<Reason> {
     );
   }
 
-  Future<bool> sendCreateChangeTicket() async {
+  //회원이 사용하는 change ticket 생성 메소드
+  Future<int> sendCreateChangeTicket() async {
     final body = {
       'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': 'USER',
@@ -270,16 +276,17 @@ class ReasonState extends State<Reason> {
       'change_reason': clicked == 0
           ? textController.text
           : widget.reasonContent.reasons[clicked],
-      'start_time': widget.type == CHANGE
-          ? DateUtil.convertDatabaseFormatFromDayAndTime(
-              widget.selectedDay!, widget.selectedTime!)
-          : null,
-      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay!)
+      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay)
     };
-    var response = await ChangeTicketRepository().createChangeTicket(body);
+    if (widget.type == CHANGE) {
+      body['start_time'] = DateUtil.convertDatabaseFormatFromDayAndTime(
+          widget.selectedDay!, widget.selectedTime!);
+    }
+    int response = await ChangeTicketRepository().createChangeTicket(body);
     return response;
   }
 
+  //트레이너가 사용하는 change ticket 취소 메소드
   void sendRejectChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
@@ -296,18 +303,18 @@ class ReasonState extends State<Reason> {
     await ChangeTicketRepository().modifyChangeTicket(widget.requestId!, body);
   }
 
-  void moveToCompletePage(BuildContext context) {
+  void moveToCompletePage(BuildContext context, int changeTicketId) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => GymbieScheduleResolveTicket(
-                  type: widget.type,
-                  originDay: widget.scheduleDetail!.startTime,
-                  selectedDay: widget.selectedDay!,
-                  selectedTime: widget.selectedTime!,
-                  reason: clicked == 0
-                      ? textController.text
-                      : widget.reasonContent.reasons[clicked],
-                )));
+                type: widget.type,
+                originDay: widget.scheduleDetail!.startTime,
+                selectedDay: widget.selectedDay,
+                selectedTime: widget.selectedTime,
+                reason: clicked == 0
+                    ? textController.text
+                    : widget.reasonContent.reasons[clicked],
+                changeTicketId: changeTicketId)));
   }
 }

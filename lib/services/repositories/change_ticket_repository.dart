@@ -56,7 +56,7 @@ class ChangeTicketRepository extends ApiService {
     }
   }
 
-  Future<bool> createChangeTicket(Object body) async {
+  Future<int> createChangeTicket(Object body) async {
     final response = await makeAuthenticatedRequest(
       'POST',
       Uri.parse(baseUrl),
@@ -67,9 +67,9 @@ class ChangeTicketRepository extends ApiService {
     );
 
     if (response.statusCode == 200) {
-      return true;
+      return json.decode(response.body)['change_ticket_id'];
     } else {
-      return false;
+      throw Exception("create change ticket failed.");
     }
   }
 

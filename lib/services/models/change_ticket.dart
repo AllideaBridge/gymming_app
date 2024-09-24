@@ -49,7 +49,7 @@ class ChangeTicket {
         json["trainer_name"],
         json["change_ticket_type"],
         DateTime.parse(json["as_is_date"]),
-        json["to_be_date"] == '' ? null : DateTime.parse(json["to_be_date"]),
+        json["to_be_date"] != null ? DateTime.parse(json["to_be_date"]) : null,
         DateTime.parse(json["created_at"]),
         json["change_ticket_status"],
         json["user_message"],
