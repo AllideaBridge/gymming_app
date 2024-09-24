@@ -157,8 +157,10 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 후',
-                            content: DateUtil.getKoreanDayAndHour(
-                                widget.changeTicket.toBeDate!),
+                            content: widget.changeTicket.toBeDate != null
+                                ? DateUtil.getKoreanDayAndHour(
+                                    widget.changeTicket.toBeDate)
+                                : '취소',
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                         SizedBox(
@@ -207,7 +209,10 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                                       type: REJECT,
                                                       originalDay: widget
                                                           .changeTicket
-                                                          .toBeDate!,
+                                                          .asIsDate,
+                                                      selectedDay: widget
+                                                          .changeTicket
+                                                          .toBeDate,
                                                     )));
                                       })),
                               SizedBox(width: 12),
@@ -229,13 +234,16 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
   void sendApproveChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
-      'change_type': 'MODIFY',
+      'change_type': widget.changeTicket.changeTicketType,
       'status': 'APPROVED',
       'change_reason': widget.changeTicket.userMessage,
       'reject_reason': '-',
-      'start_time':
-          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
+      'start_time': widget.changeTicket.changeTicketType == 'MODIFY'
+          ? DateUtil.convertDatabaseFormatDateTime(
+              widget.changeTicket.toBeDate!)
+          : null,
     };
+
     try {
       var result = await ChangeTicketRepository()
           .modifyChangeTicket(widget.changeTicket.changeTicketId, body);

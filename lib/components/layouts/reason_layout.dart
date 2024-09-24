@@ -298,7 +298,9 @@ class ReasonState extends State<Reason> {
       'reject_reason': clicked == 0
           ? textController.text
           : widget.reasonContent.reasons[clicked],
-      'start_time': DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
+      'start_time': widget.selectedDay != null
+          ? DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
+          : null,
     };
     await ChangeTicketRepository().modifyChangeTicket(widget.requestId!, body);
   }
