@@ -1,16 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-
 import '../auth/api_service.dart';
 import '../models/change_ticket.dart';
 
 class ChangeTicketRepository extends ApiService {
-  ChangeTicketRepository({required this.client});
-
-  final http.Client client;
-
   // TODO 로컬 URL에서 변경 필요
   final String baseUrl = "http://10.0.2.2:5000/change-ticket";
 
@@ -19,7 +13,13 @@ class ChangeTicketRepository extends ApiService {
     var url = Uri.parse('$baseUrl/trainer/$trainerId')
         .replace(queryParameters: {'status': status, 'page': page.toString()});
 
-    final response = await http.get(url);
+    final response = await makeAuthenticatedRequest(
+      'GET',
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
     if (response.statusCode == 200) {
       try {
@@ -37,13 +37,19 @@ class ChangeTicketRepository extends ApiService {
     var url = Uri.parse('$baseUrl/user/$userId')
         .replace(queryParameters: {'status': status, 'page': page.toString()});
 
-    final response = await http.get(url);
+    final response = await makeAuthenticatedRequest(
+      'GET',
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
     if (response.statusCode == 200) {
       try {
         return ChangeTicket.parseChangeTicketList(json.decode(response.body));
       } catch (e) {
-        throw Exception("Failed to load data");
+        throw Exception("Error Occurs : ${e.toString()}");
       }
     } else {
       throw Exception("Failed to load data");
@@ -51,16 +57,14 @@ class ChangeTicketRepository extends ApiService {
   }
 
   Future<bool> createChangeTicket(Object body) async {
-    final response = await http.post(
+    final response = await makeAuthenticatedRequest(
+      'POST',
       Uri.parse(baseUrl),
-      body: json.encode(body),
+      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
     );
-
-    print(response.body);
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       return true;
@@ -71,7 +75,8 @@ class ChangeTicketRepository extends ApiService {
 
   Future<bool> modifyChangeTicket(int changeTicketId, Object body) async {
     print(body);
-    final response = await http.put(
+    final response = await makeAuthenticatedRequest(
+      'PUT',
       Uri.parse('$baseUrl/$changeTicketId'),
       body: json.encode(body),
       headers: {

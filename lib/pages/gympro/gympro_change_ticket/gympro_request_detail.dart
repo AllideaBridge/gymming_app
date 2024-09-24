@@ -8,7 +8,6 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/services/models/change_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../../common/colors.dart';
 import '../../../../common/constants.dart';
@@ -194,26 +193,31 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                   })
                             ]
                           : [
-                              SecondaryButton(
-                                  title: '거절',
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Reason(
-                                                  reasonContent: ReasonContent(
-                                                      REJECT_TITLE,
-                                                      REJECT_SUBTITLE,
-                                                      REJECT_REASONS),
-                                                  requestId: widget.changeTicket
-                                                      .changeTicketId,
-                                                  type: REJECT,
-                                                  selectedDay: widget
-                                                      .changeTicket.toBeDate,
-                                                )));
-                                  }),
+                              Expanded(
+                                  child: SecondaryButton(
+                                      title: '거절',
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Reason(
+                                                      reasonContent:
+                                                          ReasonContent(
+                                                              REJECT_TITLE,
+                                                              REJECT_SUBTITLE,
+                                                              REJECT_REASONS),
+                                                      requestId: widget
+                                                          .changeTicket
+                                                          .changeTicketId,
+                                                      type: REJECT,
+                                                      selectedDay: widget
+                                                          .changeTicket
+                                                          .toBeDate,
+                                                    )));
+                                      })),
                               SizedBox(width: 12),
-                              PrimaryButton(
+                              Expanded(
+                                  child: PrimaryButton(
                                 title: '승인',
                                 onPressed: () {
                                   sendApproveChangeTicket();
@@ -223,7 +227,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                     _isAccepted = true;
                                   });
                                 },
-                              )
+                              ))
                             ],
                     )))
           ],
@@ -242,7 +246,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
       'start_time':
           DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
     };
-    await ChangeTicketRepository(client: http.Client())
+    await ChangeTicketRepository()
         .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
   }
 }

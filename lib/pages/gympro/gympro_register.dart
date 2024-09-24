@@ -26,7 +26,8 @@ class GymproRegister extends StatefulWidget {
   final int? trainerId;
   final String? kakaoToken;
 
-  const GymproRegister({super.key, this.type = 'register', this.trainerId, this.kakaoToken});
+  const GymproRegister(
+      {super.key, this.type = 'register', this.trainerId, this.kakaoToken});
 
   @override
   State<StatefulWidget> createState() => GymproRegisterState();
@@ -254,86 +255,97 @@ class GymproRegisterState extends State<GymproRegister> {
 
     if (_currentStep == 0) {
       button = [
-        SecondaryButton(
-          title: '취소',
-          onPressed: () {
-            if (widget.type == 'register') {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginSelectType()),
-                (Route<dynamic> route) => false,
-              );
-            } else if (widget.type == 'edit') {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => GymproHome()),
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
+        Expanded(
+          child: SecondaryButton(
+            title: '취소',
+            onPressed: () {
+              if (widget.type == 'register') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginSelectType()),
+                  (Route<dynamic> route) => false,
+                );
+              } else if (widget.type == 'edit') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => GymproHome()),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
+          ),
         ),
         SizedBox(width: 12.0),
-        PrimaryButton(
-            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step1']!),
+        Expanded(
+          child: PrimaryButton(
+              title: "다음", onPressed: _nextStep, enabled: _enableBtn['step1']!),
+        ),
       ];
     } else if (_currentStep == 1) {
       button = [
-        SecondaryButton(title: '이전', onPressed: _previousStep),
+        Expanded(child: SecondaryButton(title: '이전', onPressed: _previousStep)),
         SizedBox(width: 12.0),
-        PrimaryButton(
-            title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
+        Expanded(
+          child: PrimaryButton(
+              title: "다음", onPressed: _nextStep, enabled: _enableBtn['step2']!),
+        ),
       ];
     } else {
       button = [
-        SecondaryButton(title: '이전', onPressed: _previousStep),
+        Expanded(child: SecondaryButton(title: '이전', onPressed: _previousStep)),
         SizedBox(width: 12.0),
-        PrimaryButton(
-          title: "가입 완료",
-          onPressed: () async {
-            if (widget.type == 'register') {
-              // TODO API 연결
+        Expanded(
+          child: PrimaryButton(
+            title: "가입 완료",
+            onPressed: () async {
+              if (widget.type == 'register') {
+                // TODO API 연결
 
-              TrainerDetails trainerDetails = TrainerDetails.empty();
-              trainerDetails.setStep1Data(_model_step1);
-              trainerDetails.setStep2Data(_model_step2);
-              trainerDetails.setStep3Data(_model_step3);
-              print("register ---- trainer");
-              print(trainerDetails.trainerAvailability);
-              Map<String, Object> params = trainerDetails.toJson();
-              params['kakao_token'] = widget.kakaoToken!;
-              TrainerAuth trainerAuth = await authRepository.signUpTrainer(params);
-              await TokenManagerService.instance.saveAccessToken(trainerAuth.accessToken);
-              await TokenManagerService.instance
-                  .saveRefreshToken(trainerAuth.refreshToken);
-              Provider.of<InfoState>(context, listen: false).setUserId(trainerAuth.trainerId);
+                TrainerDetails trainerDetails = TrainerDetails.empty();
+                trainerDetails.setStep1Data(_model_step1);
+                trainerDetails.setStep2Data(_model_step2);
+                trainerDetails.setStep3Data(_model_step3);
+                print("register ---- trainer");
+                print(trainerDetails.trainerAvailability);
+                Map<String, Object> params = trainerDetails.toJson();
+                params['kakao_token'] = widget.kakaoToken!;
+                TrainerAuth trainerAuth =
+                    await authRepository.signUpTrainer(params);
+                await TokenManagerService.instance
+                    .saveAccessToken(trainerAuth.accessToken);
+                await TokenManagerService.instance
+                    .saveRefreshToken(trainerAuth.refreshToken);
+                Provider.of<InfoState>(context, listen: false)
+                    .setUserId(trainerAuth.trainerId);
 
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignInSuccess(
-                    type: "trainer",
-                    //TODO add image url
-                    imgUrl: 'assets/images/user_example.png',
-                    name: _model_step1['name'],
-                    birth: _model_step1['birth'],
-                    gender: _model_step1['gender'],
-                    phoneNumber: _model_step1['phoneNumber'],
-                    additionalTitle: _model_step2['lessonName'],
-                    additionalSub: _buildAdditionalSub(),
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignInSuccess(
+                      type: "trainer",
+                      //TODO add image url
+                      imgUrl: 'assets/images/user_example.png',
+                      name: _model_step1['name'],
+                      birth: _model_step1['birth'],
+                      gender: _model_step1['gender'],
+                      phoneNumber: _model_step1['phoneNumber'],
+                      additionalTitle: _model_step2['lessonName'],
+                      additionalSub: _buildAdditionalSub(),
+                    ),
                   ),
-                ),
-                (Route<dynamic> route) => false,
-              );
-            } else if (widget.type == 'edit') {
-              // TODO API 연결
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => GymproHome()),
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
-          enabled: _enableBtn['step3']!,
+                  (Route<dynamic> route) => false,
+                );
+              } else if (widget.type == 'edit') {
+                // TODO API 연결
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => GymproHome()),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
+            enabled: _enableBtn['step3']!,
+          ),
         ),
       ];
     }

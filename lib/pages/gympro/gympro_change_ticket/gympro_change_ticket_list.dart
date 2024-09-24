@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../common/colors.dart';
 import '../../../components/cards/change_ticket_list_card.dart';
@@ -18,7 +17,7 @@ class GymproChangeTicketList extends StatelessWidget {
       // TODO TrainerId 로그인된 값으로 변경
       // TODO Status 값(WAITING) 상수화
       // TODO 무한 스크롤 page 늘어나는 기능 구현
-      future: ChangeTicketRepository(client: http.Client())
+      future: ChangeTicketRepository()
           .getTrainerChangeTicketList(1, changeTicketStatus, 1),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

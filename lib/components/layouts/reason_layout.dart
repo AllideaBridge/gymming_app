@@ -4,7 +4,6 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -277,8 +276,7 @@ class ReasonState extends State<Reason> {
           : null,
       'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay!)
     };
-    var response = await ChangeTicketRepository(client: http.Client())
-        .createChangeTicket(body);
+    var response = await ChangeTicketRepository().createChangeTicket(body);
     return response;
   }
 
@@ -295,8 +293,7 @@ class ReasonState extends State<Reason> {
           : widget.reasonContent.reasons[clicked],
       'start_time': DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
     };
-    await ChangeTicketRepository(client: http.Client())
-        .modifyChangeTicket(widget.requestId!, body);
+    await ChangeTicketRepository().modifyChangeTicket(widget.requestId!, body);
   }
 
   void moveToCompletePage(BuildContext context) {
