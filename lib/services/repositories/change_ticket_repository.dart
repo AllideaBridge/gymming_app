@@ -74,11 +74,10 @@ class ChangeTicketRepository extends ApiService {
   }
 
   Future<bool> modifyChangeTicket(int changeTicketId, Object body) async {
-    print(body);
     final response = await makeAuthenticatedRequest(
       'PUT',
       Uri.parse('$baseUrl/$changeTicketId'),
-      body: json.encode(body),
+      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -87,10 +86,12 @@ class ChangeTicketRepository extends ApiService {
     //400 예외가 나오는 경우 메세지
     // "Schedule is not changeable.Lesson change range overflow. schedule_id : *"
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
-    } else {
+    } else if (response.statusCode == 400) {
       return false;
+    } else {
+      throw Exception(json.decode(response.body)["message"]);
     }
   }
 

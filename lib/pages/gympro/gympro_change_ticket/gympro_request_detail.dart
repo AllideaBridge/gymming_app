@@ -15,7 +15,6 @@ import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
 import '../../../services/utils/date_util.dart';
 import '../../../services/utils/toast_util.dart';
-import 'gympro_change_ticket_list.dart';
 
 class GymproRequestDetail extends StatefulWidget {
   final ChangeTicket changeTicket;
@@ -180,17 +179,13 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                     child: Row(
                       children: _isCompleted
                           ? [
-                              SecondaryButton(
-                                  title: '목록으로 이동',
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                GymproChangeTicketList(
-                                                    changeTicketStatus:
-                                                        "APPROVED,REJECTED,CANCELED")));
-                                  })
+                              Expanded(
+                                child: SecondaryButton(
+                                    title: '목록으로 이동',
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
+                              )
                             ]
                           : [
                               Expanded(
@@ -221,11 +216,6 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                 title: '승인',
                                 onPressed: () {
                                   sendApproveChangeTicket();
-                                  _showToast('승인 되었습니다.');
-                                  setState(() {
-                                    _isCompleted = true;
-                                    _isAccepted = true;
-                                  });
                                 },
                               ))
                             ],
@@ -246,7 +236,18 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
       'start_time':
           DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
     };
-    await ChangeTicketRepository()
-        .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
+    try {
+      var result = await ChangeTicketRepository()
+          .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
+      if (result) {
+        _showToast('승인 되었습니다.');
+        setState(() {
+          _isCompleted = true;
+          _isAccepted = true;
+        });
+      } else {
+        _showToast('자동 승인 기간 내에 변경 승인이 불가능합니다.');
+      }
+    } catch (e) {}
   }
 }
