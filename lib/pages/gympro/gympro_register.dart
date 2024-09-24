@@ -50,7 +50,7 @@ class GymproRegisterState extends State<GymproRegister> {
     'lessonName': '',
     'lessonCost': '',
     'lessonTime': 60,
-    'lessonChangeRange': '',
+    'lessonChangeRange': '7',
     'lessonTimeType': null,
     'availableTimeList': [],
   };

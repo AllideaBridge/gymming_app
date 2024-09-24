@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/components/available_time.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/text_dropdown.dart';
@@ -16,13 +17,14 @@ class GymproInfoStep2 extends StatefulWidget {
 class GymproInfoStep2State extends State<GymproInfoStep2> {
   final TextEditingController _lessonNameController = TextEditingController();
   final TextEditingController _lessonCostController = TextEditingController();
-  final TextEditingController _lessonChangeRangeController = TextEditingController();
+  final TextEditingController _lessonChangeRangeController =
+      TextEditingController();
   List<Map<String, dynamic>> _availableTimeList = [];
 
   late Map<String, dynamic> _model = {
     'lessonName': '',
     'lessonCost': '',
-    'lessonChangeRange': '',
+    'lessonChangeRange': '7',
     'lessonTimeType': null,
     'availableTimeList': [],
   };
@@ -32,18 +34,18 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
     super.initState();
 
     if (widget.originModel != null) {
-      setState(() {
-        _model = widget.originModel!;
-        _lessonNameController.text = _model['lessonName'];
-        _lessonCostController.text = _model['lessonCost'];
-      });
+      _model = widget.originModel!;
+      _lessonNameController.text = _model['lessonName'];
+      _lessonCostController.text = _model['lessonCost'];
     }
+    _lessonChangeRangeController.text = _model['lessonChangeRange'];
   }
 
   @override
   void dispose() {
     _lessonNameController.dispose();
     _lessonCostController.dispose();
+    _lessonChangeRangeController.dispose();
     super.dispose();
   }
 
@@ -105,6 +107,11 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
 
   @override
   Widget build(BuildContext context) {
+    int _lessonChangeRange = 0;
+    if (_model['lessonChangeRange'] != '') {
+      _lessonChangeRange = int.parse(_model['lessonChangeRange']);
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -136,15 +143,35 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
             ),
             SizedBox(height: 60.0),
             InputField(
-              controller: _lessonChangeRangeController,
-              title: '수업 변경 기간',
-              validator: (val) {
-                if (val.length < 1) return '수업 변경 기간은 필수값입니다.';
-              } ,
-              onValidationChanged: onChangedLessonChangeRange,
-              isRequired: true,
-              type: TextInputType.number,
-              placeHolder: '며칠 전까지 변경 가능한지 입력하세요.'
+                controller: _lessonChangeRangeController,
+                title: '자동 승인 기간(일)',
+                validator: (val) {
+                  if (val.length < 1) return '자동 승인 기간은 필수값입니다.';
+                },
+                onValidationChanged: onChangedLessonChangeRange,
+                isRequired: true,
+                type: TextInputType.number,
+                placeHolder: 'ex) 7'),
+            SizedBox(height: 24.0),
+            Container(
+              decoration: BoxDecoration(
+                color: BACKGROUND_COLOR,
+                borderRadius: BorderRadius.circular(4.0),
+                border: Border.all(color: SECONDARY_COLOR),
+              ),
+              padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info, color: Colors.white, size: 20.0),
+                  SizedBox(height: 8.0),
+                  _buildTable(_lessonChangeRange, '일 이상', '자동으로 스케쥴 변경 가능'),
+                  Visibility(
+                      visible: _lessonChangeRange != 0,
+                      child: _buildTable(
+                          _lessonChangeRange - 1, '일 이하', '스케쥴 변경 요청 필요')),
+                ],
+              ),
             ),
             SizedBox(height: 60.0),
             TextDropdown(
@@ -160,6 +187,45 @@ class GymproInfoStep2State extends State<GymproInfoStep2> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTable(int day, String msg1, String msg2) {
+    return SizedBox(
+      height: 48.0,
+      child: Row(
+        children: [
+          Text.rich(TextSpan(
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: 'D-$day ',
+                style: TextStyle(
+                  color: PRIMARY_COLOR,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextSpan(
+                text: msg1,
+              )
+            ],
+          )),
+          Container(
+            height: 20.0,
+            width: 1.0,
+            color: Colors.white,
+            margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 1.0),
+          ),
+          Text(msg2,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              )),
+        ],
       ),
     );
   }
