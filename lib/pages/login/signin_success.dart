@@ -133,16 +133,6 @@ class SignInSuccess extends StatelessWidget {
               text: '은 일정 변경 자동 승인 정책을 지원합니다.\n\n',
             ),
             TextSpan(
-              text: '기본값인 ',
-            ),
-            TextSpan(
-              text: '7일',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(
-              text: '로 설정되어 있지만 이 설정은 언제든지 변경할 수 있습니다.\n\n',
-            ),
-            TextSpan(
               text: '좌측 상단 메뉴의 ',
             ),
             TextSpan(
