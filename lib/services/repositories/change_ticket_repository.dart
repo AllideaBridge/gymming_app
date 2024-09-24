@@ -45,6 +45,7 @@ class ChangeTicketRepository extends ApiService {
       },
     );
 
+    print(response.body);
     if (response.statusCode == 200) {
       try {
         return ChangeTicket.parseChangeTicketList(json.decode(response.body));
@@ -83,15 +84,13 @@ class ChangeTicketRepository extends ApiService {
       },
     );
 
-    //400 예외가 나오는 경우 메세지
-    // "Schedule is not changeable.Lesson change range overflow. schedule_id : *"
-
     if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 400) {
+      print("400 Exception occurs :  " + response.body);
       return false;
     } else {
-      throw Exception(json.decode(response.body)["message"]);
+      return false;
     }
   }
 
@@ -109,7 +108,6 @@ class ChangeTicketRepository extends ApiService {
         throw Exception('Failed to delete change ticket');
       }
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

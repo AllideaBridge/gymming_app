@@ -203,16 +203,18 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                                               REJECT_TITLE,
                                                               REJECT_SUBTITLE,
                                                               REJECT_REASONS),
-                                                      requestId: widget
+                                                      changeTicketId: widget
                                                           .changeTicket
                                                           .changeTicketId,
-                                                      type: REJECT,
+                                                      type: widget.changeTicket
+                                                          .changeTicketType,
                                                       originalDay: widget
                                                           .changeTicket
                                                           .asIsDate,
                                                       selectedDay: widget
                                                           .changeTicket
                                                           .toBeDate,
+                                                      requesterType: 'TRAINER',
                                                     )));
                                       })),
                               SizedBox(width: 12),

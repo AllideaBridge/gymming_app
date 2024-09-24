@@ -147,7 +147,8 @@ class GymbieScheduleCancel extends StatelessWidget {
                         CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
                     scheduleDetail: scheduleDetail,
                     originalDay: scheduleDetail.startTime,
-                    type: CANCEL,
+                    type: ChangeTicketType.CANCEL,
+                    requesterType: 'USER',
                   )));
     }
   }

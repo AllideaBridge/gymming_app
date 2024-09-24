@@ -159,7 +159,8 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                     originalDay: widget.originDay,
-                    type: CHANGE,
+                    type: ChangeTicketType.MODIFY,
+                    requesterType: 'USER',
                   )));
     }
   }

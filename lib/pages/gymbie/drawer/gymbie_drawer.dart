@@ -141,8 +141,8 @@ class GymbieDrawer extends StatelessWidget {
                               changeTicketStatus: "WAITING",
                             ),
                             rightComponent: GymbieChangeTicketList(
-                                changeTicketStatus:
-                                    "APPROVED,REJECTED,CANCELED"),
+                              changeTicketStatus: "APPROVED,REJECTED,CANCELED",
+                            ),
                           )));
             },
           ),
