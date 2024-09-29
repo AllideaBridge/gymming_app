@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymming_app/components/buttons/primary_button.dart';
 import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/components/text_dropdown.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve_ticket.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
+import '../../services/models/reason_content.dart';
 import '../../services/models/schedule_user.dart';
 import '../../services/utils/toast_util.dart';
-import 'reason_content.dart';
 
-class Reason extends StatefulWidget {
+class ReasonLayout extends StatefulWidget {
   //변경,취소 관련 문자열 및 사유
   final ReasonContent reasonContent;
 
@@ -29,13 +30,16 @@ class Reason extends StatefulWidget {
   //changeTicketId
   final int? changeTicketId;
 
+  //트레이너가 받은 changeTicket 의 기존 reason
+  final String? reasonFromUser;
+
   //changeTicket의 change_type (CANCEL,MODIFY)
   final String type;
 
   //reason 을 작성하는 주체 ('USER', 'TRAINER')
   final String requesterType;
 
-  const Reason(
+  const ReasonLayout(
       {super.key,
       required this.reasonContent,
       this.scheduleDetail,
@@ -44,17 +48,19 @@ class Reason extends StatefulWidget {
       this.changeTicketId,
       required this.type,
       required this.originalDay,
-      required this.requesterType});
+      required this.requesterType,
+      this.reasonFromUser});
 
   @override
-  ReasonState createState() => ReasonState();
+  ReasonLayoutState createState() => ReasonLayoutState();
 }
 
-class ReasonState extends State<Reason> {
+class ReasonLayoutState extends State<ReasonLayout> {
   final textController = TextEditingController();
   late FToast fToast;
 
-  bool isOpen = false;
+  String _selectedReason = "";
+  bool _isTextFieldOpen = false;
   int clicked = 0;
   int textLength = 0;
 
@@ -66,6 +72,7 @@ class ReasonState extends State<Reason> {
 
     textController.addListener(() {
       setState(() {
+        _selectedReason = textController.text;
         textLength = textController.text.length;
       });
     });
@@ -103,30 +110,34 @@ class ReasonState extends State<Reason> {
             children: [
               CommonHeader(title: getReasonHeaderTitle()),
               buildReasonHeader(),
-              buildReasonTextfield(),
+              buildReasonSelector(),
               PrimaryButton(
                   title: '확인',
+                  enabled: _selectedReason.isNotEmpty,
                   onPressed: () async {
-                    if (widget.requesterType == 'TRAINER') {
-                      //trainer 의 change ticket 거절 api
-                      if (widget.type == ChangeTicketType.MODIFY) {
-                        rejectModifyTypeChangeTicket();
-                      } else {
-                        rejectCancelTypeChangeTicket();
-                      }
-                      _showToast('운동 일정 변경을 거절하셨습니다.');
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    } else {
-                      //user 의 change ticket 생성 api
-                      int changeTicketId;
-                      if (widget.type == ChangeTicketType.MODIFY) {
-                        changeTicketId = await createModifyTypeChangeTicket();
-                      } else {
-                        changeTicketId = await createCancelTypeChangeTicket();
-                      }
-                      moveToCompletePage(context, changeTicketId);
-                    }
+                    print(_selectedReason);
+                    print(widget.requesterType);
+                    print(widget.type);
+                    // if (widget.requesterType == 'TRAINER') {
+                    //   //trainer 의 change ticket 거절 api
+                    //   if (widget.type == ChangeTicketType.MODIFY) {
+                    //     rejectModifyTypeChangeTicket();
+                    //   } else {
+                    //     rejectCancelTypeChangeTicket();
+                    //   }
+                    //   _showToast('운동 일정 변경을 거절하셨습니다.');
+                    //   Navigator.pop(context);
+                    //   Navigator.pop(context);
+                    // } else {
+                    //   //user 의 change ticket 생성 api
+                    //   int changeTicketId;
+                    //   if (widget.type == ChangeTicketType.MODIFY) {
+                    //     changeTicketId = await createModifyTypeChangeTicket();
+                    //   } else {
+                    //     changeTicketId = await createCancelTypeChangeTicket();
+                    //   }
+                    //   moveToCompletePage(context, changeTicketId);
+                    // }
                   }),
             ],
           ),
@@ -168,73 +179,23 @@ class ReasonState extends State<Reason> {
     );
   }
 
-  Expanded buildReasonTextfield() {
+  void setReasonText(String result) {
+    setState(() {
+      _selectedReason = result == '직접 입력' ? "" : result;
+      _isTextFieldOpen = result == '직접 입력';
+    });
+  }
+
+  Widget buildReasonSelector() {
     return Expanded(
       child: Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isOpen = !isOpen;
-              });
-            },
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: isOpen ? PRIMARY_COLOR : SECONDARY_COLOR,
-                        width: 2)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(widget.reasonContent.reasons[clicked],
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
-                  isOpen
-                      ? Image.asset('assets/images/icon_nav_arrow_up.png',
-                          width: 20, height: 20)
-                      : Image.asset('assets/images/icon_nav_arrow_down.png',
-                          width: 20, height: 20),
-                ],
-              ),
-            ),
+          TextDropdown(
+            dropdownItems: widget.reasonContent.reasons,
+            setter: setReasonText,
+            placeholder: '선택하기',
           ),
-          if (isOpen)
-            Container(
-              height: 248,
-              margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
-              padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
-              decoration: BoxDecoration(
-                  border: Border.all(color: PRIMARY_COLOR),
-                  borderRadius: BorderRadius.circular(4),
-                  color: BACKGROUND_COLOR),
-              child: Scrollbar(
-                thumbVisibility: true,
-                thickness: 4.0,
-                radius: Radius.circular(10.0),
-                child: ListView.builder(
-                    itemCount: widget.reasonContent.reasons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            clicked = index;
-                            isOpen = !isOpen;
-                          });
-                        },
-                        child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 0),
-                            child: Text(widget.reasonContent.reasons[index],
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.white))),
-                      );
-                    }),
-              ),
-            ),
-          if (widget.reasonContent.reasons[clicked] == '직접 입력' && !isOpen)
+          if (_isTextFieldOpen)
             Container(
               margin: EdgeInsets.only(top: 12),
               height: 180,
@@ -244,7 +205,8 @@ class ReasonState extends State<Reason> {
                     controller: textController,
                     maxLines: 50,
                     decoration: InputDecoration(
-                      hintText: '${widget.type}하시려는 사유를 입력해주세요.',
+                      hintText:
+                          '${widget.type == ChangeTicketType.MODIFY ? '변경' : '취소'}하시려는 사유를 입력해주세요.',
                       hintStyle: TextStyle(fontSize: 18, color: TERITARY_COLOR),
                       filled: true,
                       fillColor: BACKGROUND_COLOR,
@@ -276,9 +238,7 @@ class ReasonState extends State<Reason> {
       'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': widget.requesterType,
       'change_type': widget.type,
-      'change_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
+      'change_reason': _selectedReason,
       'start_time': DateUtil.convertDatabaseFormatFromDayAndTime(
           widget.selectedDay!, widget.selectedTime!),
       'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay)
@@ -293,9 +253,7 @@ class ReasonState extends State<Reason> {
       'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': widget.requesterType,
       'change_type': widget.type,
-      'change_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
+      'change_reason': _selectedReason,
       'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay)
     };
     int response = await ChangeTicketRepository().createChangeTicket(body);
@@ -308,12 +266,8 @@ class ReasonState extends State<Reason> {
       'change_from': widget.requesterType,
       'change_type': widget.type,
       'status': ChangeTicketStatus.REJECTED,
-      'change_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
-      'reject_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
+      'change_reason': widget.reasonFromUser,
+      'reject_reason': _selectedReason,
       'start_time': DateUtil.convertDatabaseFormatDateTime(widget.selectedDay!)
     };
     await ChangeTicketRepository()
@@ -326,12 +280,8 @@ class ReasonState extends State<Reason> {
       'change_from': widget.requesterType,
       'change_type': widget.type,
       'status': ChangeTicketStatus.REJECTED,
-      'change_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
-      'reject_reason': clicked == 0
-          ? textController.text
-          : widget.reasonContent.reasons[clicked],
+      'change_reason': widget.reasonFromUser,
+      'reject_reason': _selectedReason,
       'start_time': null,
     };
     await ChangeTicketRepository()
@@ -347,9 +297,7 @@ class ReasonState extends State<Reason> {
                 originDay: widget.scheduleDetail!.startTime,
                 selectedDay: widget.selectedDay,
                 selectedTime: widget.selectedTime,
-                reason: clicked == 0
-                    ? textController.text
-                    : widget.reasonContent.reasons[clicked],
+                reason: _selectedReason,
                 changeTicketId: changeTicketId)));
   }
 }
