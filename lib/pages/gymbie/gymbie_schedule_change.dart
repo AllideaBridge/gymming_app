@@ -10,8 +10,8 @@ import 'package:intl/intl.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
-import '../../components/layouts/reason_content.dart';
 import '../../components/layouts/reason_layout.dart';
+import '../../services/models/reason_content.dart';
 import '../../services/models/schedule_user.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
@@ -152,14 +152,15 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Reason(
+              builder: (context) => ReasonLayout(
                     reasonContent: ReasonContent(
                         CHANGE_TITLE, CHANEG_SUBTITLE, CHANGE_REASONS),
                     scheduleDetail: widget.scheduleDetail,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
                     originalDay: widget.originDay,
-                    type: CHANGE,
+                    type: ChangeTicketType.MODIFY,
+                    requesterType: 'USER',
                   )));
     }
   }

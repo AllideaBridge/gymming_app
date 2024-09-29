@@ -38,20 +38,19 @@ class TrainerUserRepository {
         .replace(queryParameters: {
       'training_user_delete_flag': isPresent ? "true" : "false",
     });
-    // initClient();
-    // final response = await client.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     final List<dynamic> body = json.decode(response.body)["result"];
-    //     return TrainerUser.parseTrainerUserList(body);
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
-    return TrainerUser.getDummyTrainerUserList(isPresent);
+    initClient();
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> body = json.decode(response.body)["result"];
+        return TrainerUser.parseTrainerUserList(body);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   Future<TrainerUserDetail> getTrainerUserDetail(

@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import '../../common/colors.dart';
 import '../../common/constants.dart';
 import '../../components/common_header.dart';
-import '../../components/layouts/reason_content.dart';
+import '../../services/models/reason_content.dart';
 import '../../services/utils/date_util.dart';
 
 class GymbieScheduleCancel extends StatelessWidget {
@@ -142,13 +142,13 @@ class GymbieScheduleCancel extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Reason(
+              builder: (context) => ReasonLayout(
                     reasonContent: ReasonContent(
                         CANCEL_TITLE, CANCEL_SUBTITLE, CHANGE_REASONS),
                     scheduleDetail: scheduleDetail,
-                    selectedDay: scheduleDetail.startTime,
-                    selectedTime: '${scheduleDetail.startTime.hour}:00',
-                    type: CANCEL,
+                    originalDay: scheduleDetail.startTime,
+                    type: ChangeTicketType.CANCEL,
+                    requesterType: 'USER',
                   )));
     }
   }

@@ -45,6 +45,7 @@ class ChangeTicketRepository extends ApiService {
       },
     );
 
+    print(response.body);
     if (response.statusCode == 200) {
       try {
         return ChangeTicket.parseChangeTicketList(json.decode(response.body));
@@ -56,7 +57,7 @@ class ChangeTicketRepository extends ApiService {
     }
   }
 
-  Future<bool> createChangeTicket(Object body) async {
+  Future<int> createChangeTicket(Object body) async {
     final response = await makeAuthenticatedRequest(
       'POST',
       Uri.parse(baseUrl),
@@ -67,28 +68,27 @@ class ChangeTicketRepository extends ApiService {
     );
 
     if (response.statusCode == 200) {
-      return true;
+      return json.decode(response.body)['change_ticket_id'];
     } else {
-      return false;
+      throw Exception("create change ticket failed.");
     }
   }
 
   Future<bool> modifyChangeTicket(int changeTicketId, Object body) async {
-    print(body);
     final response = await makeAuthenticatedRequest(
       'PUT',
       Uri.parse('$baseUrl/$changeTicketId'),
-      body: json.encode(body),
+      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
     );
 
-    //400 예외가 나오는 경우 메세지
-    // "Schedule is not changeable.Lesson change range overflow. schedule_id : *"
-
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
+    } else if (response.statusCode == 400) {
+      print("400 Exception occurs :  " + response.body);
+      return false;
     } else {
       return false;
     }
@@ -108,7 +108,6 @@ class ChangeTicketRepository extends ApiService {
         throw Exception('Failed to delete change ticket');
       }
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

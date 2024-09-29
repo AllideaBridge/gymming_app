@@ -73,7 +73,7 @@ class _TextDropdownState extends State<TextDropdown> {
                 style: TextStyle(
                   fontSize: 20,
                   color: TERITARY_COLOR,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               items: widget.dropdownItems

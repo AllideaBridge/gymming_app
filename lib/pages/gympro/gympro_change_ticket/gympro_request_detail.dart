@@ -11,11 +11,10 @@ import 'package:gymming_app/services/repositories/change_ticket_repository.dart'
 
 import '../../../../common/colors.dart';
 import '../../../../common/constants.dart';
-import '../../../components/layouts/reason_content.dart';
 import '../../../components/layouts/reason_layout.dart';
+import '../../../services/models/reason_content.dart';
 import '../../../services/utils/date_util.dart';
 import '../../../services/utils/toast_util.dart';
-import 'gympro_change_ticket_list.dart';
 
 class GymproRequestDetail extends StatefulWidget {
   final ChangeTicket changeTicket;
@@ -158,8 +157,10 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                         IconLabel(
                             iconData: Icons.alarm,
                             title: '변경 후',
-                            content: DateUtil.getKoreanDayAndHour(
-                                widget.changeTicket.toBeDate!),
+                            content: widget.changeTicket.toBeDate != null
+                                ? DateUtil.getKoreanDayAndHour(
+                                    widget.changeTicket.toBeDate)
+                                : '취소',
                             titleColor: Colors.white,
                             contentColor: Colors.white),
                         SizedBox(
@@ -180,17 +181,13 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                     child: Row(
                       children: _isCompleted
                           ? [
-                              SecondaryButton(
-                                  title: '목록으로 이동',
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                GymproChangeTicketList(
-                                                    changeTicketStatus:
-                                                        "APPROVED,REJECTED,CANCELED")));
-                                  })
+                              Expanded(
+                                child: SecondaryButton(
+                                    title: '목록으로 이동',
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
+                              )
                             ]
                           : [
                               Expanded(
@@ -200,19 +197,28 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Reason(
+                                                builder: (context) =>
+                                                    ReasonLayout(
                                                       reasonContent:
                                                           ReasonContent(
                                                               REJECT_TITLE,
                                                               REJECT_SUBTITLE,
                                                               REJECT_REASONS),
-                                                      requestId: widget
+                                                      changeTicketId: widget
                                                           .changeTicket
                                                           .changeTicketId,
-                                                      type: REJECT,
+                                                      type: widget.changeTicket
+                                                          .changeTicketType,
+                                                      originalDay: widget
+                                                          .changeTicket
+                                                          .asIsDate,
                                                       selectedDay: widget
                                                           .changeTicket
                                                           .toBeDate,
+                                                      requesterType: 'TRAINER',
+                                                      reasonFromUser: widget
+                                                          .changeTicket
+                                                          .userMessage,
                                                     )));
                                       })),
                               SizedBox(width: 12),
@@ -221,11 +227,6 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                 title: '승인',
                                 onPressed: () {
                                   sendApproveChangeTicket();
-                                  _showToast('승인 되었습니다.');
-                                  setState(() {
-                                    _isCompleted = true;
-                                    _isAccepted = true;
-                                  });
                                 },
                               ))
                             ],
@@ -239,14 +240,28 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
   void sendApproveChangeTicket() async {
     final body = {
       'change_from': 'TRAINER',
-      'change_type': 'MODIFY',
+      'change_type': widget.changeTicket.changeTicketType,
       'status': 'APPROVED',
       'change_reason': widget.changeTicket.userMessage,
       'reject_reason': '-',
-      'start_time':
-          DateUtil.convertDatabaseFormatDateTime(widget.changeTicket.toBeDate!),
+      'start_time': widget.changeTicket.changeTicketType == 'MODIFY'
+          ? DateUtil.convertDatabaseFormatDateTime(
+              widget.changeTicket.toBeDate!)
+          : null,
     };
-    await ChangeTicketRepository()
-        .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
+
+    try {
+      var result = await ChangeTicketRepository()
+          .modifyChangeTicket(widget.changeTicket.changeTicketId, body);
+      if (result) {
+        _showToast('승인 되었습니다.');
+        setState(() {
+          _isCompleted = true;
+          _isAccepted = true;
+        });
+      } else {
+        _showToast('자동 승인 기간 내에 변경 승인이 불가능합니다.');
+      }
+    } catch (e) {}
   }
 }
