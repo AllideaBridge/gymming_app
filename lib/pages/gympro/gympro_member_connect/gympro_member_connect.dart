@@ -140,8 +140,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
       'exercise_days': selectedLabel,
       'special_notice': _model['info'],
     };
-    print(body);
-    // await TrainerUserRepository().updateTrainerUser(1, 1, body);
+    await TrainerUserRepository().updateTrainerUser(1, 1, body);
 
     Navigator.pop(context);
   }

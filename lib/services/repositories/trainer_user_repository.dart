@@ -42,7 +42,7 @@ class TrainerUserRepository {
     final response = await client.get(url);
     if (response.statusCode == 200) {
       try {
-        final List<dynamic> body = json.decode(response.body)["result"];
+        final List<dynamic> body = json.decode(response.body)["results"];
         return TrainerUser.parseTrainerUserList(body);
       } catch (e) {
         throw Exception("Failed to load data : ${e.toString()}");

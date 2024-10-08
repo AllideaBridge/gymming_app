@@ -3,7 +3,7 @@ import '../utils/date_util.dart';
 class TrainerUser {
   final int _userId;
   final String _userName;
-  final String _userProfileImgUrl;
+  final String? _userProfileImgUrl;
   final String _exerciseDays;
   final int _lessonCurrentCount;
   final int _lessonTotalCount;
@@ -24,7 +24,7 @@ class TrainerUser {
 
   String get userName => _userName;
 
-  String get userProfileImgUrl => _userProfileImgUrl;
+  String? get userProfileImgUrl => _userProfileImgUrl;
 
   String get exerciseDays => _exerciseDays;
 
