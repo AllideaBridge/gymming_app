@@ -93,12 +93,21 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(80.0),
-                child: Image.asset(
-                  trainerUserDetail.profileImgUrl,
+                child: trainerUserDetail.profileImgUrl != null ?
+
+                Image.network(
+                  trainerUserDetail.profileImgUrl!,
                   fit: BoxFit.cover,
                   width: 80.0,
                   height: 80.0,
-                ),
+                ) :
+                Image.asset(
+                  'assets/images/user_example.png',
+                  fit: BoxFit.cover,
+                  width: 80.0,
+                  height: 80.0,
+                )
+                ,
               ),
               SizedBox(height: 16.0),
               Text(
@@ -208,6 +217,7 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                           builder: (context) => GymproMemberConnect(
                                 userId: 1,
                                 userDetail: trainerUserDetail,
+                                isEdit: true,
                               )));
                 },
               ),

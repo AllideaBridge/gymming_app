@@ -7,7 +7,7 @@ class TrainerUserDetail {
   final String _email;
   final String _gender;
   final String _phoneNumber;
-  final String _profileImgUrl;
+  final String? _profileImgUrl;
   final bool _deleteFlag;
   final DateTime _birthday;
   final int _lessonTotalCount;
@@ -42,7 +42,7 @@ class TrainerUserDetail {
 
   DateTime get birthday => _birthday;
 
-  String get profileImgUrl => _profileImgUrl;
+  String? get profileImgUrl => _profileImgUrl;
 
   String get phoneNumber => _phoneNumber;
 
@@ -61,20 +61,22 @@ class TrainerUserDetail {
   }
 
   factory TrainerUserDetail.fromJson(Map<String, dynamic> json) {
+    // print("여기");
+    // print(json["gender"]);
     return TrainerUserDetail(
-        json["name"],
-        json["email"],
-        json["gender"],
-        json["phone_number"],
+        json["name"] ?? "",
+        json["email"] ?? "",
+        json["gender"] ?? "",
+        json["phone_number"] ?? "",
         json["profile_img_url"],
-        json["delete_flag"],
-        DateTime.parse(json["birthday"]),
-        json["lesson_total_count"],
-        json["lesson_current_count"],
-        json["exercise_days"],
-        json["special_notice"],
-        DateTime.parse(json["registered_date"]),
-        DateTime.parse(json["last_date"]));
+        json["delete_flag"] ?? "",
+        DateTime.parse(json["birthday"] ?? "1111-11-11"),
+        json["lesson_total_count"] ?? 0,
+        json["lesson_current_count"] ?? 0,
+        json["exercise_days"] ?? "",
+        json["special_notice"] ?? "",
+        DateTime.parse(json["registered_date"] ?? "1111-11-11"),
+        DateTime.parse(json["last_date"] ?? "1111-11-11"));
   }
 
 // api 완성되기 전 dummy 값

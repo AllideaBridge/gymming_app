@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 
+import '../../common/constants.dart';
 import '../models/trainer_detail.dart';
 
 class TrainerRepository {
@@ -7,7 +8,7 @@ class TrainerRepository {
 
   final http.Client client;
 
-  static final String baseUrl = "http://10.0.2.2:5000/trainers";
+  static final String baseUrl = "$SERVER_URL/trainers";
 
   final TrainerDetail _dummyDetail = TrainerDetail([
     'assets/images/trainerExample.png',

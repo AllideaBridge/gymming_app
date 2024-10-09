@@ -8,6 +8,7 @@ import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:http/http.dart' as http;
 
+import '../../common/constants.dart';
 import '../models/available_times.dart';
 
 class ScheduleRepository extends ApiService {
@@ -20,7 +21,7 @@ class ScheduleRepository extends ApiService {
   static final String typeMonth = 'month';
   static final String typeDay = 'day';
   static final String typeWeek = 'week';
-  static final String baseUrl = "http://10.0.2.2:5000/schedules";
+  static final String baseUrl = "$SERVER_URL/schedules";
 
   /*
     스케쥴 상세조회
@@ -122,22 +123,32 @@ class ScheduleRepository extends ApiService {
     회원의 한달 별 스케쥴 조회
     URL: schedules/users/<user_id>?day=date&type=month
    */
-  Future<Set<String>> getScheduleByMonth(DateTime datetime) async {
-    Uri url = Uri.parse('$baseUrl/user/$dummyUserId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeMonth
-    });
-    final response = await client.get(url);
-    if (response.statusCode == 200) {
-      try {
-        final List<dynamic> result = json.decode(response.body)["result"];
-        return result.map((item) => item.toString()).toSet();
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
+  Future<Set<String>> getScheduleByMonth(int userId, DateTime datetime) async {
+    try {
+      final response = await makeAuthenticatedRequest(
+          'GET',
+          Uri.parse('$baseUrl/user/$userId').replace(queryParameters: {
+            'date': DateUtil.convertDateTimeWithDash(datetime),
+            'type': typeMonth
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+
+      if (response.statusCode == 200) {
+        try {
+          final List<dynamic> result = json.decode(response.body)["result"];
+          return result.map((item) => item.toString()).toSet();
+        } catch (e) {
+          throw Exception("Failed to load data : ${e.toString()}");
+        }
+      } else {
+        throw Exception(
+            "api response error occurs: error code = ${response.statusCode}");
       }
-    } else {
-      throw Exception(
-          "api response error occurs: error code = ${response.statusCode}");
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
@@ -196,13 +207,13 @@ class ScheduleRepository extends ApiService {
    */
   Future<List<LessonList>> getTrainerScheduleByWeek(
       DateTime datetime, int trainer_id) async {
-    Uri url =
+    final response = await makeAuthenticatedRequest(
+        "GET",
         Uri.parse('$baseUrl/trainer/$trainer_id').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeWeek,
-    });
+          'date': DateUtil.convertDateTimeWithDash(datetime),
+          'type': typeWeek,
+        }));
 
-    final response = await http.get(url);
     if (response.statusCode == 200) {
       try {
         return LessonList.parseLessonListList(json.decode(response.body));
