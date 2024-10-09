@@ -99,7 +99,7 @@ class ProfileCard extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                 ),
                 Text(
-                  gender == 'M' ? '남' : '여',
+                  gender,
                   style: TextStyle(
                     fontSize: 16.0,
                     color: BRIGHT_SECONDARY_COLOR,

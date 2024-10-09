@@ -8,7 +8,7 @@ class TrainerUser {
   final int _lessonCurrentCount;
   final int _lessonTotalCount;
   final DateTime _registeredDate;
-  final DateTime _lastDate;
+  final DateTime? _lastDate;
 
   TrainerUser(
       this._userId,
@@ -34,10 +34,10 @@ class TrainerUser {
 
   DateTime get registeredDate => _registeredDate;
 
-  DateTime get lastDate => _lastDate;
+  DateTime? get lastDate => _lastDate;
 
   String getTrainerUserListDetailText(bool isPresent) {
-    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 |${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate)} ${isPresent ? "등록" : "종료"}';
+    return '$_exerciseDays | $_lessonCurrentCount / $_lessonTotalCount 진행 |${DateUtil.convertDateTimeWithDash(isPresent ? _registeredDate : _lastDate!)} ${isPresent ? "등록" : "종료"}';
   }
 
   factory TrainerUser.fromJson(Map<String, dynamic> json) {
@@ -49,7 +49,7 @@ class TrainerUser {
         json["lesson_current_count"],
         json["lesson_total_count"],
         DateTime.parse(json["registered_date"]),
-        DateTime.parse(json["last_date"]));
+        DateTime.parse(json["last_date"] ?? "1111-11-11"));
   }
 
   static List<TrainerUser> parseTrainerUserList(List<dynamic> body) {

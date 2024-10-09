@@ -10,6 +10,8 @@ import 'package:gymming_app/services/utils/toast_util.dart';
 import 'package:gymming_app/services/utils/validate_util.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../services/models/trainer_user_detail.dart';
+
 class GymproMemberSearch extends StatefulWidget {
   const GymproMemberSearch({super.key});
 
@@ -70,18 +72,43 @@ class GymproMemberSearchState extends State<GymproMemberSearch> {
     final result = await userRepository.checkUserExist(
         _model['name'], _model['phoneNumber']);
 
-    if (result['exists'] == true) {
-      _moveNextStep(result['user_id']);
+    /**
+     * result 예시 :
+
+        {
+        user_id: 5,
+        user_email: null,
+        user_name: asd,
+        user_gender: M,
+        user_phone_number: 010-1111-1111,
+        user_profile_img_url: null,
+        user_delete_flag: false,
+        user_birthday: null
+        }
+
+        or
+
+        null
+     */
+
+    print(result);
+
+    if (result != null) {
+      _moveNextStep(result);
     } else {
       _showToast('회원을 찾을 수 없습니다.');
     }
   }
 
-  void _moveNextStep(int userId) {
+  void _moveNextStep(Map<String, dynamic> user) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => GymproMemberConnect(userId: userId)),
+          builder: (context) => GymproMemberConnect(
+                userId: user['id'],
+                userDetail: TrainerUserDetail.fromJson(user),
+                isEdit: false,
+              )),
     );
   }
 

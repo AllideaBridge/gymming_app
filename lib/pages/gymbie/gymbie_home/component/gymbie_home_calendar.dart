@@ -8,6 +8,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../common/colors.dart';
 import '../../../../services/utils/date_util.dart';
+import '../../../../state/info_state.dart';
 
 class GymbieHomeCalendar extends StatefulWidget {
   const GymbieHomeCalendar({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
   void initState() {
     super.initState();
     futureSchedules =
-        scheduleRepository.getScheduleByMonth(DateUtil.getKorTimeNow());
+        scheduleRepository.getScheduleByMonth(Provider.of<InfoState>(context, listen: false).userId!, DateUtil.getKorTimeNow());
   }
 
   @override
@@ -106,7 +107,7 @@ class _GymbieHomeCalendarState extends State<GymbieHomeCalendar> {
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules = scheduleRepository.getScheduleByMonth(day);
+          futureSchedules = scheduleRepository.getScheduleByMonth(Provider.of<InfoState>(context, listen: false).userId!, day);
         });
       },
     );

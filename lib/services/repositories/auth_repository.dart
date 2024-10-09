@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../../common/constants.dart';
 import '../../common/exceptions.dart';
 import '../auth/api_service.dart';
 import '../models/trainer_auth.dart';
@@ -11,7 +12,7 @@ class AuthRepository extends ApiService {
 
   final http.Client client;
 
-  final String baseUrl = "http://10.0.2.2:5000/auth";
+  final String baseUrl = "$SERVER_URL/auth";
 
   Future<Map<String, dynamic>> getTokenType() async {
     try {

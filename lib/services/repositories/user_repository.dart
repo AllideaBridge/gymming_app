@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:gymming_app/services/auth/api_service.dart';
 import 'package:http/http.dart' as http;
 
+import '../../common/constants.dart';
 import '../models/user_detail.dart';
 
 class UserRepository extends ApiService {
@@ -11,23 +12,23 @@ class UserRepository extends ApiService {
 
   final http.Client client;
 
-  static final String baseUrl = "http://10.0.2.2:5000/users";
+  static final String baseUrl = "$SERVER_URL/users";
 
-  Future<Map<String, dynamic>> checkUserExist(
+  Future<Map<String, dynamic>?> checkUserExist(
       String userName, String userPhoneNumber) async {
-    Uri url = Uri.parse('$baseUrl/check').replace(queryParameters: {
-      'user_name': userName,
-      'user_phone_number': userPhoneNumber
-    });
+    final response = await makeAuthenticatedRequest(
+        "GET",
+        Uri.parse('$baseUrl/check').replace(queryParameters: {
+          'user_name': userName,
+          'user_phone_number': userPhoneNumber
+        }));
 
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   return json.decode(response.body)['result'];
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
-    return {'exists': true, 'user_id': 1};
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
+    }
   }
 
   Future<Map<String, dynamic>> getUserDetail(int userId) async {

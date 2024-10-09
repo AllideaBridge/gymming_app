@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_detail.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/colors.dart';
 import '../../../services/models/trainer_user.dart';
+import '../../../state/info_state.dart';
 
 class GymproMemberMgmt extends StatefulWidget {
   final bool isPresent;
-
-  //todo trainerId 받아오기
-  final int trainerId = 1;
 
   const GymproMemberMgmt({
     super.key,
@@ -27,8 +26,7 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
   @override
   Widget build(BuildContext context) {
     trainingUserList = trainingUserRepository.getTrainerUserList(
-        widget.trainerId, widget.isPresent);
-
+        Provider.of<InfoState>(context, listen: false).trainerId!, widget.isPresent);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
       child: Column(
@@ -91,7 +89,7 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => GymproMemberDetail(
-                          trainerId: widget.trainerId,
+                          trainerId: Provider.of<InfoState>(context, listen: false).trainerId!,
                           userId: trainingUserList[index].userId,
                           isPresent: widget.isPresent)));
             },
@@ -103,8 +101,14 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-                      child: Image.asset(
-                        trainingUserList[index].userProfileImgUrl,
+                      child:trainingUserList[index].userProfileImgUrl != null ?Image.network(
+                        trainingUserList[index].userProfileImgUrl!,
+                        fit: BoxFit.cover,
+                        width: 48.0,
+                        height: 48.0,
+                      ) :
+                      Image.asset(
+                        'assets/images/user_example.png',
                         fit: BoxFit.cover,
                         width: 48.0,
                         height: 48.0,

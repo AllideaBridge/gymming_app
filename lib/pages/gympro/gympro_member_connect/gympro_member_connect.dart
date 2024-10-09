@@ -7,21 +7,26 @@ import 'package:gymming_app/components/profile_card.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
 import 'package:gymming_app/services/models/trainer_user_detail.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
-import 'package:gymming_app/services/repositories/user_repository.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import '../../../state/info_state.dart';
 
 class GymproMemberConnect extends StatefulWidget {
   final int userId;
-  final TrainerUserDetail? userDetail;
+  final TrainerUserDetail userDetail;
+  final bool isEdit;
 
-  const GymproMemberConnect({super.key, required this.userId, this.userDetail});
+  const GymproMemberConnect(
+      {super.key,
+      required this.userId,
+      required this.userDetail,
+      required this.isEdit});
 
   @override
   State<StatefulWidget> createState() => GymproMemberConnectState();
 }
 
 class GymproMemberConnectState extends State<GymproMemberConnect> {
-  late Map<String, dynamic> userDetail;
   final TextEditingController _countController = TextEditingController();
   final TextEditingController _infoController = TextEditingController();
   final Map<String, dynamic> _model = {
@@ -33,22 +38,19 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
 
   final List<String> _buttonLabels = ["일", "월", "화", "수", "목", "금", "토", "불규칙"];
   late List<bool> _selectedButtons;
-  late bool isEdit = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.userDetail == null) {
+    if (!widget.isEdit) {
       _selectedButtons = List<bool>.filled(_buttonLabels.length, false);
-      isEdit = false;
     } else {
-      _infoController.text = widget.userDetail!.specialNotes;
+      _infoController.text = widget.userDetail.specialNotes;
       _selectedButtons =
-          _convertDaysStringToBoolList(widget.userDetail!.exerciseDays);
+          _convertDaysStringToBoolList(widget.userDetail.exerciseDays);
 
       _model['info'] = _infoController.text;
-      isEdit = true;
     }
     _model['workDay'] = _selectedButtons;
 
@@ -96,7 +98,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
     bool isValidCount = _model['count'] != '';
 
     setState(() {
-      _enableBtn = isValidWorkDay && (isEdit || isValidCount);
+      _enableBtn = isValidWorkDay && (widget.isEdit || isValidCount);
     });
   }
 
@@ -111,8 +113,8 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
                 '등록하려는 회원의 정보가 정확한지 확인해주세요.',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              onConfirm: () {
-                _connectMember();
+              onConfirm: () async {
+                await _connectMember();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -141,11 +143,10 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
       'special_notice': _model['info'],
     };
     await TrainerUserRepository().updateTrainerUser(1, 1, body);
-
     Navigator.pop(context);
   }
 
-  void _connectMember() async {
+  Future<void> _connectMember() async {
     String selectedLabel = _buttonLabels
         .asMap()
         .entries
@@ -153,15 +154,16 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         .map((entry) => entry.value)
         .join(',');
 
-    Map<String, dynamic> body = {
-      'user_name': userDetail['user_name'],
-      'phone_number': userDetail['user_phone_number'],
+    Map<String, Object> body = {
+      'user_name': widget.userDetail.name,
+      'phone_number': widget.userDetail.phoneNumber,
       'lesson_total_count': int.parse(_model['count']),
       'lesson_current_count': int.parse(_model['count']),
       'exercise_days': selectedLabel,
       'special_notice': _model['info'],
     };
-    await TrainerUserRepository().connectTrainerUser(1, body);
+    await TrainerUserRepository().connectTrainerUser(
+        Provider.of<InfoState>(context, listen: false).trainerId!, body);
   }
 
   @override
@@ -171,7 +173,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         child: Column(
           children: [
             CommonHeader(
-                title: isEdit ? '회원 정보 수정' : '새로운 회원 등록',
+                title: widget.isEdit ? '회원 정보 수정' : '새로운 회원 등록',
                 onPressed: () {
                   Navigator.pop(context);
                 }),
@@ -196,29 +198,37 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            FutureBuilder(
-              future: UserRepository(client: http.Client())
-                  .getUserDetail(widget.userId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}',
-                      style: TextStyle(color: Colors.white));
-                } else {
-                  userDetail = snapshot.data!;
-                  return ProfileCard(
-                    imgUrl: userDetail['user_profile_img_url'],
-                    name: userDetail['user_name'],
-                    birth: DateTime.parse(userDetail['user_birthday']),
-                    gender: userDetail['user_gender'],
-                    phoneNumber: userDetail['user_phone_number'],
-                  );
-                }
-              },
-            ),
-            if (!isEdit) SizedBox(height: 60.0),
-            if (!isEdit)
+            if (!widget.isEdit)
+              ProfileCard(
+                imgUrl: widget.userDetail.profileImgUrl,
+                name: widget.userDetail.name,
+                birth: widget.userDetail.birthday,
+                gender: widget.userDetail.gender,
+                phoneNumber: widget.userDetail.phoneNumber,
+              ),
+            // FutureBuilder(
+            //   future: UserRepository(client: http.Client())
+            //       .getUserDetail(widget.userId),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return CircularProgressIndicator();
+            //     } else if (snapshot.hasError) {
+            //       return Text('Error: ${snapshot.error}',
+            //           style: TextStyle(color: Colors.white));
+            //     } else {
+            //       userDetail = snapshot.data!;
+            //       return ProfileCard(
+            //         imgUrl: userDetail['user_profile_img_url'],
+            //         name: userDetail['user_name'],
+            //         birth: DateTime.parse(userDetail['user_birthday']),
+            //         gender: userDetail['user_gender'],
+            //         phoneNumber: userDetail['user_phone_number'],
+            //       );
+            //     }
+            //   },
+            // ),
+            if (!widget.isEdit) SizedBox(height: 60.0),
+            if (!widget.isEdit)
               InputField(
                 controller: _countController,
                 title: '등록 횟수',
@@ -311,13 +321,13 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         ),
         onPressed: () {
           if (_enableBtn) {
-            isEdit ? _updateUser() : _showModal();
+            widget.isEdit ? _updateUser() : _showModal();
           } else {
             null;
           }
         },
         child: Text(
-          isEdit ? "수정 완료" : "새로운 회원 등록",
+          widget.isEdit ? "수정 완료" : "새로운 회원 등록",
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,

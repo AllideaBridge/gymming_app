@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../../common/constants.dart';
 import '../auth/api_service.dart';
 import '../models/change_ticket.dart';
 
 class ChangeTicketRepository extends ApiService {
   // TODO 로컬 URL에서 변경 필요
-  final String baseUrl = "http://10.0.2.2:5000/change-ticket";
+  final String baseUrl = "$SERVER_URL/change-ticket";
 
   Future<List<ChangeTicket>> getTrainerChangeTicketList(
       int trainerId, String status, int page) async {
