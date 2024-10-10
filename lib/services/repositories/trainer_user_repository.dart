@@ -70,8 +70,7 @@ class TrainerUserRepository extends ApiService {
   Future<TrainerUserDetail> getTrainerUserDetail(
       int trainerId, int userId) async {
     final response = await makeAuthenticatedRequest(
-      'GET', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId')
-    );
+        'GET', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId'));
 
     // Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users/$userId');
     // initClient();
@@ -90,9 +89,9 @@ class TrainerUserRepository extends ApiService {
   }
 
   Future<List<TrainerList>> getTrainersListOfUser(int userId) async {
-    Uri uri = Uri.parse('$baseUrl/user/$userId/trainers');
-    initClient();
-    final response = await client.get(uri);
+    final response = await makeAuthenticatedRequest(
+        'GET', Uri.parse('$baseUrl/user/$userId/trainers'));
+
     if (response.statusCode == 200) {
       try {
         List<dynamic> result = json.decode(response.body)['results'];

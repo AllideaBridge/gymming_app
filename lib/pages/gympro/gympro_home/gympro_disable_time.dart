@@ -7,6 +7,7 @@ import '../../../components/schedule_select_calendar.dart';
 import '../../../components/time_select_table.dart';
 import '../../../services/models/available_times.dart';
 import '../../../services/repositories/schedule_repository.dart';
+import 'package:http/http.dart' as http;
 
 class GymproDisableTime extends StatefulWidget {
   final int trainerId;
@@ -21,10 +22,11 @@ class _GymproDisableTimeState extends State<GymproDisableTime> {
   DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
+  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
 
   void _changeSelectedDay(DateTime selectedDay) async {
     var result =
-        await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
+        await scheduleRepository.getAvailableTimeListByTrainerIdAndDate(
             widget.trainerId, selectedDay);
     setState(() {
       _selectedDay = selectedDay;
