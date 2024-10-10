@@ -52,7 +52,8 @@ const MONTHS = [
 
 const FIRST_NUMBERS = ["010", "02"];
 
-const SERVER_URL = "http://172.30.1.80:5000";
+// const SERVER_URL = "http://172.30.1.80:5000";
+const SERVER_URL = "http://10.0.2.2:5000";
 
 //change-ticket api의 change_type 범주
 class ChangeTicketType {

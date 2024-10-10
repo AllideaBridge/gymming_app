@@ -180,15 +180,15 @@ class ScheduleRepository extends ApiService {
     회원의 하루 중 트레이너 별 예약 가능한 시간 조회
     URL: schedules/trainer/<trainer_id>?date=date&type=day
    */
-  static Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
+  Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
       int trainerId, DateTime datetime) async {
-    Uri url =
+    final response = await makeAuthenticatedRequest(
+        'GET',
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
-      'date': DateUtil.convertDateTimeWithDash(datetime),
-      'type': typeDay,
-    });
+          'date': DateUtil.convertDateTimeWithDash(datetime),
+          'type': typeDay,
+        }));
 
-    final response = await http.get(url);
     if (response.statusCode == 200) {
       try {
         List<dynamic> result = json.decode(response.body)['result'];

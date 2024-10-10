@@ -7,6 +7,7 @@ import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -33,10 +34,11 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
+  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
 
   void _changeSelectedDay(DateTime selectedDay) async {
     List<AvailableTimes> trainerList =
-        await ScheduleRepository.getAvailableTimeListByTrainerIdAndDate(
+        await scheduleRepository.getAvailableTimeListByTrainerIdAndDate(
             widget.scheduleDetail.trainerId, selectedDay);
     List<ScheduleUser> userSchedules =
         await ScheduleRepository.getScheduleByDay(widget.userId, selectedDay);
