@@ -21,7 +21,7 @@ class ReasonLayout extends StatefulWidget {
   final ScheduleUser? scheduleDetail;
 
   //기존에 선택한 시간
-  final DateTime originalDay;
+  final DateTime originalDatetime;
 
   //새롭게 선택한 시간(오직 변경인 경우에만 해당함)
   final DateTime? selectedDay;
@@ -47,7 +47,7 @@ class ReasonLayout extends StatefulWidget {
       this.selectedTime,
       this.changeTicketId,
       required this.type,
-      required this.originalDay,
+      required this.originalDatetime,
       required this.requesterType,
       this.reasonFromUser});
 
@@ -115,29 +115,26 @@ class ReasonLayoutState extends State<ReasonLayout> {
                   title: '확인',
                   enabled: _selectedReason.isNotEmpty,
                   onPressed: () async {
-                    print(_selectedReason);
-                    print(widget.requesterType);
-                    print(widget.type);
-                    // if (widget.requesterType == 'TRAINER') {
-                    //   //trainer 의 change ticket 거절 api
-                    //   if (widget.type == ChangeTicketType.MODIFY) {
-                    //     rejectModifyTypeChangeTicket();
-                    //   } else {
-                    //     rejectCancelTypeChangeTicket();
-                    //   }
-                    //   _showToast('운동 일정 변경을 거절하셨습니다.');
-                    //   Navigator.pop(context);
-                    //   Navigator.pop(context);
-                    // } else {
-                    //   //user 의 change ticket 생성 api
-                    //   int changeTicketId;
-                    //   if (widget.type == ChangeTicketType.MODIFY) {
-                    //     changeTicketId = await createModifyTypeChangeTicket();
-                    //   } else {
-                    //     changeTicketId = await createCancelTypeChangeTicket();
-                    //   }
-                    //   moveToCompletePage(context, changeTicketId);
-                    // }
+                    if (widget.requesterType == 'TRAINER') {
+                      //trainer 의 change ticket 거절 api
+                      if (widget.type == ChangeTicketType.MODIFY) {
+                        rejectModifyTypeChangeTicket();
+                      } else {
+                        rejectCancelTypeChangeTicket();
+                      }
+                      _showToast('운동 일정 변경을 거절하셨습니다.');
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      //user 의 change ticket 생성 api
+                      int changeTicketId;
+                      if (widget.type == ChangeTicketType.MODIFY) {
+                        changeTicketId = await createModifyTypeChangeTicket();
+                      } else {
+                        changeTicketId = await createCancelTypeChangeTicket();
+                      }
+                      moveToCompletePage(context, changeTicketId);
+                    }
                   }),
             ],
           ),
@@ -234,6 +231,7 @@ class ReasonLayoutState extends State<ReasonLayout> {
 
   //회원이 날리는 변경 타입 change ticket 생성 메소드
   Future<int> createModifyTypeChangeTicket() async {
+    print(DateUtil.convertDatabaseFormatDateTime(widget.originalDatetime));
     final body = {
       'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': widget.requesterType,
@@ -241,7 +239,8 @@ class ReasonLayoutState extends State<ReasonLayout> {
       'change_reason': _selectedReason,
       'start_time': DateUtil.convertDatabaseFormatFromDayAndTime(
           widget.selectedDay!, widget.selectedTime!),
-      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay)
+      'as_is_date':
+          DateUtil.convertDatabaseFormatDateTime(widget.originalDatetime)
     };
     int response = await ChangeTicketRepository().createChangeTicket(body);
     return response;
@@ -249,12 +248,14 @@ class ReasonLayoutState extends State<ReasonLayout> {
 
   //회원이 날리는 취소 타입 change ticket 생성 메소드
   Future<int> createCancelTypeChangeTicket() async {
+    print(DateUtil.convertDatabaseFormatDateTime(widget.originalDatetime));
     final body = {
       'schedule_id': widget.scheduleDetail?.scheduleId,
       'change_from': widget.requesterType,
       'change_type': widget.type,
       'change_reason': _selectedReason,
-      'as_is_date': DateUtil.convertDatabaseFormatDateTime(widget.originalDay)
+      'as_is_date':
+          DateUtil.convertDatabaseFormatDateTime(widget.originalDatetime)
     };
     int response = await ChangeTicketRepository().createChangeTicket(body);
     return response;

@@ -209,7 +209,7 @@ class _GymproRequestDetailState extends State<GymproRequestDetail> {
                                                           .changeTicketId,
                                                       type: widget.changeTicket
                                                           .changeTicketType,
-                                                      originalDay: widget
+                                                      originalDatetime: widget
                                                           .changeTicket
                                                           .asIsDate,
                                                       selectedDay: widget

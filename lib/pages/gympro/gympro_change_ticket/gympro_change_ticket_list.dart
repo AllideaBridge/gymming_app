@@ -1,24 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:gymming_app/services/repositories/change_ticket_repository.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/colors.dart';
 import '../../../components/cards/change_ticket_list_card.dart';
 import '../../../services/models/change_ticket.dart';
+import '../../../state/info_state.dart';
 import 'gympro_request_detail.dart';
 
-class GymproChangeTicketList extends StatelessWidget {
+class GymproChangeTicketList extends StatefulWidget {
   final String changeTicketStatus;
 
   const GymproChangeTicketList({super.key, required this.changeTicketStatus});
 
   @override
+  State<GymproChangeTicketList> createState() => _GymproChangeTicketListState();
+}
+
+class _GymproChangeTicketListState extends State<GymproChangeTicketList> {
+  late Future<List<ChangeTicket>> _changeTicketList;
+  late int trainerId;
+
+  @override
+  void initState() {
+    super.initState();
+    trainerId = Provider.of<InfoState>(context, listen: false).trainerId!;
+    _changeTicketList = ChangeTicketRepository()
+        .getTrainerChangeTicketList(trainerId, widget.changeTicketStatus, 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // TODO TrainerId 로그인된 값으로 변경
-      // TODO Status 값(WAITING) 상수화
-      // TODO 무한 스크롤 page 늘어나는 기능 구현
-      future: ChangeTicketRepository()
-          .getTrainerChangeTicketList(1, changeTicketStatus, 1),
+      future: _changeTicketList,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -40,12 +54,17 @@ class GymproChangeTicketList extends StatelessWidget {
         itemCount: changeTicketList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => GymproRequestDetail(
                           changeTicket: changeTicketList[index])));
+              setState(() {
+                _changeTicketList = ChangeTicketRepository()
+                    .getTrainerChangeTicketList(
+                        trainerId, widget.changeTicketStatus, 1);
+              });
             },
             child: ChangeTicketListCard(
               title: changeTicketList[index].userName!,

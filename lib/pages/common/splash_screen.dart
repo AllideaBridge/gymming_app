@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../common/exceptions.dart';
 import '../../services/repositories/auth_repository.dart';
-import 'package:http/http.dart' as http;
-
 import '../../state/info_state.dart';
 import '../gymbie/gymbie_home/gymbie_home.dart';
 import '../gympro/gympro_home/gympro_home.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/gymbie_home.dart';
 import 'package:gymming_app/pages/gympro/gympro_member_connect/gympro_member_search.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
@@ -92,10 +93,12 @@ class TrainerDrawer extends StatelessWidget {
                   onTap: () {
                     print('log out!');
                     TokenManagerService.instance.clearTokens();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LoginSelectType()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginSelectType()),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: Container(
                     padding:
@@ -170,10 +173,10 @@ class TrainerDrawer extends StatelessWidget {
                             leftTabName: "응답 대기",
                             rightTabName: "완료",
                             leftComponent: GymproChangeTicketList(
-                              changeTicketStatus: "WAITING",
+                              changeTicketStatus: ChangeTicketStatus.WAITING,
                             ),
                             rightComponent: GymproChangeTicketList(
-                              changeTicketStatus: "APPROVED,REJECTED,CANCELED",
+                              changeTicketStatus: ChangeTicketStatus.RESOLVED,
                             ),
                           )));
             },

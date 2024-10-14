@@ -6,8 +6,8 @@ import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
@@ -18,11 +18,11 @@ import '../../services/models/schedule_user.dart';
 class GymbieScheduleChange extends StatefulWidget {
   const GymbieScheduleChange(
       {super.key,
-      required this.originDay,
+      required this.originalSelectedDay,
       required this.scheduleDetail,
       required this.userId});
 
-  final DateTime originDay;
+  final DateTime originalSelectedDay;
   final ScheduleUser scheduleDetail;
   final int userId;
 
@@ -34,7 +34,8 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
   DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
-  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
+  final ScheduleRepository scheduleRepository =
+      ScheduleRepository(client: http.Client());
 
   void _changeSelectedDay(DateTime selectedDay) async {
     List<AvailableTimes> trainerList =
@@ -68,7 +69,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
               children: [
                 CommonHeader(title: '일정 $CHANGE'),
                 ScheduleSelectCalendar(
-                  originDay: widget.originDay,
+                  originDay: widget.originalSelectedDay,
                   changeSelectedDay: _changeSelectedDay,
                 ),
                 const SizedBox(
@@ -127,7 +128,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
 
   void clickChangeButton(context) async {
     DateTime now = DateUtil.getKorTimeNow();
-    int days = widget.originDay
+    int days = widget.originalSelectedDay
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
 
@@ -160,7 +161,7 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
                     scheduleDetail: widget.scheduleDetail,
                     selectedDay: _selectedDay,
                     selectedTime: _selectedTime,
-                    originalDay: widget.originDay,
+                    originalDatetime: widget.scheduleDetail.startTime,
                     type: ChangeTicketType.MODIFY,
                     requesterType: 'USER',
                   )));
