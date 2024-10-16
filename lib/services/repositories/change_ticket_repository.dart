@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:gymming_app/common/exceptions.dart';
+
 import '../../common/constants.dart';
 import '../auth/api_service.dart';
 import '../models/change_ticket.dart';
@@ -70,7 +72,8 @@ class ChangeTicketRepository extends ApiService {
     if (response.statusCode == 200) {
       return json.decode(response.body)['change_ticket_id'];
     } else {
-      throw Exception("create change ticket failed.");
+      throw ChangeTicketCreateFailedException(
+          jsonDecode(response.body)['message']);
     }
   }
 

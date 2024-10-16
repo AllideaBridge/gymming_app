@@ -9,6 +9,7 @@ import 'package:gymming_app/services/utils/date_util.dart';
 
 import '../../common/colors.dart';
 import '../../common/constants.dart';
+import '../../common/exceptions.dart';
 import '../../services/models/reason_content.dart';
 import '../../services/models/schedule_user.dart';
 import '../../services/utils/toast_util.dart';
@@ -128,12 +129,16 @@ class ReasonLayoutState extends State<ReasonLayout> {
                     } else {
                       //user 의 change ticket 생성 api
                       int changeTicketId;
-                      if (widget.type == ChangeTicketType.MODIFY) {
-                        changeTicketId = await createModifyTypeChangeTicket();
-                      } else {
-                        changeTicketId = await createCancelTypeChangeTicket();
+                      try {
+                        if (widget.type == ChangeTicketType.MODIFY) {
+                          changeTicketId = await createModifyTypeChangeTicket();
+                        } else {
+                          changeTicketId = await createCancelTypeChangeTicket();
+                        }
+                        moveToCompletePage(context, changeTicketId);
+                      } on ChangeTicketCreateFailedException catch (e) {
+                        _showToast(e.message);
                       }
-                      moveToCompletePage(context, changeTicketId);
                     }
                   }),
             ],
