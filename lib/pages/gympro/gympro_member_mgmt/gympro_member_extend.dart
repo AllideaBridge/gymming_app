@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/input_filed.dart';
+import 'package:gymming_app/services/models/trainer_user_detail.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
+import 'package:provider/provider.dart';
+
+import '../../../state/info_state.dart';
 
 class GymproMemberExtend extends StatefulWidget {
-  final int currentCount;
-  final int totalCount;
+  final int userId;
+  final TrainerUserDetail trainerUserDetail;
 
   const GymproMemberExtend(
-      {super.key, required this.currentCount, required this.totalCount});
+      {super.key, required this.trainerUserDetail, required this.userId});
 
   @override
   State<StatefulWidget> createState() => _GymproMemberExtendState();
@@ -24,8 +28,8 @@ class _GymproMemberExtendState extends State<GymproMemberExtend> {
   @override
   void initState() {
     super.initState();
-    _updateCurrentCount = widget.currentCount;
-    _updateTotalCount = widget.totalCount;
+    _updateCurrentCount = widget.trainerUserDetail.lessonCurrentCount;
+    _updateTotalCount = widget.trainerUserDetail.lessonTotalCount;
   }
 
   @override
@@ -78,7 +82,7 @@ class _GymproMemberExtendState extends State<GymproMemberExtend> {
           Row(
             children: [
               Text(
-                widget.currentCount.toString(),
+                widget.trainerUserDetail.lessonCurrentCount.toString(),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.white,
@@ -109,7 +113,7 @@ class _GymproMemberExtendState extends State<GymproMemberExtend> {
           Row(
             children: [
               Text(
-                widget.totalCount.toString(),
+                widget.trainerUserDetail.lessonTotalCount.toString(),
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.white,
@@ -136,8 +140,10 @@ class _GymproMemberExtendState extends State<GymproMemberExtend> {
   void onChangedCount(bool isValid) {
     setState(() {
       int inputNumber = int.tryParse(_countController.text) ?? 0;
-      _updateCurrentCount = widget.currentCount + inputNumber;
-      _updateTotalCount = widget.totalCount + inputNumber;
+      _updateCurrentCount =
+          widget.trainerUserDetail.lessonCurrentCount + inputNumber;
+      _updateTotalCount =
+          widget.trainerUserDetail.lessonTotalCount + inputNumber;
 
       if (_countController.text.isEmpty) {
         _enableBtn = false;
@@ -180,8 +186,13 @@ class _GymproMemberExtendState extends State<GymproMemberExtend> {
     Map<String, dynamic> body = {
       'lesson_total_count': _updateCurrentCount,
       'lesson_current_count': _updateTotalCount,
+      'exercise_days': widget.trainerUserDetail.exerciseDays,
+      'special_notice': widget.trainerUserDetail.specialNotes,
     };
-    await TrainerUserRepository().updateTrainerUser(1, 1, body);
+    await TrainerUserRepository().updateTrainerUser(
+        Provider.of<InfoState>(context, listen: false).trainerId!,
+        widget.userId,
+        body);
 
     Navigator.pop(context);
   }

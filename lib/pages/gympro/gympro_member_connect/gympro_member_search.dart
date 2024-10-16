@@ -106,7 +106,7 @@ class GymproMemberSearchState extends State<GymproMemberSearch> {
       MaterialPageRoute(
           builder: (context) => GymproMemberConnect(
                 userId: user['id'],
-                userDetail: TrainerUserDetail.fromJson(user),
+                trainerUserDetail: TrainerUserDetail.fromJson(user),
                 isEdit: false,
               )),
     );

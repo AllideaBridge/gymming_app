@@ -31,6 +31,10 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
   @override
   void initState() {
     super.initState();
+    refreshTrainerUserDetail();
+  }
+
+  void refreshTrainerUserDetail() {
     trainerUserDetail = TrainerUserRepository()
         .getTrainerUserDetail(widget.trainerId, widget.userId);
   }
@@ -187,15 +191,17 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GymproMemberExtend(
-                                currentCount:
-                                    trainerUserDetail.lessonCurrentCount,
-                                totalCount: trainerUserDetail.lessonTotalCount,
+                                userId: widget.userId,
+                                trainerUserDetail: trainerUserDetail,
                               )));
+                  setState(() {
+                    refreshTrainerUserDetail();
+                  });
                 },
               ),
               PopupMenuItem(
@@ -207,15 +213,18 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GymproMemberConnect(
-                                userId: 1,
-                                userDetail: trainerUserDetail,
+                                userId: widget.userId,
+                                trainerUserDetail: trainerUserDetail,
                                 isEdit: true,
                               )));
+                  setState(() {
+                    refreshTrainerUserDetail();
+                  });
                 },
               ),
               PopupMenuItem(

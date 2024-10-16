@@ -4,7 +4,7 @@ import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/input_filed.dart';
 import 'package:gymming_app/components/modals/basic_modal.dart';
 import 'package:gymming_app/components/profile_card.dart';
-import 'package:gymming_app/pages/gympro/gympro_member_mgmt/gympro_member_mgmt.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
 import 'package:gymming_app/services/models/trainer_user_detail.dart';
 import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 import 'package:provider/provider.dart';
@@ -13,13 +13,13 @@ import '../../../state/info_state.dart';
 
 class GymproMemberConnect extends StatefulWidget {
   final int userId;
-  final TrainerUserDetail userDetail;
+  final TrainerUserDetail trainerUserDetail;
   final bool isEdit;
 
   const GymproMemberConnect(
       {super.key,
       required this.userId,
-      required this.userDetail,
+      required this.trainerUserDetail,
       required this.isEdit});
 
   @override
@@ -46,9 +46,9 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
     if (!widget.isEdit) {
       _selectedButtons = List<bool>.filled(_buttonLabels.length, false);
     } else {
-      _infoController.text = widget.userDetail.specialNotes;
+      _infoController.text = widget.trainerUserDetail.specialNotes;
       _selectedButtons =
-          _convertDaysStringToBoolList(widget.userDetail.exerciseDays);
+          _convertDaysStringToBoolList(widget.trainerUserDetail.exerciseDays);
 
       _model['info'] = _infoController.text;
     }
@@ -117,10 +117,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
                 await _connectMember();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => GymproMemberMgmt(
-                            isPresent: true,
-                          )),
+                  MaterialPageRoute(builder: (context) => GymproHome()),
                   (Route<dynamic> route) => false,
                 );
               },
@@ -139,10 +136,15 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         .join(',');
 
     Map<String, dynamic> body = {
+      'lesson_total_count': widget.trainerUserDetail.lessonTotalCount,
+      'lesson_current_count': widget.trainerUserDetail.lessonCurrentCount,
       'exercise_days': selectedLabel,
       'special_notice': _model['info'],
     };
-    await TrainerUserRepository().updateTrainerUser(1, 1, body);
+    await TrainerUserRepository().updateTrainerUser(
+        Provider.of<InfoState>(context, listen: false).trainerId!,
+        widget.userId,
+        body);
     Navigator.pop(context);
   }
 
@@ -155,8 +157,8 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
         .join(',');
 
     Map<String, Object> body = {
-      'user_name': widget.userDetail.name,
-      'phone_number': widget.userDetail.phoneNumber,
+      'user_name': widget.trainerUserDetail.name,
+      'phone_number': widget.trainerUserDetail.phoneNumber,
       'lesson_total_count': int.parse(_model['count']),
       'lesson_current_count': int.parse(_model['count']),
       'exercise_days': selectedLabel,
@@ -200,11 +202,11 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
           children: [
             if (!widget.isEdit)
               ProfileCard(
-                imgUrl: widget.userDetail.profileImgUrl,
-                name: widget.userDetail.name,
-                birth: widget.userDetail.birthday,
-                gender: widget.userDetail.gender,
-                phoneNumber: widget.userDetail.phoneNumber,
+                imgUrl: widget.trainerUserDetail.profileImgUrl,
+                name: widget.trainerUserDetail.name,
+                birth: widget.trainerUserDetail.birthday,
+                gender: widget.trainerUserDetail.gender,
+                phoneNumber: widget.trainerUserDetail.phoneNumber,
               ),
             // FutureBuilder(
             //   future: UserRepository(client: http.Client())

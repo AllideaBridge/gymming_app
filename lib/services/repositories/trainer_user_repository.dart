@@ -3,24 +3,15 @@ import 'dart:convert';
 import 'package:gymming_app/services/auth/api_service.dart';
 import 'package:gymming_app/services/models/trainer_list.dart';
 import 'package:gymming_app/services/models/trainer_user.dart';
-import 'package:http/http.dart' as http;
 
 import '../../common/constants.dart';
 import '../models/trainer_user_detail.dart';
 
 class TrainerUserRepository extends ApiService {
-  late final http.Client client;
-
   static final String baseUrl = "$SERVER_URL/trainer-user";
-
-  void initClient() {
-    client = http.Client();
-  }
 
   Future<bool> connectTrainerUser(
       int trainerId, Map<String, Object> body) async {
-    print("body");
-    print(body);
     try {
       final response = await makeAuthenticatedRequest(
           'POST', Uri.parse('$baseUrl/trainer/$trainerId/users'),
@@ -46,17 +37,9 @@ class TrainerUserRepository extends ApiService {
               'training_user_delete_flag': isPresent ? "true" : "false"
             }));
 
-    // Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users')
-    //     .replace(queryParameters: {
-    //   'training_user_delete_flag': isPresent ? "true" : "false",
-    // });
-    // initClient();
-    // final response = await client.get(url);
     if (response.statusCode == 200) {
       try {
         final List<dynamic> body = json.decode(response.body)["results"];
-        print("getTrainerUserList");
-        print(body);
         return TrainerUser.parseTrainerUserList(body);
       } catch (e) {
         throw Exception("Failed to load data : ${e.toString()}");
@@ -72,9 +55,6 @@ class TrainerUserRepository extends ApiService {
     final response = await makeAuthenticatedRequest(
         'GET', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId'));
 
-    // Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users/$userId');
-    // initClient();
-    // final response = await client.get(url);
     if (response.statusCode == 200) {
       try {
         final dynamic body = json.decode(response.body);
@@ -106,14 +86,9 @@ class TrainerUserRepository extends ApiService {
   }
 
   Future<bool> updateTrainerUser(int trainerId, int userId, Object body) async {
-    Uri url = Uri.parse('$baseUrl/trainer/$trainerId/users/$userId');
-    final response = await http.put(
-      url,
-      body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
+    final response = await makeAuthenticatedRequest(
+        'PUT', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId'),
+        body: body);
 
     if (response.statusCode == 201) {
       return true;
