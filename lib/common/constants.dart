@@ -67,5 +67,5 @@ class ChangeTicketStatus {
   static String APPROVED = "APPROVED";
   static String REJECTED = "REJECTED";
   static String CANCELED = "CANCELED";
-  static String RESOLVED = "APPROVED,REJECTED,CANCELED";
+  static String RESOLVED = "RESOLVED";
 }

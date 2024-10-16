@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gymming_app/pages/gympro/gympro_register.dart';
 import 'package:gymming_app/pages/login/component/login_footer.dart';
 import 'package:gymming_app/pages/login/component/login_header.dart';
 import 'package:gymming_app/services/auth/token_manager_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
@@ -16,8 +16,6 @@ import '../../services/repositories/auth_repository.dart';
 import '../../state/info_state.dart';
 import '../gymbie/gymbie_home/gymbie_home.dart';
 import '../gymbie/gymbie_register.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-
 import '../gympro/gympro_home/gympro_home.dart';
 
 class LoginSelectSocial extends StatelessWidget {
@@ -131,7 +129,7 @@ class LoginSelectSocial extends StatelessWidget {
                     TrainerAuth trainerAuth = await authRepository
                         .signInTrainer(oAuthToken.accessToken);
                     Provider.of<InfoState>(context, listen: false)
-                        .setUserId(trainerAuth.trainerId);
+                        .setTrainerId(trainerAuth.trainerId);
                     TokenManagerService.instance
                         .saveAccessToken(trainerAuth.accessToken);
                     TokenManagerService.instance

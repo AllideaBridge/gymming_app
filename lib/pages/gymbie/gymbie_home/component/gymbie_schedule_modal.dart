@@ -73,7 +73,7 @@ class GymbieScheduleModal extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => GymbieScheduleChange(
-                                      originDay:
+                                      originalSelectedDay:
                                           Provider.of<StateDateTime>(context)
                                               .selectedDateTime,
                                       scheduleDetail: scheduleDetail,

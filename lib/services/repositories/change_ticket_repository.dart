@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:gymming_app/common/exceptions.dart';
+
 import '../../common/constants.dart';
 import '../auth/api_service.dart';
 import '../models/change_ticket.dart';
 
 class ChangeTicketRepository extends ApiService {
-  // TODO 로컬 URL에서 변경 필요
   final String baseUrl = "$SERVER_URL/change-ticket";
 
   Future<List<ChangeTicket>> getTrainerChangeTicketList(
@@ -71,7 +72,8 @@ class ChangeTicketRepository extends ApiService {
     if (response.statusCode == 200) {
       return json.decode(response.body)['change_ticket_id'];
     } else {
-      throw Exception("create change ticket failed.");
+      throw ChangeTicketCreateFailedException(
+          jsonDecode(response.body)['message']);
     }
   }
 
