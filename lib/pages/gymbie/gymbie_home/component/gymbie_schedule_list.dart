@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_item.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_home/component/gymbie_schedule_modal.dart';
 import 'package:gymming_app/services//utils/date_util.dart';
+import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
+import 'package:gymming_app/state/info_state.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/colors.dart';
-import '../../../../services/models/schedule_user.dart';
-
 class GymbieScheduleList extends StatelessWidget {
-  final int userId;
-
-  const GymbieScheduleList({super.key, required this.userId});
+  const GymbieScheduleList({super.key});
 
   @override
   Widget build(BuildContext context) {
     var selectedDateTime = Provider.of<StateDateTime>(context).selectedDateTime;
-    Future<List<ScheduleUser>> schedules =
-        ScheduleRepository.getScheduleByDay(userId, selectedDateTime);
+    Future<List<ScheduleUser>> schedules = ScheduleRepository()
+        .getScheduleByDay(
+            Provider.of<InfoState>(context, listen: false).userId!,
+            selectedDateTime);
 
     return FutureBuilder(
         future: schedules,
@@ -86,12 +86,14 @@ class GymbieScheduleList extends StatelessWidget {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
+          return SizedBox(
             height: 428,
             child: ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: GymbieScheduleModal(
-                    scheduleDetail: schedule, userId: userId)),
+                    scheduleDetail: schedule,
+                    userId: Provider.of<InfoState>(context, listen: false)
+                        .userId!)),
           );
         });
   }

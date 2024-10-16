@@ -1,45 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/components/schedule_select_calendar.dart';
+import 'package:gymming_app/components/time_select_table.dart';
+import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-
-import '../../../common/colors.dart';
-import '../../../components/common_header.dart';
-import '../../../components/schedule_select_calendar.dart';
-import '../../../components/time_select_table.dart';
-import '../../../services/models/available_times.dart';
-import '../../../services/repositories/schedule_repository.dart';
-import 'package:http/http.dart' as http;
+import 'package:gymming_app/state/info_state.dart';
+import 'package:provider/provider.dart';
 
 class GymproDisableTime extends StatefulWidget {
-  final int trainerId;
-
-  const GymproDisableTime({super.key, required this.trainerId});
+  const GymproDisableTime({super.key});
 
   @override
   State<StatefulWidget> createState() => _GymproDisableTimeState();
 }
 
 class _GymproDisableTimeState extends State<GymproDisableTime> {
+  late int trainerId =
+      Provider.of<InfoState>(context, listen: false).trainerId!;
+
   DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
-  final ScheduleRepository scheduleRepository = ScheduleRepository(client: http.Client());
-
-  void _changeSelectedDay(DateTime selectedDay) async {
-    var result =
-        await scheduleRepository.getAvailableTimeListByTrainerIdAndDate(
-            widget.trainerId, selectedDay);
-    setState(() {
-      _selectedDay = selectedDay;
-      _selectedTime = '';
-      _availableTimesList = result;
-    });
-  }
-
-  void _changeSelectedTime(String selectedTime) {
-    setState(() {
-      _selectedTime = selectedTime;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +71,8 @@ class _GymproDisableTimeState extends State<GymproDisableTime> {
       child: ElevatedButton(
         onPressed: _selectedTime.isEmpty ? null : () => clickConfirm(context),
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),
@@ -107,11 +90,27 @@ class _GymproDisableTimeState extends State<GymproDisableTime> {
     );
   }
 
+  void _changeSelectedDay(DateTime selectedDay) async {
+    var result = await ScheduleRepository()
+        .getAvailableTimeListByTrainerIdAndDate(trainerId, selectedDay);
+
+    setState(() {
+      _selectedDay = selectedDay;
+      _selectedTime = '';
+      _availableTimesList = result;
+    });
+  }
+
+  void _changeSelectedTime(String selectedTime) {
+    setState(() {
+      _selectedTime = selectedTime;
+    });
+  }
+
   void clickConfirm(context) {
-    //todo 스케쥴 생성 변경 필요
     var dateTime = DateUtil.convertDatabaseFormatFromDayAndTime(
         _selectedDay, _selectedTime);
-    ScheduleRepository.createSchedule(0, widget.trainerId, dateTime);
-    return;
+
+    ScheduleRepository().createSchedule(0, trainerId, dateTime);
   }
 }

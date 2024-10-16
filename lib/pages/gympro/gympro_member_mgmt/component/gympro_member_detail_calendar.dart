@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/components/state_date_time.dart';
 import 'package:gymming_app/services/models/schedule_detail.dart';
 import 'package:gymming_app/services/models/schedule_trainer_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:http/http.dart' as http;
+import 'package:gymming_app/services/utils/date_util.dart';
+import 'package:gymming_app/state/info_state.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../common/colors.dart';
-import '../../../../components/icon_label.dart';
-import '../../../../services/utils/date_util.dart';
-
 class GymproMemberDetailCalendar extends StatefulWidget {
-  final int trainerId;
   final int userId;
 
-  const GymproMemberDetailCalendar(
-      {Key? key, required this.trainerId, required this.userId})
+  const GymproMemberDetailCalendar({Key? key, required this.userId})
       : super(key: key);
 
   @override
@@ -27,14 +24,15 @@ class GymproMemberDetailCalendar extends StatefulWidget {
 
 class _GymproMemberDetailCalendarState
     extends State<GymproMemberDetailCalendar> {
-  final scheduleRepository = ScheduleRepository(client: http.Client());
+  late int trainerId =
+      Provider.of<InfoState>(context, listen: false).trainerId!;
   late Future<Set<ScheduleTrainerUser>> futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    futureSchedules = scheduleRepository.getTrainerUserScheduleByMonth(
-        widget.trainerId, widget.userId, DateUtil.getKorTimeNow());
+    futureSchedules = ScheduleRepository().getTrainerUserScheduleByMonth(
+        trainerId, widget.userId, DateUtil.getKorTimeNow());
   }
 
   @override
@@ -132,7 +130,7 @@ class _GymproMemberDetailCalendarState
         var scheduleId = findScheduleId(schedules, selectedDay);
         if (scheduleId != -1) {
           ScheduleDetail scheduleDetail =
-              await scheduleRepository.getScheduleDetail(scheduleId);
+              await ScheduleRepository().getScheduleDetail(scheduleId);
           buildBottomSheet(scheduleDetail);
         }
       },
@@ -146,8 +144,8 @@ class _GymproMemberDetailCalendarState
       onPageChanged: (DateTime day) {
         Provider.of<StateDateTime>(context, listen: false).changeStateDate(day);
         setState(() {
-          futureSchedules = scheduleRepository.getTrainerUserScheduleByMonth(
-              widget.trainerId, widget.userId, day);
+          futureSchedules = ScheduleRepository()
+              .getTrainerUserScheduleByMonth(trainerId, widget.userId, day);
         });
       },
       calendarBuilders: CalendarBuilders(

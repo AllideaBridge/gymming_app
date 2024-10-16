@@ -2,6 +2,7 @@ class TrainerList {
   final int _trainerId;
   final String _trainerName;
   final String _trainerProfileImgUrl;
+  final String _lessonName;
   final int _lessonTotalCount;
   final int _lessonCurrentCount;
   final String _centerName;
@@ -11,6 +12,7 @@ class TrainerList {
     this._trainerId,
     this._trainerName,
     this._trainerProfileImgUrl,
+    this._lessonName,
     this._lessonTotalCount,
     this._lessonCurrentCount,
     this._centerName,
@@ -20,6 +22,8 @@ class TrainerList {
   String get centerLocation => _centerLocation;
 
   String get centerName => _centerName;
+
+  String get lessonName => _lessonName;
 
   int get lessonCurrentCount => _lessonCurrentCount;
 
@@ -37,6 +41,7 @@ class TrainerList {
         json["trainer_name"],
         // json["trainer_profile_img_url"],
         'assets/images/user_example.png',
+        json["lesson_name"],
         //todo null 값이 들어오는 지 확인
         json["lesson_total_count"],
         json["lesson_current_count"],

@@ -68,8 +68,7 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                       height: 12,
                       color: BACKGROUND_COLOR,
                     ),
-                    GymproMemberDetailCalendar(
-                        trainerId: widget.trainerId, userId: widget.userId),
+                    GymproMemberDetailCalendar(userId: widget.userId),
                   ],
                 ),
               ),
@@ -93,21 +92,19 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(80.0),
-                child: trainerUserDetail.profileImgUrl != null ?
-
-                Image.network(
-                  trainerUserDetail.profileImgUrl!,
-                  fit: BoxFit.cover,
-                  width: 80.0,
-                  height: 80.0,
-                ) :
-                Image.asset(
-                  'assets/images/user_example.png',
-                  fit: BoxFit.cover,
-                  width: 80.0,
-                  height: 80.0,
-                )
-                ,
+                child: trainerUserDetail.profileImgUrl != null
+                    ? Image.network(
+                        trainerUserDetail.profileImgUrl!,
+                        fit: BoxFit.cover,
+                        width: 80.0,
+                        height: 80.0,
+                      )
+                    : Image.asset(
+                        'assets/images/user_example.png',
+                        fit: BoxFit.cover,
+                        width: 80.0,
+                        height: 80.0,
+                      ),
               ),
               SizedBox(height: 16.0),
               Text(

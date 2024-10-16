@@ -77,7 +77,6 @@ class GymbieScheduleModal extends StatelessWidget {
                                           Provider.of<StateDateTime>(context)
                                               .selectedDateTime,
                                       scheduleDetail: scheduleDetail,
-                                      userId: userId,
                                     )));
                       },
                       title: '변경하기',

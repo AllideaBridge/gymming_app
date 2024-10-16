@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/pages/gympro/drawer/gympro_drawer.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/gympro_disable_time.dart';
 import 'package:gymming_app/pages/gympro/gympro_home/lesson_data_source.dart';
+import 'package:gymming_app/services/models/lesson_list.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-import 'package:http/http.dart' as http;
+import 'package:gymming_app/state/info_state.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
-import '../../../../common/colors.dart';
-import '../../../services/models/lesson_list.dart';
-import '../../../state/info_state.dart';
 
 class GymproHome extends StatefulWidget {
   const GymproHome({Key? key}) : super(key: key);
@@ -21,7 +19,9 @@ class GymproHome extends StatefulWidget {
 }
 
 class _GymproHomeState extends State<GymproHome> {
-  final scheduleRepository = ScheduleRepository(client: http.Client());
+  late int trainerId =
+      Provider.of<InfoState>(context, listen: false).trainerId!;
+
   Future<List<LessonList>> futureTrainerSchedules =
       Future<List<LessonList>>.value([]);
 
@@ -65,11 +65,8 @@ class _GymproHomeState extends State<GymproHome> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GymproDisableTime(
-                      trainerId: Provider.of<InfoState>(context).trainerId!)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => GymproDisableTime()));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),
@@ -114,9 +111,8 @@ class _GymproHomeState extends State<GymproHome> {
         List<DateTime> dates = details.visibleDates;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            futureTrainerSchedules =
-                scheduleRepository.getTrainerScheduleByWeek(dates[0],
-                    Provider.of<InfoState>(context, listen: false).trainerId!);
+            futureTrainerSchedules = ScheduleRepository()
+                .getTrainerScheduleByWeek(dates[0], trainerId);
           });
         });
       },
