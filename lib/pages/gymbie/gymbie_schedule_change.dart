@@ -1,48 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/components/common_header.dart';
+import 'package:gymming_app/components/layouts/reason_layout.dart';
 import 'package:gymming_app/components/schedule_select_calendar.dart';
 import 'package:gymming_app/components/time_select_table.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
 import 'package:gymming_app/services/models/available_times.dart';
+import 'package:gymming_app/services/models/reason_content.dart';
+import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-import 'package:http/http.dart' as http;
+import 'package:gymming_app/state/info_state.dart';
 import 'package:intl/intl.dart';
-
-import '../../common/colors.dart';
-import '../../common/constants.dart';
-import '../../components/layouts/reason_layout.dart';
-import '../../services/models/reason_content.dart';
-import '../../services/models/schedule_user.dart';
+import 'package:provider/provider.dart';
 
 class GymbieScheduleChange extends StatefulWidget {
-  const GymbieScheduleChange(
-      {super.key,
-      required this.originalSelectedDay,
-      required this.scheduleDetail,
-      required this.userId});
+  const GymbieScheduleChange({
+    super.key,
+    required this.originalSelectedDay,
+    required this.scheduleDetail,
+  });
 
   final DateTime originalSelectedDay;
   final ScheduleUser scheduleDetail;
-  final int userId;
 
   @override
   State<GymbieScheduleChange> createState() => _GymbieScheduleChangeState();
 }
 
 class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
+  late int userId = Provider.of<InfoState>(context, listen: false).userId!;
+
   DateTime _selectedDay = DateUtil.getKorTimeNow();
   String _selectedTime = '';
   List<AvailableTimes> _availableTimesList = [];
-  final ScheduleRepository scheduleRepository =
-      ScheduleRepository(client: http.Client());
 
   void _changeSelectedDay(DateTime selectedDay) async {
-    List<AvailableTimes> trainerList =
-        await scheduleRepository.getAvailableTimeListByTrainerIdAndDate(
+    List<AvailableTimes> trainerList = await ScheduleRepository()
+        .getAvailableTimeListByTrainerIdAndDate(
             widget.scheduleDetail.trainerId, selectedDay);
     List<ScheduleUser> userSchedules =
-        await ScheduleRepository.getScheduleByDay(widget.userId, selectedDay);
+        await ScheduleRepository().getScheduleByDay(userId, selectedDay);
     List<AvailableTimes> result =
         getAvailableTimeListWithUser(trainerList, userSchedules);
     setState(() {
@@ -107,8 +106,8 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
         onPressed:
             _selectedTime.isEmpty ? null : () => clickChangeButton(context),
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),
@@ -136,10 +135,10 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
       var requestTime = DateUtil.convertDatabaseFormatFromDayAndTime(
           _selectedDay, _selectedTime);
 
-      final response = await ScheduleRepository.updateSchedule(
-          widget.scheduleDetail.scheduleId, requestTime);
+      final response = await ScheduleRepository()
+          .updateSchedule(widget.scheduleDetail.scheduleId, requestTime);
 
-      if (response) {
+      if (response.isNotEmpty) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -185,17 +184,15 @@ class _GymbieScheduleChangeState extends State<GymbieScheduleChange> {
 
     for (int i = 0; i < trainerList.length; i++) {
       if (!trainerList[i].isPossible) {
-        availableTimeList.add(AvailableTimes(
-            time: trainerList[i].time, isPossible: trainerList[i].isPossible));
+        availableTimeList.add(
+            AvailableTimes(trainerList[i].time, trainerList[i].isPossible));
         continue;
       }
 
       if (userUnavailableTimes.contains(trainerList[i].time)) {
-        availableTimeList
-            .add(AvailableTimes(time: trainerList[i].time, isPossible: false));
+        availableTimeList.add(AvailableTimes(trainerList[i].time, false));
       } else {
-        availableTimeList
-            .add(AvailableTimes(time: trainerList[i].time, isPossible: true));
+        availableTimeList.add(AvailableTimes(trainerList[i].time, true));
       }
     }
 

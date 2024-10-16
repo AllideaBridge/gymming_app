@@ -37,10 +37,4 @@ class ScheduleDetail {
       json["center_location"],
     );
   }
-
-  // api 완성되기 전 dummy 값
-  static ScheduleDetail getDummyScheduleDetail() {
-    return ScheduleDetail(
-        1, DateTime.parse('2024-05-17T09:00'), 'PT', '김헬스', 'GYMGYM', '방이동');
-  }
 }

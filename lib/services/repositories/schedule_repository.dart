@@ -1,47 +1,19 @@
 import 'dart:convert';
 
+import 'package:gymming_app/common/constants.dart';
 import 'package:gymming_app/services/auth/api_service.dart';
+import 'package:gymming_app/services/models/available_times.dart';
 import 'package:gymming_app/services/models/lesson_list.dart';
 import 'package:gymming_app/services/models/schedule_detail.dart';
 import 'package:gymming_app/services/models/schedule_trainer_user.dart';
 import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/utils/date_util.dart';
-import 'package:http/http.dart' as http;
-
-import '../../common/constants.dart';
-import '../models/available_times.dart';
 
 class ScheduleRepository extends ApiService {
-  ScheduleRepository({required this.client});
-
-  final http.Client client;
-
-  static final int dummyUserId = 1;
-  static final int dummyTrainerId = 1;
   static final String typeMonth = 'month';
   static final String typeDay = 'day';
   static final String typeWeek = 'week';
   static final String baseUrl = "$SERVER_URL/schedules";
-
-  /*
-    스케쥴 상세조회
-    URL: schedules/<schedule_id>
-   */
-  Future<ScheduleDetail> getScheduleDetail(int scheduleId) async {
-    Uri url = Uri.parse('$baseUrl/$scheduleId');
-    return ScheduleDetail.getDummyScheduleDetail();
-    // final response = await client.get(url);
-    // if (response.statusCode == 200) {
-    //   try {
-    //     return ScheduleDetail.fromJson(json.decode(response.body)["result"]);
-    //   } catch (e) {
-    //     throw Exception("Failed to load data : ${e.toString()}");
-    //   }
-    // } else {
-    //   throw Exception(
-    //       "api response error occurs: error code = ${response.statusCode}");
-    // }
-  }
 
   /*
     스케줄 생성
@@ -51,22 +23,43 @@ class ScheduleRepository extends ApiService {
       trainer_id: String,
       start_time: String(YYYY-MM-DDTHH:MM:SS)
    */
-  static Future<bool> createSchedule(
+  Future<String> createSchedule(
       int userId, int trainerId, String startTime) async {
-    final response = await http.post(Uri.parse(baseUrl),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json.encode({
-          'user_id': userId,
-          'trainer_id': trainerId,
-          'schedule_start_time': startTime
-        }));
+    var url = Uri.parse(baseUrl);
+
+    final response = await makeAuthenticatedRequest('POST', url, headers: {
+      "Content-Type": "application/json",
+    }, body: {
+      'user_id': userId,
+      'trainer_id': trainerId,
+      'schedule_start_time': startTime
+    });
 
     if (response.statusCode == 200) {
-      return true;
+      return json.decode(response.body)['message'];
     } else {
-      return false;
+      throw Exception(json.decode(response.body)['message']);
+    }
+  }
+
+  /*
+    스케쥴 상세 조회
+    URL: schedules/<schedule_id>
+   */
+  Future<ScheduleDetail> getScheduleDetail(int scheduleId) async {
+    Uri url = Uri.parse('$baseUrl/$scheduleId');
+
+    final response = await makeAuthenticatedRequest('GET', url);
+
+    if (response.statusCode == 200) {
+      try {
+        return ScheduleDetail.fromJson(json.decode(response.body)["result"]);
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
+      }
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
     }
   }
 
@@ -76,27 +69,25 @@ class ScheduleRepository extends ApiService {
     body: {
       id: String,
       start_time: String(YYYY-MM-DDTHH:MM:SS)
-      status: String (MODIFIED/CANCELED)
+      status: String (MODIFIED)
     }
    */
-  static Future<bool> updateSchedule(int scheduleId, String time) async {
+  Future<String> updateSchedule(int scheduleId, String time) async {
     var url = Uri.parse('$baseUrl/$scheduleId');
-    final response = await http.put(
+    final response = await makeAuthenticatedRequest(
+      'PUT',
       url,
-      body: json.encode({
+      body: {
         'id': scheduleId,
         'start_time': time,
         'status': 'MODIFIED',
-      }),
-      headers: {
-        'Content-Type': 'application/json', // Content-Type 설정
       },
     );
 
     if (response.statusCode == 200) {
-      return true;
+      return json.decode(response.body)['message'];
     } else {
-      return false;
+      throw Exception(json.decode(response.body)['message']);
     }
   }
 
@@ -104,18 +95,14 @@ class ScheduleRepository extends ApiService {
     스케줄 삭제
     URL: schedules/<schedule_id>
    */
-  Future<bool> cancelSchedule(int scheduleId) async {
+  Future<String> cancelSchedule(int scheduleId) async {
     var url = Uri.parse('$baseUrl/$scheduleId');
-    final response = await http.delete(url);
-    if (response.statusCode != 200) {
+    final response = await makeAuthenticatedRequest('DELETE', url);
+    if (response.statusCode == 200) {
+      return (json.decode(response.body)["message"]);
+    } else {
       throw Exception(
           "api response error occurs: error code = ${response.statusCode}");
-    }
-    final dynamic body = json.decode(response.body);
-    if (body["message"] == "Schedule cancel successfully") {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -124,31 +111,23 @@ class ScheduleRepository extends ApiService {
     URL: schedules/users/<user_id>?day=date&type=month
    */
   Future<Set<String>> getScheduleByMonth(int userId, DateTime datetime) async {
-    try {
-      final response = await makeAuthenticatedRequest(
-          'GET',
-          Uri.parse('$baseUrl/user/$userId').replace(queryParameters: {
-            'date': DateUtil.convertDateTimeWithDash(datetime),
-            'type': typeMonth
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          });
+    var url = Uri.parse('$baseUrl/user/$userId').replace(queryParameters: {
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeMonth
+    });
 
-      if (response.statusCode == 200) {
-        try {
-          final List<dynamic> result = json.decode(response.body)["result"];
-          return result.map((item) => item.toString()).toSet();
-        } catch (e) {
-          throw Exception("Failed to load data : ${e.toString()}");
-        }
-      } else {
-        throw Exception(
-            "api response error occurs: error code = ${response.statusCode}");
+    final response = await makeAuthenticatedRequest('GET', url);
+
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> result = json.decode(response.body)["result"];
+        return result.map((item) => item.toString()).toSet();
+      } catch (e) {
+        throw Exception("Failed to load data : ${e.toString()}");
       }
-    } catch (e) {
-      print(e);
-      rethrow;
+    } else {
+      throw Exception(
+          "api response error occurs: error code = ${response.statusCode}");
     }
   }
 
@@ -156,13 +135,15 @@ class ScheduleRepository extends ApiService {
     회원의 하루 중 스케쥴 조회
     URL: schedules/users/<user_id>?day=date&type=day
    */
-  static Future<List<ScheduleUser>> getScheduleByDay(
+  Future<List<ScheduleUser>> getScheduleByDay(
       int userId, DateTime datetime) async {
     Uri url = Uri.parse('$baseUrl/user/$userId').replace(queryParameters: {
       'date': DateUtil.convertDateTimeWithDash(datetime),
       'type': typeDay
     });
-    final response = await http.get(url);
+
+    final response = await makeAuthenticatedRequest('GET', url);
+
     if (response.statusCode == 200) {
       try {
         List<dynamic> result = json.decode(response.body)['result'];
@@ -182,12 +163,13 @@ class ScheduleRepository extends ApiService {
    */
   Future<List<AvailableTimes>> getAvailableTimeListByTrainerIdAndDate(
       int trainerId, DateTime datetime) async {
-    final response = await makeAuthenticatedRequest(
-        'GET',
+    var url =
         Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
-          'date': DateUtil.convertDateTimeWithDash(datetime),
-          'type': typeDay,
-        }));
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeDay,
+    });
+
+    final response = await makeAuthenticatedRequest('GET', url);
 
     if (response.statusCode == 200) {
       try {
@@ -197,7 +179,7 @@ class ScheduleRepository extends ApiService {
         throw Exception('Failed to load data');
       }
     } else {
-      throw Exception('Failed to load data');
+      throw "api response error occurs: error code = ${response.statusCode}";
     }
   }
 
@@ -206,13 +188,14 @@ class ScheduleRepository extends ApiService {
     URL: schedules/trainer/<trainer_id>?date=date&type=week
    */
   Future<List<LessonList>> getTrainerScheduleByWeek(
-      DateTime datetime, int trainer_id) async {
-    final response = await makeAuthenticatedRequest(
-        "GET",
-        Uri.parse('$baseUrl/trainer/$trainer_id').replace(queryParameters: {
-          'date': DateUtil.convertDateTimeWithDash(datetime),
-          'type': typeWeek,
-        }));
+      DateTime datetime, int trainerId) async {
+    var url =
+        Uri.parse('$baseUrl/trainer/$trainerId').replace(queryParameters: {
+      'date': DateUtil.convertDateTimeWithDash(datetime),
+      'type': typeWeek,
+    });
+
+    final response = await makeAuthenticatedRequest("GET", url);
 
     if (response.statusCode == 200) {
       try {
@@ -226,7 +209,7 @@ class ScheduleRepository extends ApiService {
     }
   }
 
-  /*
+/*
     트레이너의 회원관리 상세에서 한달 스케쥴 조회
     URL: schedules/trainer/<trainer_id>/users/<user_id>?date=date&type=month
    */
@@ -237,7 +220,9 @@ class ScheduleRepository extends ApiService {
           'date': DateUtil.convertDateTimeWithDash(datetime),
           'type': typeMonth
         });
-    final response = await client.get(url);
+
+    final response = await makeAuthenticatedRequest('GET', url);
+
     if (response.statusCode == 200) {
       try {
         final List<dynamic> body = json.decode(response.body)["result"];

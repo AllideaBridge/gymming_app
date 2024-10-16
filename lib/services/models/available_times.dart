@@ -1,13 +1,17 @@
 class AvailableTimes {
-  final String time;
-  final bool isPossible;
+  final String _time;
+  final bool _isPossible;
 
-  AvailableTimes({required this.time, required this.isPossible});
+  AvailableTimes(this._time, this._isPossible);
+
+  String get time => _time;
+
+  bool get isPossible => _isPossible;
 
   factory AvailableTimes.fromJson(Map<String, dynamic> json) {
     return AvailableTimes(
-      time: json['time'],
-      isPossible: json['possible'],
+      json['time'],
+      json['possible'],
     );
   }
 

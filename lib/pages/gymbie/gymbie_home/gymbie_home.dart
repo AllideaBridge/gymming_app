@@ -8,7 +8,6 @@ import '../../../state/info_state.dart';
 import 'component/gymbie_schedule_list.dart';
 
 class GymbieHome extends StatelessWidget {
-
   const GymbieHome({Key? key}) : super(key: key);
 
   @override
@@ -22,20 +21,15 @@ class GymbieHome extends StatelessWidget {
       ),
       drawer: GymbieDrawer(),
       body: Column(
-        children: [
-          GymbieHomeCalendar(),
-          GymbieScheduleList(
-            userId: Provider.of<InfoState>(context).userId!,
-          )
-        ],
+        children: [GymbieHomeCalendar(), GymbieScheduleList()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      GymbieScheduleTrainerList(userId: Provider.of<InfoState>(context).userId!)));
+                  builder: (context) => GymbieScheduleTrainerList(
+                      userId: Provider.of<InfoState>(context).userId!)));
         },
         backgroundColor: Colors.white54,
         child: Icon(Icons.add),

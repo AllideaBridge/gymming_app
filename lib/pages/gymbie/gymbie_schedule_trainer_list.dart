@@ -57,8 +57,7 @@ class GymbieScheduleTrainerList extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => GymbieScheduleCreate(
-                            userId: userId,
-                            selectedTrainer: trainerList[index])));
+                            selectedTrainerId: trainerList[index].trainerId)));
               }
             },
             child: buildTrainerTile(trainerList[index]),
@@ -116,7 +115,7 @@ class GymbieScheduleTrainerList extends StatelessWidget {
                       const SizedBox(
                         height: 2,
                       ),
-                      Text("레슨명 안들어옴",
+                      Text(trainer.lessonName,
                           style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,

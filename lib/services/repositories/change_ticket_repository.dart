@@ -47,7 +47,6 @@ class ChangeTicketRepository extends ApiService {
       },
     );
 
-    print(response.body);
     if (response.statusCode == 200) {
       try {
         return ChangeTicket.parseChangeTicketList(json.decode(response.body));

@@ -48,7 +48,7 @@ class ScheduleUser {
         json["center_name"],
         json["center_location"],
         json["lesson_change_range"],
-        json["lesson_minutes"]); //아직 lesson_change_range 는 들어오지 않는다.
+        json["lesson_minutes"]);
   }
 
   static List<ScheduleUser> parseScheduleDetailList(List<dynamic> body) {

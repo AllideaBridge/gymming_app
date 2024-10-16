@@ -26,13 +26,4 @@ class ScheduleTrainerUser {
     }
     return result.toSet();
   }
-
-  // api 완성되기 전 dummy 값
-  static List<ScheduleTrainerUser> getDummyTrainerUserMonthlyScheduleList() {
-    return [
-      ScheduleTrainerUser(1, DateTime.parse('2024-05-17T09:00')),
-      ScheduleTrainerUser(2, DateTime.parse('2024-05-18T10:00')),
-      ScheduleTrainerUser(3, DateTime.parse('2024-05-19T11:00')),
-    ];
-  }
 }

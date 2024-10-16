@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/common/colors.dart';
+import 'package:gymming_app/common/constants.dart';
+import 'package:gymming_app/components/common_header.dart';
 import 'package:gymming_app/components/icon_label.dart';
 import 'package:gymming_app/components/layouts/reason_layout.dart';
 import 'package:gymming_app/pages/gymbie/gymbie_schedule_resolve.dart';
+import 'package:gymming_app/services/models/reason_content.dart';
 import 'package:gymming_app/services/models/schedule_user.dart';
 import 'package:gymming_app/services/repositories/schedule_repository.dart';
-import 'package:http/http.dart' as http;
-
-import '../../common/colors.dart';
-import '../../common/constants.dart';
-import '../../components/common_header.dart';
-import '../../services/models/reason_content.dart';
-import '../../services/utils/date_util.dart';
+import 'package:gymming_app/services/utils/date_util.dart';
 
 class GymbieScheduleCancel extends StatelessWidget {
-  final ScheduleRepository scheduleRepository =
-      ScheduleRepository(client: http.Client());
   final ScheduleUser scheduleDetail;
 
-  GymbieScheduleCancel({super.key, required this.scheduleDetail});
+  const GymbieScheduleCancel({super.key, required this.scheduleDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +80,8 @@ class GymbieScheduleCancel extends StatelessWidget {
                             },
                             style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all<Color>(BTN_COLOR),
-                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                  WidgetStateProperty.all<Color>(BTN_COLOR),
+                              shape: WidgetStateProperty.all<OutlinedBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
@@ -120,12 +116,10 @@ class GymbieScheduleCancel extends StatelessWidget {
         .inDays;
 
     if (days >= scheduleDetail.lessonChangeRange) {
-      //예약일까지의 날짜 차이가 remainDays보다 긴 경우 -> 즉시 취소 가능
-      // api 호출
-      var cancelResult =
-          await scheduleRepository.cancelSchedule(scheduleDetail.scheduleId);
-      //api 성공 -> 성공 페이지로 이동
-      if (cancelResult == true) {
+      var result =
+          await ScheduleRepository().cancelSchedule(scheduleDetail.scheduleId);
+
+      if (result.isNotEmpty) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -134,11 +128,8 @@ class GymbieScheduleCancel extends StatelessWidget {
                     originDay: scheduleDetail.startTime,
                   )),
         );
-      } else {
-        //api 실패 -> 유지 (에러 메세지 띄우기?)
       }
     } else {
-      //예약일까지의 날짜 차이가 remainDays보다 짧은 경우 -> 취소 사유 입력
       Navigator.push(
           context,
           MaterialPageRoute(
