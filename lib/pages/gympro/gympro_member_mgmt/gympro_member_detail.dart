@@ -55,6 +55,7 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     FutureBuilder(
                       future: trainerUserDetail,
                       builder: (context, snapshot) {
+                        print(snapshot);
                         if (snapshot.hasData) {
                           final detail = snapshot.data!;
                           return buildTrainerUserDetail(context, detail);

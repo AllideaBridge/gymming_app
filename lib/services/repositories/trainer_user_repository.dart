@@ -56,12 +56,8 @@ class TrainerUserRepository extends ApiService {
         'GET', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId'));
 
     if (response.statusCode == 200) {
-      try {
-        final dynamic body = json.decode(response.body);
-        return TrainerUserDetail.fromJson(body);
-      } catch (e) {
-        throw Exception("Failed to load data : ${e.toString()}");
-      }
+      final dynamic body = json.decode(response.body);
+      return TrainerUserDetail.fromJson(body);
     } else {
       throw Exception(
           "api response error occurs: error code = ${response.statusCode}");

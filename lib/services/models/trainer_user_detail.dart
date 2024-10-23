@@ -67,7 +67,7 @@ class TrainerUserDetail {
         json["email"] ?? '',
         json["gender"],
         json["phone_number"],
-        json["profile_img_url"],
+        json["user_profile_img_url"],
         json["delete_flag"],
         DateTime.parse(json["birthday"]),
         json["lesson_total_count"],
@@ -75,7 +75,7 @@ class TrainerUserDetail {
         json["exercise_days"],
         json["special_notice"],
         DateTime.parse(json["registered_date"]),
-        DateTime.parse(json["last_date"]));
+        json["last_date"] == null ? null : DateTime.parse(json["last_date"]));
   }
 
   factory TrainerUserDetail.fromUser(UserDetail userDetail) {
