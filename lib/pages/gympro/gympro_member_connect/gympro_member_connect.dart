@@ -202,7 +202,7 @@ class GymproMemberConnectState extends State<GymproMemberConnect> {
           children: [
             if (!widget.isEdit)
               ProfileCard(
-                imgUrl: widget.trainerUserDetail.profileImgUrl,
+                imgUrl: widget.trainerUserDetail.userProfileImgUrl,
                 name: widget.trainerUserDetail.name,
                 birth: widget.trainerUserDetail.birthday,
                 gender: widget.trainerUserDetail.gender,

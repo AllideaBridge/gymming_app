@@ -1,10 +1,10 @@
 class UserDetail {
   final int _userId;
-  final String _userEmail;
+  final String? _userEmail;
   final String _userName;
   final String _userGender;
   final String _userPhoneNumber;
-  final String _userProfileImgUrl;
+  final String? _userProfileImgUrl;
   final bool _userDeleteFlag;
   final String _userBirthday;
 
@@ -22,7 +22,7 @@ class UserDetail {
 
   bool get userDeleteFlag => _userDeleteFlag;
 
-  String get userProfileImgUrl => _userProfileImgUrl;
+  String? get userProfileImgUrl => _userProfileImgUrl;
 
   String get userPhoneNumber => _userPhoneNumber;
 
@@ -30,19 +30,19 @@ class UserDetail {
 
   String get userName => _userName;
 
-  String get userEmail => _userEmail;
+  String? get userEmail => _userEmail;
 
   int get userId => _userId;
 
   factory UserDetail.fromJson(Map<String, dynamic> json) {
     return UserDetail(
-        json['user_id'],
-        json['user_email'],
-        json['user_name'],
-        json['user_gender'],
-        json['user_phone_number'],
+        json['id'],
+        json['email'],
+        json['name'],
+        json['gender'],
+        json['phone_number'],
         json['user_profile_img_url'],
-        json['user_delete_flag'],
-        json['user_birthday']);
+        json['delete_flag'],
+        json['birthday']);
   }
 }

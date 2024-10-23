@@ -26,6 +26,7 @@ class UserRepository extends ApiService {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
+      print(response.body);
       throw Exception(
           "api response error occurs: error code = ${response.statusCode}");
     }

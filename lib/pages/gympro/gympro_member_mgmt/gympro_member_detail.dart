@@ -96,9 +96,9 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(80.0),
-                child: trainerUserDetail.profileImgUrl != null
+                child: trainerUserDetail.userProfileImgUrl != null
                     ? Image.network(
-                        trainerUserDetail.profileImgUrl!,
+                        trainerUserDetail.userProfileImgUrl!,
                         fit: BoxFit.cover,
                         width: 80.0,
                         height: 80.0,

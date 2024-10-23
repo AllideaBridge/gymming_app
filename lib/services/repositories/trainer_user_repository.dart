@@ -34,7 +34,7 @@ class TrainerUserRepository extends ApiService {
         'GET',
         Uri.parse('$baseUrl/trainer/$trainerId/users').replace(
             queryParameters: {
-              'training_user_delete_flag': isPresent ? "true" : "false"
+              'trainer_user_delete_flag': isPresent ? "False" : "True"
             }));
 
     if (response.statusCode == 200) {
