@@ -241,8 +241,11 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              TraineeDelete(name: trainerUserDetail.name)));
+                          builder: (context) => GymproGymbieDelete(
+                                name: trainerUserDetail.name,
+                                trainerId: widget.trainerId,
+                                userId: widget.userId,
+                              )));
                 },
               ),
             ],

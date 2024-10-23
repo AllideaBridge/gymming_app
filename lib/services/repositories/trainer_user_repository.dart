@@ -20,7 +20,7 @@ class TrainerUserRepository extends ApiService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        throw Exception("회원 등록 실패");
+        throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
       print(e);
@@ -90,6 +90,15 @@ class TrainerUserRepository extends ApiService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  void deleteTrainerUser(int trainerId, int userId) async {
+    final response = await makeAuthenticatedRequest(
+        'DELETE', Uri.parse('$baseUrl/trainer/$trainerId/users/$userId'));
+
+    if (response.statusCode == 400) {
+      throw Exception(response.body);
     }
   }
 }
