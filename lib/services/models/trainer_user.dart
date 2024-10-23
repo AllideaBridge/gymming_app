@@ -49,7 +49,7 @@ class TrainerUser {
         json["lesson_current_count"],
         json["lesson_total_count"],
         DateTime.parse(json["registered_date"]),
-        DateTime.parse(json["last_date"] ?? "1111-11-11"));
+        json["last_date"] != null ? DateTime.parse(json["last_date"]) : null);
   }
 
   static List<TrainerUser> parseTrainerUserList(List<dynamic> body) {

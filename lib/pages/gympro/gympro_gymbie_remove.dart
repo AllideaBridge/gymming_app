@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gymming_app/pages/gympro/gympro_home/gympro_home.dart';
+import 'package:gymming_app/services/repositories/trainer_user_repository.dart';
 
 import '../../common/colors.dart';
 
-class TraineeDelete extends StatelessWidget {
+class GymproGymbieDelete extends StatelessWidget {
   final String name;
+  final int trainerId;
+  final int userId;
 
-  const TraineeDelete({required this.name, super.key});
+  const GymproGymbieDelete(
+      {required this.name,
+      super.key,
+      required this.trainerId,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +77,19 @@ class TraineeDelete extends StatelessWidget {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      //TODO 삭제 api 발송 후 회원관리 목록으로 이동
+                      TrainerUserRepository()
+                          .deleteTrainerUser(trainerId, userId);
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => GymproHome()),
+                          (Route<dynamic> route) => false);
                     },
                     style: ButtonStyle(
-                      side: MaterialStateProperty.all(
+                      side: WidgetStateProperty.all(
                           BorderSide(color: TERITARY_COLOR, width: 1.5)),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          WidgetStateProperty.all<Color>(Colors.black),
+                      shape: WidgetStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -106,8 +119,8 @@ class TraineeDelete extends StatelessWidget {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          WidgetStateProperty.all<Color>(Colors.white),
+                      shape: WidgetStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),

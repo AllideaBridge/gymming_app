@@ -25,8 +25,7 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
 
   @override
   Widget build(BuildContext context) {
-    trainingUserList = trainingUserRepository.getTrainerUserList(
-        Provider.of<InfoState>(context, listen: false).trainerId!, widget.isPresent);
+    refreshTrainerUserList(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
       child: Column(
@@ -84,14 +83,19 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
         itemCount: trainingUserList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => GymproMemberDetail(
-                          trainerId: Provider.of<InfoState>(context, listen: false).trainerId!,
+                          trainerId:
+                              Provider.of<InfoState>(context, listen: false)
+                                  .trainerId!,
                           userId: trainingUserList[index].userId,
                           isPresent: widget.isPresent)));
+              setState(() {
+                refreshTrainerUserList(context);
+              });
             },
             child: Card(
               color: Colors.black,
@@ -101,18 +105,19 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-                      child:trainingUserList[index].userProfileImgUrl != null ?Image.network(
-                        trainingUserList[index].userProfileImgUrl!,
-                        fit: BoxFit.cover,
-                        width: 48.0,
-                        height: 48.0,
-                      ) :
-                      Image.asset(
-                        'assets/images/user_example.png',
-                        fit: BoxFit.cover,
-                        width: 48.0,
-                        height: 48.0,
-                      ),
+                      child: trainingUserList[index].userProfileImgUrl != null
+                          ? Image.network(
+                              trainingUserList[index].userProfileImgUrl!,
+                              fit: BoxFit.cover,
+                              width: 48.0,
+                              height: 48.0,
+                            )
+                          : Image.asset(
+                              'assets/images/user_example.png',
+                              fit: BoxFit.cover,
+                              width: 48.0,
+                              height: 48.0,
+                            ),
                     ),
                     SizedBox(
                       width: 16.0,
@@ -151,5 +156,11 @@ class _GymproMemberMgmtState extends State<GymproMemberMgmt> {
         },
       ),
     );
+  }
+
+  void refreshTrainerUserList(BuildContext context) {
+    trainingUserList = trainingUserRepository.getTrainerUserList(
+        Provider.of<InfoState>(context, listen: false).trainerId!,
+        widget.isPresent);
   }
 }

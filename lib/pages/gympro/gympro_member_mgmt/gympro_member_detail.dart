@@ -31,6 +31,10 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
   @override
   void initState() {
     super.initState();
+    refreshTrainerUserDetail();
+  }
+
+  void refreshTrainerUserDetail() {
     trainerUserDetail = TrainerUserRepository()
         .getTrainerUserDetail(widget.trainerId, widget.userId);
   }
@@ -51,6 +55,7 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     FutureBuilder(
                       future: trainerUserDetail,
                       builder: (context, snapshot) {
+                        print(snapshot);
                         if (snapshot.hasData) {
                           final detail = snapshot.data!;
                           return buildTrainerUserDetail(context, detail);
@@ -92,9 +97,9 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(80.0),
-                child: trainerUserDetail.profileImgUrl != null
+                child: trainerUserDetail.userProfileImgUrl != null
                     ? Image.network(
-                        trainerUserDetail.profileImgUrl!,
+                        trainerUserDetail.userProfileImgUrl!,
                         fit: BoxFit.cover,
                         width: 80.0,
                         height: 80.0,
@@ -187,15 +192,17 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GymproMemberExtend(
-                                currentCount:
-                                    trainerUserDetail.lessonCurrentCount,
-                                totalCount: trainerUserDetail.lessonTotalCount,
+                                userId: widget.userId,
+                                trainerUserDetail: trainerUserDetail,
                               )));
+                  setState(() {
+                    refreshTrainerUserDetail();
+                  });
                 },
               ),
               PopupMenuItem(
@@ -207,15 +214,18 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GymproMemberConnect(
-                                userId: 1,
-                                userDetail: trainerUserDetail,
+                                userId: widget.userId,
+                                trainerUserDetail: trainerUserDetail,
                                 isEdit: true,
                               )));
+                  setState(() {
+                    refreshTrainerUserDetail();
+                  });
                 },
               ),
               PopupMenuItem(
@@ -231,8 +241,11 @@ class _GymproMemberDetailState extends State<GymproMemberDetail> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              TraineeDelete(name: trainerUserDetail.name)));
+                          builder: (context) => GymproGymbieDelete(
+                                name: trainerUserDetail.name,
+                                trainerId: widget.trainerId,
+                                userId: widget.userId,
+                              )));
                 },
               ),
             ],

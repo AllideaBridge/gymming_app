@@ -277,7 +277,6 @@ class _GymbieRegisterState extends State<GymbieRegister> {
   }
 
   Future<void> onClickConfirmButton() async {
-    // UserDetail userInfo= UserDetail()
     if (widget.type == 'register') {
       // TODO API 연결
       Map<String, Object> params = <String, Object>{};
@@ -291,7 +290,6 @@ class _GymbieRegisterState extends State<GymbieRegister> {
       await TokenManagerService.instance
           .saveRefreshToken(userAuth.refreshToken);
       Provider.of<InfoState>(context, listen: false).setUserId(userAuth.userId);
-      // userRepository.updateUser(userInfo)
     } else if (widget.type == 'edit') {
       // TODO API 연결
       print('회원 정보 수정');
